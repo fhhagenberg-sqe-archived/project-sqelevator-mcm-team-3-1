@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.fhhagenberg.sqelevator.interfaces;
+package at.fhhagenberg.sqelevator.controller;
+
+import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 
 /**
  *
  * @author jmayr
  */
-public interface IElevatorMode {
-    public void getNextFloor();
-    public void setEnvironment(IEnvironment e);
+public class CoreMapper implements ICoreMapper{
+    
 }

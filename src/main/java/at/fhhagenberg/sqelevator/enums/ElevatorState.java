@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.fhhagenberg.sqelevator.controller;
+package at.fhhagenberg.sqelevator.enums;
 
 /**
  *
  * @author jmayr
  */
-public class ICoreMaooer {
-    
+public enum ElevatorState {
+    ERROR,
+    ACTIVE,
+    INACTIVE,
+    UNKNOWN
 }

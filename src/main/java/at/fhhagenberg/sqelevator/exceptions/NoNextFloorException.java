@@ -3,13 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.fhhagenberg.sqelevator.interfaces;
+package at.fhhagenberg.sqelevator.exceptions;
 
 /**
  *
  * @author jmayr
  */
-public interface IElevatorMode {
-    public void getNextFloor();
-    public void setEnvironment(IEnvironment e);
+public class NoNextFloorException extends Exception{
 }

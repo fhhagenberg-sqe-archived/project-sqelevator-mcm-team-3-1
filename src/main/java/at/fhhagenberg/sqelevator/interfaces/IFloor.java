@@ -9,8 +9,8 @@ package at.fhhagenberg.sqelevator.interfaces;
  *
  * @author jmayr
  */
-public interface IUserInteractionMapper {
-    public void elevatorSelected(ILocalElevator e);
-    public void changeModeOnSelected();
-    public void manualFloorEntered(String floor);
+public interface IFloor {
+    public int getFloorNumber();
+    public boolean isServicedBy(ILocalElevator e);
+    public boolean setServicedBy(ILocalElevator e);
 }

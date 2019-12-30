@@ -5,6 +5,16 @@
  */
 package at.fhhagenberg.sqelevator.ui;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 /**
  *
  * @author jmayr
@@ -16,6 +26,19 @@ package at.fhhagenberg.sqelevator.ui;
  * WARNING: JAVA FX PROPERITARY!!!! SO INTERMEDIATE OBJECTS HAVE TO BE CREATED!!!!
  * 
  */
-public class ElevatorFxGUI {
+public class ElevatorFxGUI extends Stage {
     
+    public ElevatorFxGUI(int numberOfElevators){
+    Scene scene = new Scene(renderLayout(), 500, 200);
+    }
+     private HBox renderLayout() {
+        HBox layout = new HBox();
+        layout.setPadding(new Insets(10, 20, 50, 10));
+        layout.setSpacing(10);
+        return layout;
+    }
+     
+     private VBox generateElevator(){
+         return null;
+     }
 }

@@ -5,12 +5,13 @@
  */
 package at.fhhagenberg.sqelevator.interfaces;
 
+import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
+
 /**
  *
  * @author jmayr
  */
-public interface IUserInteractionMapper {
-    public void elevatorSelected(ILocalElevator e);
-    public void changeModeOnSelected();
-    public void manualFloorEntered(String floor);
+public interface IElevatorCall {
+    public ElevatorDirection getDirection();
+    public int getFloorNumber();
 }

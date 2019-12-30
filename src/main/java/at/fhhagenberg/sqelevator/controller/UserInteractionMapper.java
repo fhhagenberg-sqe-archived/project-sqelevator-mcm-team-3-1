@@ -5,10 +5,12 @@
  */
 package at.fhhagenberg.sqelevator.controller;
 
+import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
+
 /**
  *
  * @author jmayr
  */
-public class UserInteractionMapper {
+public class UserInteractionMapper  implements IUserInteractionMapper{
     
 }
