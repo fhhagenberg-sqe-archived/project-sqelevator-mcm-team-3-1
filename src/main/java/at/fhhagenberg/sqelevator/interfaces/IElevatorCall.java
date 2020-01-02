@@ -18,5 +18,9 @@ public interface IElevatorCall {
      * @return ElevatorDirection representing the direction of the call
      */
     public ElevatorDirection getDirection();
+    /**
+     * Gets the number of the floor the call was set
+     * @return int number of the floor the call is located at
+     */
     public int getFloorNumber();
 }

@@ -61,7 +61,7 @@ public interface ILocalElevator {
      * Gets the current acceleration of the Elevator in Ft/s^2
      * @return double current acceleration of the elevator
      */
-    public double getElevatorAccelerationInFtsqr();
+    public double getAccelerationInFtsqr();
     /**
      * Gets the current position in the building (measured from the bottom of the building)
      * @return double containing the position within the building
