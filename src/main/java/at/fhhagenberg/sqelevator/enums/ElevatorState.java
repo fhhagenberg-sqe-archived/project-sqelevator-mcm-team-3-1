@@ -8,6 +8,7 @@ package at.fhhagenberg.sqelevator.enums;
 /**
  *
  * @author jmayr
+ * State of the elevator
  */
 public enum ElevatorState {
     ERROR,

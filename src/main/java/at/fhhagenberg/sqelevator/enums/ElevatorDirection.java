@@ -8,6 +8,7 @@ package at.fhhagenberg.sqelevator.enums;
 /**
  *
  * @author jmayr
+ * current heading direction of the elevator
  */
 public enum ElevatorDirection {
     UP,DOWN, UNSET

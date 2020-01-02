@@ -12,6 +12,11 @@ import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
  * @author jmayr
  */
 public interface IElevatorCall {
+    /**
+     * gets the direction of the elevator call.
+     * It is basically the direction the elevator should go to (either up or down)
+     * @return ElevatorDirection representing the direction of the call
+     */
     public ElevatorDirection getDirection();
     public int getFloorNumber();
 }

@@ -7,6 +7,7 @@ package at.fhhagenberg.sqelevator.ui;
 
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -29,16 +30,26 @@ public class FXElevator extends GridPane {
     private int numberOfFloors;
     private Pane[] floors;
     private HBox header;
+    private Label elevatorName;
+    private Label elevatorFloor;
+    private Label elevatorDirection;
 
     public FXElevator(ILocalElevator e, int numberOfFloors) {
         this.numberOfFloors = numberOfFloors;
         this.e = e;
         floors = new Pane[numberOfFloors];
-        this.add(header, 0, 0, 2, 1);
+        // header.getChildren().add()
+        this.add(header, 0, 0);
         for (int i = 0; i < numberOfFloors; i++) {
             floors[i] = new Pane();
             this.add(floors[i], i + 1, 0);
         }
+    }
+    
+    private void populateHeader(){
+    this.header=new HBox();
+    this.elevatorName=new Label("E "+e.getElevatorNumber());
+    this.elevatorFloor = new Label(Integer.toString(e.getCurrentFloor()));
     }
 
     public void updateView() {
