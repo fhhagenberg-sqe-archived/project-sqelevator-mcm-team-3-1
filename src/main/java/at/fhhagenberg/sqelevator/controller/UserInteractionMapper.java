@@ -5,6 +5,7 @@
  */
 package at.fhhagenberg.sqelevator.controller;
 
+import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
 
 /**
@@ -12,5 +13,19 @@ import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
  * @author jmayr
  */
 public class UserInteractionMapper  implements IUserInteractionMapper{
-    
+
+    @Override
+    public void elevatorSelected(ILocalElevator e) {
+
+    }
+
+    @Override
+    public void changeModeOnSelected() {
+
+    }
+
+    @Override
+    public void manualFloorEntered(String floor) {
+
+    }
 }
