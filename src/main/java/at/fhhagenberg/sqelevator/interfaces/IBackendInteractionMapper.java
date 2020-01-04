@@ -7,7 +7,8 @@ package at.fhhagenberg.sqelevator.interfaces;
 
 
 /**
- *
+ * THIS CLASS IS USED TO MAP THE BACKEND INTERACTION AND IT'S ISSUES/EXCEPTIONS
+ * THIS CLASS IS HANDLED BY THE BACKEND SHADER
  * @author jmayr
  */
 public interface IBackendInteractionMapper{

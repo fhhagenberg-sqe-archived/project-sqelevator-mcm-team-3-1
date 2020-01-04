@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.fhhagenberg.sqelevator.enums;
+package at.fhhagenberg.sqelevator.propertychanged;
+
+import java.beans.PropertyChangeListener;
 
 /**
  *
  * @author jmayr
- * State of the elevator doors
  */
-public enum DoorState {
-    OPEN,CLOSED,UNKNOWN
+public interface BackendConnectionIssueListener extends PropertyChangeListener {
+    
 }

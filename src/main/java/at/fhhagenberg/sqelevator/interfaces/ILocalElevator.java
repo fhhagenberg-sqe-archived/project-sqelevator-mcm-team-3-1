@@ -30,7 +30,7 @@ public interface ILocalElevator {
      * @param floors int[] list of selected floors.
      * 
      */
-    public void updateSectedFloors(int[] floors);
+    public boolean setSectedFloors(int[] floors);
     /**
      * Sets the mode of the elevator
      * @param mode IElevatorMode the new mode that will be used for navigation
@@ -54,22 +54,22 @@ public interface ILocalElevator {
     public ElevatorState getElevatorState();
     /**
      * Gets the current speed of the elevator in Ft/s
-     * @return double current speed ot the elevator in Ft/s
+     * @return int current speed ot the elevator in Ft/s
      */
-    public double getCurrentSpeedInFts();
+    public int getCurrentSpeedInFts();
     /**
      * Gets the current acceleration of the Elevator in Ft/s^2
-     * @return double current acceleration of the elevator
+     * @return int current acceleration of the elevator
      */
-    public double getAccelerationInFtsqr();
+    public int getAccelerationInFtsqr();
     /**
      * Gets the current position in the building (measured from the bottom of the building)
-     * @return double containing the position within the building
+     * @return int containing the position within the building
      */
-    public double getCurrentPosition();
+    public int getCurrentPosition();
     /**
      * Gets the current weight that is in the elevator
-     * @return double current weight within the elevator
+     * @return int current weight within the elevator
      */
     public int getCurrentWeightInLbs();
     /**

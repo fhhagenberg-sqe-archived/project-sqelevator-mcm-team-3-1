@@ -5,10 +5,12 @@
  */
 package at.fhhagenberg.sqelevator.model;
 
+import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
+
 /**
  *
  * @author jmayr
  */
-public class Environment {
+public class Environment implements IEnvironment {
     
 }

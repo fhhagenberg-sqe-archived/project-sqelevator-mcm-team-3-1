@@ -8,8 +8,7 @@ package at.fhhagenberg.sqelevator.enums;
 /**
  *
  * @author jmayr
- * State of the elevator doors
  */
-public enum DoorState {
-    OPEN,CLOSED,UNKNOWN
+public enum ElevatorModeType {
+    AUTOMATIC, MANUAL
 }

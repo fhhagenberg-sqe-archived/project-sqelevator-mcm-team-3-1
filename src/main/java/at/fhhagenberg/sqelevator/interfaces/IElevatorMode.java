@@ -5,6 +5,8 @@
  */
 package at.fhhagenberg.sqelevator.interfaces;
 
+import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
+
 /**
  *
  * @author jmayr
@@ -20,4 +22,6 @@ public interface IElevatorMode {
      * @param e 
      */
     public void setEnvironment(IEnvironment e);
+    
+    public ElevatorModeType getModeType();
 }

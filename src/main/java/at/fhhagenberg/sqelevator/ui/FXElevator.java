@@ -7,6 +7,8 @@ package at.fhhagenberg.sqelevator.ui;
 
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -25,7 +27,7 @@ import javafx.scene.paint.Color;
  *
  * @author jmayr
  */
-public class FXElevator extends GridPane {
+public class FXElevator extends GridPane  {
 
     private ILocalElevator e;
     private int numberOfFloors;
@@ -147,5 +149,4 @@ public class FXElevator extends GridPane {
                 break;
         }
     }
-
 }
