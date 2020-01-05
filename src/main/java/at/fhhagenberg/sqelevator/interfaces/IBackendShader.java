@@ -5,20 +5,42 @@
  */
 package at.fhhagenberg.sqelevator.interfaces;
 
-import at.fhhagenberg.sqelevator.propertychanged.ElevatorCallLoadedListener;
-import at.fhhagenberg.sqelevator.propertychanged.ElevatorLoadedListener;
-import at.fhhagenberg.sqelevator.propertychanged.EnvironmentLoadedListener;
-import at.fhhagenberg.sqelevator.propertychanged.FloorLoadedListener;
+import java.beans.PropertyChangeListener;
 
 /**
  *
  * @author jmayr
  */
 public interface IBackendShader {
+
+    /**
+     * 
+     * @param mapper 
+     */
     public void setBackendMapper(IBackendInteractionMapper mapper);
-    public void addEnvironmentLoadedEventListener(EnvironmentLoadedListener listener);
-    public void addElevatorCallLoadedEventListener(ElevatorCallLoadedListener listener);
-    public void addFloorLoadedEventListener(FloorLoadedListener listener);
-    public void addElevatorLoadedEventListener(ElevatorLoadedListener listener);
-    
+
+    /**
+     * 
+     * @param listener 
+     */
+    public void addEnvironmentLoadedEventListener(PropertyChangeListener listener);
+
+    /**
+     * 
+     * @param listener 
+     */
+    public void addElevatorCallLoadedEventListener(PropertyChangeListener listener);
+
+    /**
+     * 
+     * @param listener 
+     */
+    public void addFloorLoadedEventListener(PropertyChangeListener listener);
+
+    /**
+     * 
+     * @param listener 
+     */
+    public void addElevatorLoadedEventListener(PropertyChangeListener listener);
+
 }

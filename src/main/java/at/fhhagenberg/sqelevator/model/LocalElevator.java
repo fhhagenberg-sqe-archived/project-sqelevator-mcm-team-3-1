@@ -10,8 +10,10 @@ import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  *
@@ -19,7 +21,7 @@ import java.util.LinkedList;
  */
 public class LocalElevator implements ILocalElevator {
 
-    private int elevatorNumber;
+    private final int elevatorNumber;
     private int[] selectedFloors = {};
     private DoorState doorState = DoorState.UNKNOWN;
     private ElevatorDirection direction = ElevatorDirection.UNSET;
@@ -31,6 +33,8 @@ public class LocalElevator implements ILocalElevator {
     private int currentSpeedFts = 0;
     private int currentAccelerationFtsqr = 0;
     private int currentPosition = 0;
+    private PropertyChangeSupport propertyChangedHandler
+            = new PropertyChangeSupport(this);
 
     public LocalElevator(int elevatorNumber) {
         this.elevatorNumber = elevatorNumber;
@@ -142,20 +146,15 @@ public class LocalElevator implements ILocalElevator {
     @Override
     public boolean updateElevatorData(ILocalElevator other) {
         if (other.getElevatorNumber() == this.elevatorNumber) {
-            boolean updated = false;
-            updated = this.setDirection(other.getDirection()) || updated;
-            updated = this.setSelectedFloors(other.getSelectedFloors()) || updated;
-            updated = this.setDoorState(other.getDoorState()) || updated;
-            updated = this.setCurrentFloor(other.getCurrentFloor()) || updated;
-            updated = this.setTargetFloor(other.getTargetFloor()) || updated;
-            updated = this.setLbsWeight(this.getCurrentWeightInLbs()) || updated;
-            // updated = this.setMaxLoad(other.getLoadCapacityInLbs()) | updated; //DOES NOT CHANGE DURING RUNTIME
-            updated = this.setCurrentSpeed(other.getCurrentSpeedInFts()) || updated;
-            updated = this.setCurrentAcceleration(other.getAccelerationInFtsqr()) || updated;
-            updated = this.setCurrentPosition(other.getCurrentPosition()) || updated;
-            if (updated) {
-                ...//TODO: rise events on change!
-            }
+            this.setDirection(other.getDirection());
+            this.setSelectedFloors(other.getSelectedFloors());
+            this.setDoorState(other.getDoorState());
+            this.setCurrentFloor(other.getCurrentFloor());
+            this.setTargetFloor(other.getTargetFloor());
+            this.setLbsWeight(this.getCurrentWeightInLbs());
+            this.setCurrentSpeed(other.getCurrentSpeedInFts());
+            this.setCurrentAcceleration(other.getAccelerationInFtsqr());
+            this.setCurrentPosition(other.getCurrentPosition());
         }
         return other.getElevatorNumber() == this.elevatorNumber;
     }
@@ -168,6 +167,9 @@ public class LocalElevator implements ILocalElevator {
         return this.direction;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -180,15 +182,35 @@ public class LocalElevator implements ILocalElevator {
         return this.elevatorNumber == elevator.elevatorNumber;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public int hashCode() {
         return elevatorNumber + direction.hashCode() + Arrays.hashCode(this.selectedFloors) + this.currentPosition;
     }
 
-    public boolean setSelectedFloors(int[] selectedFloors) {
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void addListener(PropertyChangeListener l) {
+        this.propertyChangedHandler.addPropertyChangeListener(l);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void removeListener(PropertyChangeListener l) {
+        this.propertyChangedHandler.removePropertyChangeListener(l);
+    }
+
+    public void setSelectedFloors(int[] selectedFloors) {
         if (this.selectedFloors.length != selectedFloors.length) {
+            var old = this.selectedFloors;
             this.selectedFloors = selectedFloors;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.SELECTED_FLOORS.name(), old, selectedFloors);
         } else {
             boolean hasNew = false;
             for (int selection : selectedFloors) {
@@ -201,83 +223,83 @@ public class LocalElevator implements ILocalElevator {
                 hasNew = hasNew || !contains; //previously detected a new element or has a new element in previous check
             }
             if (hasNew) {
+                var old = this.selectedFloors;
                 this.selectedFloors = selectedFloors;
+                this.propertyChangedHandler.firePropertyChange(ElevatorEvent.SELECTED_FLOORS.name(), old, selectedFloors);
             }
-            return hasNew;
         }
     }
 
-    public boolean setDoorState(DoorState state) {
+    public void setDoorState(DoorState state) {
         if (this.doorState != state && state != null) {
+            var old = this.doorState;
             this.doorState = state;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.DOOR_STATE.name(), old, this.doorState);
         }
-        return false;
     }
 
-    public boolean setDirection(ElevatorDirection direction) {
+    public void setDirection(ElevatorDirection direction) {
         if (this.direction != direction && direction != null) {
+            var old = this.direction;
             this.direction = direction;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.DIRECTION.name(), old, this.direction);
         }
-        return false;
     }
 
-    public boolean setCurrentFloor(int floor) {
+    public void setCurrentFloor(int floor) {
 
         if (this.currentFloor != floor) {
+            var old = this.currentFloor;
             this.currentFloor = floor;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_FLOOR.name(), old, this.currentFloor);
         }
-        return false;
     }
 
-    public boolean setTargetFloor(int target) {
+    public void setTargetFloor(int target) {
         if (this.targetFloor != target) {
+            var old = this.targetFloor;
             this.targetFloor = target;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.TARGET_FLOOR.name(), old, this.targetFloor);
         }
-        return false;
     }
 
-    public boolean setLbsWeight(int weight) {
+    public void setLbsWeight(int weight) {
         if (this.lbsWeight != weight && weight > -1) {
+            var old = this.lbsWeight;
             this.lbsWeight = weight;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.LBS_WEIGHT.name(), old, this.lbsWeight);
         }
-        return false;
     }
 
-    public boolean setMaxLoad(int maxLoad) {
+    public void setMaxLoad(int maxLoad) {
         if (this.lbsMaxLoad != maxLoad) {
+            var old = this.lbsMaxLoad;
             this.lbsMaxLoad = maxLoad;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.LBS_MAX_LOAD.name(), old, this.lbsMaxLoad);
         }
-        return false;
     }
 
-    public boolean setCurrentSpeed(int speed) {
+    public void setCurrentSpeed(int speed) {
         if (this.currentSpeedFts != speed) {
+            var old = this.currentSpeedFts;
             this.currentSpeedFts = speed;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_SPEED_FTS.name(), old, this.currentSpeedFts);
         }
-        return false;
     }
 
-    public boolean setCurrentAcceleration(int acceleration) {
+    public void setCurrentAcceleration(int acceleration) {
         if (this.currentAccelerationFtsqr != acceleration) {
+            var old = this.currentAccelerationFtsqr;
             this.currentAccelerationFtsqr = acceleration;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_ACCELERATION_FTSQR.name(), old, this.currentAccelerationFtsqr);
         }
-        return false;
     }
 
-    public boolean setCurrentPosition(int pos) {
+    public void setCurrentPosition(int pos) {
         if (this.currentPosition != pos) {
+            var old = this.currentPosition;
             this.currentPosition = pos;
-            return true;
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_POSITION.name(), old, this.currentPosition);
         }
-        return false;
     }
-
 }
