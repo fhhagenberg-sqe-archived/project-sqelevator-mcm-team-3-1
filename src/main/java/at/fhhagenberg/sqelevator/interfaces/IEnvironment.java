@@ -23,13 +23,7 @@ public interface IEnvironment {
      * @return int height in ft.
      */
     public int getFloorHeightInFt();
-    /**
-     * function is used to place a new call from the environment
-     * This is a call, that is set to call an elevator, not the call within the elevator
-     * @param floor the floor, on which the elevator is called
-     * @param direction the direction the caller wants to go.
-     */
-    public void addFloorCall(int floor, ElevatorDirection direction);
+
     /**
      * function is used to place a new call from the environment
      * This is a call, that is set to call an elevator, not the call within the elevator

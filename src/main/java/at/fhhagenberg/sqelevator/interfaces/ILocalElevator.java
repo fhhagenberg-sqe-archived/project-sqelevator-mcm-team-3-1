@@ -13,7 +13,7 @@ import at.fhhagenberg.sqelevator.enums.ElevatorState;
  *
  * @author jmayr
  */
-public interface ILocalElevator {
+public interface ILocalElevator  {
     /**
      * Gets the number of the elevator
      * @return int number of the elevator
@@ -24,13 +24,7 @@ public interface ILocalElevator {
      * @return integer array containing the selected floors;
      */
     public int[] getSelectedFloors();
-    /**
-     * Updates the selected floors by a given array of floors.
-     * Previously selected list will be replaced by this list.
-     * @param floors int[] list of selected floors.
-     * 
-     */
-    public boolean setSectedFloors(int[] floors);
+
     /**
      * Sets the mode of the elevator
      * @param mode IElevatorMode the new mode that will be used for navigation
@@ -83,12 +77,12 @@ public interface ILocalElevator {
      */
     public int getTargetFloor();
     /**
-     * Updates alle the elevator data and it's states
+     * Updates alle the elevator data and it's states, but not it's mode
      * The id of both elevators must match
-     * @param e ILocalElevator elevator from which the data should be taken
+     * @param other ILocalElevator elevator from which the data should be taken
      * @return boolean true if the data could be updated
      */
-    public boolean updateElevatorData(ILocalElevator e);
+    public boolean updateElevatorData(ILocalElevator other);
     /**
      * Gets the direction the elevator going to
      * @return ElevatorDirection direction the elevator is heading
