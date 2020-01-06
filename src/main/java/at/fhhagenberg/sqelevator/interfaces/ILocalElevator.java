@@ -132,4 +132,18 @@ public interface ILocalElevator {
      */
     public void removeListener(PropertyChangeListener l);
 
+    /**
+     * function returns the current mode of the elevator
+     *
+     * @return IElevatorMode current mode of the elevator
+     */
+    public IElevatorMode getCurrentMode();
+
+    /**
+     * function returns the current state of the elevator
+     *
+     * @return ElevatorState current state of the elevator
+     */
+    public ElevatorState getCurrentState();
+
 }

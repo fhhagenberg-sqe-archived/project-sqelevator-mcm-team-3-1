@@ -26,6 +26,7 @@ public class LocalElevator implements ILocalElevator {
     private DoorState doorState = DoorState.UNKNOWN;
     private ElevatorDirection direction = ElevatorDirection.UNSET;
     private IElevatorMode mode;
+    private ElevatorState lastState = ElevatorState.UNKNOWN;
     private int currentFloor = -1;
     private int targetFloor = -1;
     private int lbsWeight = -1;
@@ -206,11 +207,28 @@ public class LocalElevator implements ILocalElevator {
         this.propertyChangedHandler.removePropertyChangeListener(l);
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public IElevatorMode getCurrentMode() {
+        return this.getCurrentMode();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public ElevatorState getCurrentState() {
+        // TODO: Add actual checkings to check the elevator state
+        return ElevatorState.UNKNOWN;
+    }
+
     public void setSelectedFloors(int[] selectedFloors) {
         if (this.selectedFloors.length != selectedFloors.length) {
             var old = this.selectedFloors;
             this.selectedFloors = selectedFloors;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.SELECTED_FLOORS.name(), old, selectedFloors);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.SELECTED_FLOORS, old, selectedFloors);
         } else {
             boolean hasNew = false;
             for (int selection : selectedFloors) {
@@ -225,7 +243,7 @@ public class LocalElevator implements ILocalElevator {
             if (hasNew) {
                 var old = this.selectedFloors;
                 this.selectedFloors = selectedFloors;
-                this.propertyChangedHandler.firePropertyChange(ElevatorEvent.SELECTED_FLOORS.name(), old, selectedFloors);
+                this.propertyChangedHandler.firePropertyChange(ElevatorEvent.SELECTED_FLOORS, old, selectedFloors);
             }
         }
     }
@@ -234,7 +252,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.doorState != state && state != null) {
             var old = this.doorState;
             this.doorState = state;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.DOOR_STATE.name(), old, this.doorState);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.DOOR_STATE, old, this.doorState);
         }
     }
 
@@ -242,7 +260,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.direction != direction && direction != null) {
             var old = this.direction;
             this.direction = direction;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.DIRECTION.name(), old, this.direction);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.DIRECTION, old, this.direction);
         }
     }
 
@@ -251,7 +269,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.currentFloor != floor) {
             var old = this.currentFloor;
             this.currentFloor = floor;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_FLOOR.name(), old, this.currentFloor);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_FLOOR, old, this.currentFloor);
         }
     }
 
@@ -259,7 +277,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.targetFloor != target) {
             var old = this.targetFloor;
             this.targetFloor = target;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.TARGET_FLOOR.name(), old, this.targetFloor);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.TARGET_FLOOR, old, this.targetFloor);
         }
     }
 
@@ -267,7 +285,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.lbsWeight != weight && weight > -1) {
             var old = this.lbsWeight;
             this.lbsWeight = weight;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.LBS_WEIGHT.name(), old, this.lbsWeight);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.LBS_WEIGHT, old, this.lbsWeight);
         }
     }
 
@@ -275,7 +293,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.lbsMaxLoad != maxLoad) {
             var old = this.lbsMaxLoad;
             this.lbsMaxLoad = maxLoad;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.LBS_MAX_LOAD.name(), old, this.lbsMaxLoad);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.LBS_MAX_LOAD, old, this.lbsMaxLoad);
         }
     }
 
@@ -283,7 +301,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.currentSpeedFts != speed) {
             var old = this.currentSpeedFts;
             this.currentSpeedFts = speed;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_SPEED_FTS.name(), old, this.currentSpeedFts);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_SPEED_FTS, old, this.currentSpeedFts);
         }
     }
 
@@ -291,7 +309,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.currentAccelerationFtsqr != acceleration) {
             var old = this.currentAccelerationFtsqr;
             this.currentAccelerationFtsqr = acceleration;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_ACCELERATION_FTSQR.name(), old, this.currentAccelerationFtsqr);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_ACCELERATION_FTSQR, old, this.currentAccelerationFtsqr);
         }
     }
 
@@ -299,7 +317,7 @@ public class LocalElevator implements ILocalElevator {
         if (this.currentPosition != pos) {
             var old = this.currentPosition;
             this.currentPosition = pos;
-            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_POSITION.name(), old, this.currentPosition);
+            this.propertyChangedHandler.firePropertyChange(ElevatorEvent.CURRENT_POSITION, old, this.currentPosition);
         }
     }
 }

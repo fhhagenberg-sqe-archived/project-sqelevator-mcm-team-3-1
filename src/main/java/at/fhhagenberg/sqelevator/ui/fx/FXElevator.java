@@ -3,10 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.fhhagenberg.sqelevator.ui;
+package at.fhhagenberg.sqelevator.ui.fx;
 
+import at.fhhagenberg.sqelevator.enums.DoorState;
+import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
+import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.geometry.Insets;
@@ -27,7 +31,7 @@ import javafx.scene.paint.Color;
  *
  * @author jmayr
  */
-public class FXElevator extends GridPane  {
+public class FXElevator extends GridPane implements PropertyChangeListener {
 
     private ILocalElevator e;
     private int numberOfFloors;
@@ -36,6 +40,7 @@ public class FXElevator extends GridPane  {
     private Label elevatorName;
     private Label elevatorDoorState;
     private Label elevatorDirection;
+    private Label elevatorMode;
 
     public FXElevator(ILocalElevator e, int numberOfFloors) {
         this.numberOfFloors = numberOfFloors;
@@ -58,9 +63,11 @@ public class FXElevator extends GridPane  {
         this.elevatorName = new Label("E " + e.getElevatorNumber());
         this.elevatorDoorState = new Label(e.getDoorState().name());
         this.elevatorDirection = new Label(e.getDirection().name());
+        this.elevatorMode = new Label(e.getCurrentMode().getModeType().name());
         header.getChildren().add(elevatorName);
         header.getChildren().add(elevatorDoorState);
         header.getChildren().add(elevatorDirection);
+        header.getChildren().add(elevatorMode);
     }
 
     /**
@@ -75,8 +82,6 @@ public class FXElevator extends GridPane  {
         }
         this.setPosition(this.e.getCurrentFloor());
         this.setTarget(this.e.getTargetFloor());
-        this.elevatorDirection.setText(this.e.getDirection().name());
-        this.elevatorDoorState.setText(this.e.getDoorState().name());
     }
 
     /**
@@ -146,6 +151,39 @@ public class FXElevator extends GridPane  {
             default:
                 this.header.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,
                         CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+        }
+    }
+
+    public void setSelected(ILocalElevator e) {
+        if (this.e.equals(e)) {
+            setBorder(new Border(new BorderStroke(Color.BLACK,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        } else {
+            setBorder(Border.EMPTY);
+        }
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        switch (evt.getPropertyName()) {
+            case ElevatorEvent.SELECTED_FLOORS:
+            case ElevatorEvent.TARGET_FLOOR:
+            case ElevatorEvent.CURRENT_FLOOR:
+                updateView();
+                break;
+            case ElevatorEvent.DIRECTION:
+                this.elevatorDirection.setText(((ElevatorDirection) evt.getNewValue()).name());
+                break;
+            case ElevatorEvent.DOOR_STATE:
+                this.elevatorDoorState.setText(((DoorState) evt.getNewValue()).name());
+                break;
+            case ElevatorEvent.MODE:
+                this.elevatorMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
+                break;
+            case ElevatorEvent.CURRENT_STATE:
+                this.setElevatorState((ElevatorState) evt.getNewValue());
                 break;
         }
     }
