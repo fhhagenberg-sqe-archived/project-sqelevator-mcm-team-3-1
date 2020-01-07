@@ -44,10 +44,15 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
 
     public FXElevatorCallView(IEnvironment e) {
         this.e = e;
+        this.minWidth(100);
         this.numberOfFloors = e.getNumberOfFloors();
         for (int i = 0; i < numberOfFloors; i++) {
             upFloors[i] = new Pane();
             downFloors[i] = new Pane();
+            upFloors[i].minWidth(40);
+            upFloors[i].minHeight(40);
+            downFloors[i].minWidth(40);
+            downFloors[i].minHeight(40);
         }
         e.addCallRemovedListener(this);
         e.addCallAddedListener(this);

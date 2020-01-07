@@ -11,7 +11,9 @@ import at.fhhagenberg.sqelevator.interfaces.IElevatorCall;
 import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
 import at.fhhagenberg.sqelevator.interfaces.IFloor;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import at.fhhagenberg.sqelevator.propertychanged.event.CoreMapperEvent;
 import at.fhhagenberg.sqelevator.propertychanged.event.EnvironmentEvent;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
@@ -31,6 +33,7 @@ public class Environment implements IEnvironment {
     private LinkedList<IFloor> floors;
     private int floorHeight = 0;
     private int numberOfFloors;
+    private int numberOfElevators;
 
     /**
      * @inheritDoc
@@ -55,7 +58,7 @@ public class Environment implements IEnvironment {
     public void addFloorCall(IElevatorCall call) {
         if (!this.handledCalls.contains(call) && !this.unhandledCalls.contains(call)) {
             this.unhandledCalls.addLast(call);
-            this.newCallHandler.fireIndexedPropertyChange(EnvironmentEvent.ELEVATOR_CALL_ADDED, floorHeight, null, call);
+            this.newCallHandler.firePropertyChange(EnvironmentEvent.ELEVATOR_CALL_ADDED, null, call);
         }
     }
 
@@ -65,7 +68,7 @@ public class Environment implements IEnvironment {
     public void confirmHandle(IElevatorCall c) {
         if (this.handledCalls.contains(c)) {
             this.handledCalls.remove(c);
-            this.callRemovedHandler.fireIndexedPropertyChange(EnvironmentEvent.ELEVATOR_CALL_REMOVED, floorHeight, c, null);
+            this.callRemovedHandler.firePropertyChange(EnvironmentEvent.ELEVATOR_CALL_REMOVED, c, null);
         }
     }
 
@@ -176,6 +179,14 @@ public class Environment implements IEnvironment {
      * @inheritDoc
      */
     @Override
+    public int getNumberOfElevators() {
+        return this.numberOfElevators;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
     public void addCallRemovedListener(PropertyChangeListener l) {
         this.callRemovedHandler.addPropertyChangeListener(l);
     }
@@ -204,4 +215,36 @@ public class Environment implements IEnvironment {
         this.newCallHandler.removePropertyChangeListener(l);
     }
 
+    public boolean setFloorHeight(int height) {
+        if (height > 0) {
+            this.floorHeight = height;
+        }
+
+        return height > 0;
+    }
+
+    public boolean setNumberOfFloors(int numberOfFloors) {
+        if (numberOfFloors > 0) {
+            this.numberOfFloors = numberOfFloors;
+        }
+        return numberOfFloors > 0;
+    }
+
+    public void setNumberOfElevators(int numberOfElevators) {
+        if (numberOfElevators > 0) {
+            this.numberOfElevators = numberOfElevators;
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        switch (evt.getPropertyName()) {
+            case CoreMapperEvent.FLOOR_LOADED:
+                this.addFloor((IFloor) evt.getNewValue());
+                break;
+            case CoreMapperEvent.ELEVATOR_CALL_LOADED:
+                this.addFloorCall((IElevatorCall) evt.getNewValue());
+                break;
+        }
+    }
 }

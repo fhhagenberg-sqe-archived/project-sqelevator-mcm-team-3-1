@@ -22,7 +22,7 @@ import javafx.scene.layout.GridPane;
  * @author jmayr
  */
 public class FXSelectedElevator extends GridPane implements PropertyChangeListener {
-    
+
     private final Label header;
     private final Label speedLabel;
     private final Label currentSpeed;
@@ -48,9 +48,9 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
     private final Label nextFloorLabel;
     private final TextField nextFloor;
     private final Button submitNextFloor;
-    
+
     private ILocalElevator elevator;
-    
+
     public FXSelectedElevator() {
         header = new Label();
         speedLabel = new Label("Current Speed");
@@ -64,7 +64,7 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         stateLabel = new Label("Elevator State");
         directionLabel = new Label("Direction");
         positionLabel = new Label("Position");
-        
+
         currentSpeed = new Label();
         currentAcceleration = new Label();
         currentFloor = new Label();
@@ -75,7 +75,7 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         currentState = new Label();
         currentDirection = new Label();
         currentPosition = new Label();
-        
+
         changeMode = new Button("Switch Mode");
         submitNextFloor = new Button("Submit");
         nextFloor = new TextField();
@@ -92,35 +92,35 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         this.add(currentState, 1, 1);
         this.add(directionLabel, 3, 1);
         this.add(currentDirection, 4, 1);
-        
+
         this.add(loadLabel, 0, 2);
         this.add(currentLoad, 1, 2);
         this.add(maxLoadLabel, 3, 2);
         this.add(maxLoad, 4, 2);
-        
+
         this.add(doorStateLabel, 0, 3);
         this.add(currentDoorState, 1, 3);
-        
-        this.add(floorLabel, 0, 2);
-        this.add(currentFloor, 1, 2);
-        
-        this.add(speedLabel, 0, 3);
-        this.add(currentSpeed, 1, 3);
-        
-        this.add(accelerationLabel, 0, 4);
-        this.add(currentAcceleration, 1, 4);
-        
-        this.add(positionLabel, 0, 5);
-        this.add(currentPosition, 1, 5);
-        
-        this.add(modeLabel, 0, 6);
-        this.add(currentMode, 1, 6);
-        this.add(changeMode, 2, 6);
-        
-        this.add(nextFloorLabel, 0, 7);
-        this.add(nextFloor, 1, 7);
-        this.add(submitNextFloor, 2, 7);
-        
+
+        this.add(floorLabel, 0, 4);
+        this.add(currentFloor, 1, 4);
+
+        this.add(speedLabel, 0, 5);
+        this.add(currentSpeed, 1, 5);
+
+        this.add(accelerationLabel, 0, 6);
+        this.add(currentAcceleration, 1, 6);
+
+        this.add(positionLabel, 0, 7);
+        this.add(currentPosition, 1, 7);
+
+        this.add(modeLabel, 0, 8);
+        this.add(currentMode, 1, 8);
+        this.add(changeMode, 2, 8);
+
+        this.add(nextFloorLabel, 0, 9);
+        this.add(nextFloor, 1, 9);
+        this.add(submitNextFloor, 2, 9);
+
     }
 
     /**
@@ -130,6 +130,9 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
      * @param e ILocalElevator selected elevator
      */
     public void setSelectedElevator(ILocalElevator e) {
+        if (this.elevator != null) {
+            this.elevator.removeAllListener(this);
+        }
         this.elevator = e;
         this.updateUI();
     }
@@ -156,18 +159,27 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         } else {
             this.header.setText("Elevator E " + this.elevator.getElevatorNumber());
             this.currentLoad.setText(Integer.toString(elevator.getCurrentWeightInLbs()));
+            this.elevator.addCurrentWeightListener(this);
             this.maxLoad.setText(Integer.toString(this.elevator.getLoadCapacityInLbs()));
             this.currentAcceleration.setText(Double.toString(this.elevator.getAccelerationInFtsqr()));
+            this.elevator.addAccelerationListener(this);
             this.currentFloor.setText(Integer.toString(this.elevator.getCurrentFloor()));
+            this.elevator.addFloorListener(this);
             this.currentDoorState.setText(this.elevator.getDoorState().name());
+            this.elevator.addDoorStateListener(this);
             this.currentMode.setText(this.elevator.getCurrentMode().getModeType().name());
+            this.elevator.addModeListener(this);
             this.currentSpeed.setText(Double.toString(this.elevator.getCurrentSpeedInFts()));
+            this.elevator.addCurrentSpeedListener(this);
             this.currentState.setText(this.elevator.getElevatorState().name());
+            this.elevator.addStateListener(this);
             this.currentDirection.setText(this.elevator.getDirection().name());
+            this.elevator.addDirectionListener(this);
             this.currentPosition.setText(Integer.toString(this.elevator.getCurrentPosition()));
+            this.elevator.addPositionListener(this);
         }
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {

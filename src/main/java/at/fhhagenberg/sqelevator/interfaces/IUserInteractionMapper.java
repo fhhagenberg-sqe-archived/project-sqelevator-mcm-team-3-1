@@ -5,12 +5,44 @@
  */
 package at.fhhagenberg.sqelevator.interfaces;
 
+import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
+import java.beans.PropertyChangeListener;
+
 /**
  *
  * @author jmayr
  */
-public interface IUserInteractionMapper {
-    public void elevatorSelected(ILocalElevator e);
-    public void changeModeOnSelected();
-    public void manualFloorEntered(String floor);
+public interface IUserInteractionMapper extends PropertyChangeListener {
+
+    public void toggleMode();
+    
+    public void toggleDorrState();
+
+    public void processInput(String input);
+
+    public void selectElevator(ILocalElevator e);
+
+    public void addSelectedElevatorListener(PropertyChangeListener l);
+
+    public void removeSelectedElevatorListener(PropertyChangeListener l);
+
+    public void addElevatorListener(PropertyChangeListener l);
+
+    public void removeElevatorListener(PropertyChangeListener l);
+
+    public void addEnvironmentListener(PropertyChangeListener l);
+
+    public void removeEnvironmentListener(PropertyChangeListener l);
+
+    public void addSaveFloorEnabledListener(PropertyChangeListener l);
+
+    public void removeSaveFloorEnabledListener(PropertyChangeListener l);
+
+    public void addUpdateErrorMessageListener(PropertyChangeListener l);
+
+    public void removeUpdateErrorMessageListener(PropertyChangeListener l);
+
+    public void storeFloor();
+
+    public boolean isStorable();
 }

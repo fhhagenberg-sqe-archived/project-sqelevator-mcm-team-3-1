@@ -5,14 +5,17 @@
  */
 package at.fhhagenberg.sqelevator.ui.fx;
 
-import at.fhhagenberg.sqelevator.interfaces.IBackendShader;
+import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
+import at.fhhagenberg.sqelevator.controller.dummy.CoreMapper;
 import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
-import at.fhhagenberg.sqelevator.ui.mapper.UIMapper;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -28,26 +31,43 @@ import javafx.stage.Stage;
  * BE CREATED!!!!
  *
  */
-public class ElevatorFxGUI extends Stage implements PropertyChangeListener {
+public class ElevatorFxGUI extends Application implements PropertyChangeListener {
 
     private FXSelectedElevator selectedElevator;
     private LinkedList<FXElevator> evtrs;
     private HBox floorCallArea;
     private HBox elevatorArea;
-    private UIMapper mapper;
+    private IUserInteractionMapper mapper;
     private IEnvironment environment;
+    private CoreMapper core;
 
-    public ElevatorFxGUI(UIMapper mapper) {
-        this.mapper = mapper;
-        Scene scene = new Scene(renderLayout(), 1000, 600);
+    public static void main(String[] args) {
+        launch();
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        core = new CoreMapper();
+        var userInteractionHandler = new UserInteractionMapper(core);
+        this.mapper = userInteractionHandler;
         selectedElevator = new FXSelectedElevator();
         evtrs = new LinkedList<>();
         this.elevatorArea = new HBox();
         this.floorCallArea = new HBox();
+        Scene scene = new Scene(renderLayout(), 1080, 600);
+        primaryStage.setTitle("DataManager FX");
+        primaryStage.setMinWidth(1080);
+        primaryStage.setMinHeight(600);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        primaryStage.setOnCloseRequest(event -> {
+            Platform.exit();
+        });
         mapper.addElevatorListener(this);
         mapper.addEnvironmentListener(this);
         mapper.addSelectedElevatorListener(this.selectedElevator);
         mapper.addSaveFloorEnabledListener(this.selectedElevator);
+        core.dummyCalls();
 
     }
 
@@ -64,6 +84,7 @@ public class ElevatorFxGUI extends Stage implements PropertyChangeListener {
     private void handleElevator(ILocalElevator e) {
         if (e != null) {
             if (this.environment != null && this.evtrs.stream().filter(evtr -> evtr.getElevator().equals(e)).count() == 0) {
+                System.out.println("Elevator added!");
                 var evtr = new FXElevator(e, environment.getNumberOfFloors());
                 this.evtrs.add(evtr);
                 this.elevatorArea.getChildren().add(evtr);
@@ -72,8 +93,10 @@ public class ElevatorFxGUI extends Stage implements PropertyChangeListener {
         }
     }
 
-    private void handleFloorDisplay() {
-        if (environment != null) {
+    private void handleFloorDisplay(IEnvironment e) {
+        if (e != null) {
+            System.out.println("Floor view added!");
+            this.environment = e;
             var v = new FXElevatorCallView(environment);
             this.floorCallArea.getChildren().clear();
             this.floorCallArea.getChildren().add(v);
@@ -84,9 +107,7 @@ public class ElevatorFxGUI extends Stage implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
             case UIEvent.ENVIRONMENT_LOADED:
-                if (evt.getNewValue() != null) {
-                    this.environment = (IEnvironment) evt.getNewValue();
-                }
+                this.handleFloorDisplay((IEnvironment) evt.getNewValue());
                 break;
             case UIEvent.NEW_ELEVATOR_ADDED:
                 this.handleElevator((ILocalElevator) evt.getNewValue());

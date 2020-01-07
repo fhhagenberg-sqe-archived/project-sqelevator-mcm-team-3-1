@@ -33,7 +33,7 @@ import javafx.scene.paint.Color;
  */
 public class FXElevator extends GridPane implements PropertyChangeListener {
 
-    private ILocalElevator e;
+    private ILocalElevator elevator;
     private int numberOfFloors;
     private Pane[] floors;
     private VBox header;
@@ -42,16 +42,26 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     private Label elevatorDirection;
     private Label elevatorMode;
 
-    public FXElevator(ILocalElevator e, int numberOfFloors) {
+    public FXElevator(ILocalElevator elevator, int numberOfFloors) {
         this.numberOfFloors = numberOfFloors;
-        this.e = e;
+        this.elevator = elevator;
         floors = new Pane[numberOfFloors];
         this.populateHeader();
         this.add(header, 0, 0);
         for (int i = 0; i < numberOfFloors; i++) {
             floors[i] = new Pane();
+            floors[i].minWidth(40);
+            floors[i].minHeight(40);
             this.add(floors[i], i + 1, 0);
         }
+        this.setMinWidth(50);
+        this.elevator.addSelectedFloorsListener(this);
+        this.elevator.addTargetListener(this);
+        this.elevator.addFloorListener(this);
+        this.elevator.addDirectionListener(this);
+        this.elevator.addDoorStateListener(this);
+        this.elevator.addModeListener(this);
+        this.elevator.addStateListener(this);
     }
 
     /**
@@ -60,10 +70,10 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
      */
     private void populateHeader() {
         this.header = new VBox();
-        this.elevatorName = new Label("E " + e.getElevatorNumber());
-        this.elevatorDoorState = new Label(e.getDoorState().name());
-        this.elevatorDirection = new Label(e.getDirection().name());
-        this.elevatorMode = new Label(e.getCurrentMode().getModeType().name());
+        this.elevatorName = new Label("E " + elevator.getElevatorNumber());
+        this.elevatorDoorState = new Label(elevator.getDoorState().name());
+        this.elevatorDirection = new Label(elevator.getDirection().name());
+        this.elevatorMode = new Label(elevator.getCurrentMode().getModeType().name());
         header.getChildren().add(elevatorName);
         header.getChildren().add(elevatorDoorState);
         header.getChildren().add(elevatorDirection);
@@ -77,11 +87,11 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
      */
     public void updateView() {
         clearAll();
-        for (int floor : this.e.getSelectedFloors()) {
+        for (int floor : this.elevator.getSelectedFloors()) {
             this.setSelection(floor);
         }
-        this.setPosition(this.e.getCurrentFloor());
-        this.setTarget(this.e.getTargetFloor());
+        this.setPosition(this.elevator.getCurrentFloor());
+        this.setTarget(this.elevator.getTargetFloor());
     }
 
     /**
@@ -156,7 +166,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     }
 
     public void setSelected(ILocalElevator e) {
-        if (this.e.equals(e)) {
+        if (this.elevator.equals(e)) {
             setBorder(new Border(new BorderStroke(Color.BLACK,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         } else {
@@ -166,7 +176,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     }
 
     public ILocalElevator getElevator() {
-        return this.e;
+        return this.elevator;
     }
 
     @Override

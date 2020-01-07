@@ -123,20 +123,162 @@ public interface ILocalElevator {
      *
      * @param l ElevatorChangedListener listener that should be added
      */
-    public void addListener(PropertyChangeListener l);
+    public void addSelectedFloorsListener(PropertyChangeListener l);
 
     /**
      * Function removes a listener, that is notified on changes
      *
      * @param l ElevatorChangedListener listener that should be removed
      */
-    public void removeListener(PropertyChangeListener l);
+    public void removeSelectedFloorsListener(PropertyChangeListener l);
 
     /**
-     * function returns the current mode of the elevator
+     * Function takes a listener, that is notified on changes
      *
-     * @return IElevatorMode current mode of the elevator
+     * @param l ElevatorChangedListener listener that should be added
      */
+    public void addDoorStateListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeDoorStateListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addDirectionListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeDirectionListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addStateListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeStateListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addFloorListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeFloorListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addTargetListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeTargetListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addCurrentWeightListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeCurrentWeightListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addCurrentSpeedListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeCurrentSpeedListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addAccelerationListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeAccelerationListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addPositionListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removePositionListener(PropertyChangeListener l);
+
+    /**
+     * Function takes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be added
+     */
+    public void addModeListener(PropertyChangeListener l);
+
+    /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeModeListener(PropertyChangeListener l);
+    
+        /**
+     * Function removes a listener, that is notified on changes
+     *
+     * @param l ElevatorChangedListener listener that should be removed
+     */
+    public void removeAllListener(PropertyChangeListener l);
+
     public IElevatorMode getCurrentMode();
 
     /**
@@ -146,4 +288,10 @@ public interface ILocalElevator {
      */
     public ElevatorState getCurrentState();
 
+    /**
+     * function sets the state of the elevator
+     *
+     * @param state ElevatorState current state of the elevator
+     */
+    public void setElevatorState(ElevatorState state);
 }

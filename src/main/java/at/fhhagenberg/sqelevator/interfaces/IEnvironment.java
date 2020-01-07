@@ -14,7 +14,7 @@ import java.util.LinkedList;
  *
  * @author jmayr
  */
-public interface IEnvironment {
+public interface IEnvironment extends PropertyChangeListener{
 
     /**
      * Gets the number of floors, the elevator goes to.
@@ -87,12 +87,14 @@ public interface IEnvironment {
      */
     public void confirmHandle(IElevatorCall c);
 
-
     /**
-     * Function is used to check if a certain elevator can service a certain floor.
+     * Function is used to check if a certain elevator can service a certain
+     * floor.
+     *
      * @param e Elevator that the might go to a certain floor
      * @param floorNumber Floor number the elevator wants to service
-     *  @return boolean true when the elevator can service the given floor, false otherwhise
+     * @return boolean true when the elevator can service the given floor, false
+     * otherwhise
      */
     public boolean isServicedBy(ILocalElevator e, int floorNumber);
 
@@ -153,4 +155,12 @@ public interface IEnvironment {
      * @param l ElevatorChangedListener listener that should be removed
      */
     public void removeCallAddedListener(PropertyChangeListener l);
+
+    /**
+     * Function returns the number of elevators in the envrionment
+     *
+     * @return int number of elevators
+     */
+    public int getNumberOfElevators();
+    
 }
