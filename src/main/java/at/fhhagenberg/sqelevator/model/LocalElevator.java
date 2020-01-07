@@ -241,7 +241,7 @@ public class LocalElevator implements ILocalElevator {
      */
     @Override
     public IElevatorMode getCurrentMode() {
-        return this.getCurrentMode();
+        return this.mode;
     }
 
     /**

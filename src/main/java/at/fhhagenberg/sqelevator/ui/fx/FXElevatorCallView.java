@@ -40,20 +40,22 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
     private int numberOfFloors;
     private Pane[] upFloors;
     private Pane[] downFloors;
-    private HBox header;
 
     public FXElevatorCallView(IEnvironment e) {
         this.e = e;
-        this.minWidth(100);
+        this.minWidth(160);
+        this.populateHeader();
+        this.upFloors = new Pane[e.getNumberOfFloors()];
+        this.downFloors = new Pane[e.getNumberOfFloors()];
         this.numberOfFloors = e.getNumberOfFloors();
         for (int i = 0; i < numberOfFloors; i++) {
-            upFloors[i] = new Pane();
-            downFloors[i] = new Pane();
-            upFloors[i].minWidth(40);
-            upFloors[i].minHeight(40);
-            downFloors[i].minWidth(40);
-            downFloors[i].minHeight(40);
+            upFloors[i] = generatePane();
+            downFloors[i] = generatePane();
+            this.add(upFloors[i], 0, i + 1);
+            this.add(downFloors[i], 1, i + 1);
+
         }
+
         e.addCallRemovedListener(this);
         e.addCallAddedListener(this);
     }
@@ -63,9 +65,16 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
      * state and direction
      */
     private void populateHeader() {
-        this.header = new HBox();
-        this.header.getChildren().add(new Label("DOWN"));
-        this.header.getChildren().add(new Label("UP"));
+        this.add(new Label("DOWN"), 0, 0);
+        this.add(new Label("UP"), 1, 0);
+    }
+
+    private Pane generatePane() {
+        var p = new Pane();
+        p.setMinSize(80, 80);
+        p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        return p;
     }
 
     /**

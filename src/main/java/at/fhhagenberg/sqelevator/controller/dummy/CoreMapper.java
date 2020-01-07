@@ -131,8 +131,8 @@ public class CoreMapper implements ICoreMapper {
     }
 
     public void dummyFakeLoad() {
-        Thread t = new Thread() {
-            public void run() {
+        //Thread t = new Thread() {
+          //  public void run() {
                 System.out.println("Generating environment");
                 dummyGenerateEnvironment();
                 System.out.println("Generating Floors");
@@ -140,11 +140,12 @@ public class CoreMapper implements ICoreMapper {
                 System.out.println("Generating elevators");
                 dummyElevators();
                 System.out.println("Generating calls");
+                
                 dummyCalls();
-            }
-        };
+            //}
+       // };
 
-        t.start();
+       // t.start();
     }
 
     @Override

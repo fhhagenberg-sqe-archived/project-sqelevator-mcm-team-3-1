@@ -49,12 +49,12 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         this.populateHeader();
         this.add(header, 0, 0);
         for (int i = 0; i < numberOfFloors; i++) {
-            floors[i] = new Pane();
-            floors[i].minWidth(40);
-            floors[i].minHeight(40);
-            this.add(floors[i], i + 1, 0);
+            floors[i] = generatePane();
+            floors[i].minWidth(80);
+            floors[i].minHeight(80);
+            this.add(floors[i], 0, i + 1);
         }
-        this.setMinWidth(50);
+        this.setMinWidth(100);
         this.elevator.addSelectedFloorsListener(this);
         this.elevator.addTargetListener(this);
         this.elevator.addFloorListener(this);
@@ -62,6 +62,15 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         this.elevator.addDoorStateListener(this);
         this.elevator.addModeListener(this);
         this.elevator.addStateListener(this);
+        this.updateView();
+    }
+
+    private Pane generatePane() {
+        var p = new Pane();
+        p.setMinSize(80, 80);
+        p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        return p;
     }
 
     /**
@@ -100,7 +109,8 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     private void clearAll() {
         for (Pane p : floors) {
             p.setBackground(Background.EMPTY);
-            p.setBorder(Border.EMPTY);
+            p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         }
     }
 
@@ -110,8 +120,10 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
      * @param floor int number of the floor that is the target ID
      */
     private void setTarget(int floor) {
-        floors[floor].setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
-                CornerRadii.EMPTY, Insets.EMPTY)));
+        floors[floor].setBorder(new Border(new BorderStroke(Color.DARKGREEN,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
+                /*setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
+                CornerRadii.EMPTY, Insets.EMPTY)));*/
     }
 
     /**
@@ -132,7 +144,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
      */
     private void setSelection(int floor) {
         floors[floor].setBorder(new Border(new BorderStroke(Color.LIGHTBLUE,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
     }
 
     /**
@@ -168,9 +180,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     public void setSelected(ILocalElevator e) {
         if (this.elevator.equals(e)) {
             setBorder(new Border(new BorderStroke(Color.BLACK,
-                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        } else {
-            setBorder(Border.EMPTY);
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
         }
 
     }
