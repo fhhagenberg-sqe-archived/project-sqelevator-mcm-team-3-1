@@ -23,8 +23,8 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
@@ -36,7 +36,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     private ILocalElevator e;
     private int numberOfFloors;
     private Pane[] floors;
-    private HBox header;
+    private VBox header;
     private Label elevatorName;
     private Label elevatorDoorState;
     private Label elevatorDirection;
@@ -59,7 +59,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
      * state and direction
      */
     private void populateHeader() {
-        this.header = new HBox();
+        this.header = new VBox();
         this.elevatorName = new Label("E " + e.getElevatorNumber());
         this.elevatorDoorState = new Label(e.getDoorState().name());
         this.elevatorDirection = new Label(e.getDirection().name());
@@ -163,6 +163,10 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
             setBorder(Border.EMPTY);
         }
 
+    }
+
+    public ILocalElevator getElevator() {
+        return this.e;
     }
 
     @Override
