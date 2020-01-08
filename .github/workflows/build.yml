@@ -16,3 +16,5 @@ jobs:
         java-version: 13
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Static analysis via SonarCloud
+      run: mvn sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}
