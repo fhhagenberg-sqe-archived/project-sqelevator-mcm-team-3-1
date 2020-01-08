@@ -11,6 +11,11 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <javafx.version>13</javafx.version>
+
+        <sonar.organization>fhhagenberg-sqe</sonar.organization>
+        <sonar.projectKey>project-sqelevator-mcm-team-3-1</sonar.projectKey>
+        <sonar.projectName>SQElevator Team 3</sonar.projectName>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>  
