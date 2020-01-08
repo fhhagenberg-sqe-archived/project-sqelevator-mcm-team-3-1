@@ -3,10 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.fhhagenberg.sqelevator.ui;
+package at.fhhagenberg.sqelevator.ui.fx;
 
+import at.fhhagenberg.sqelevator.enums.DoorState;
+import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
+import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -17,34 +23,54 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
  *
  * @author jmayr
  */
-public class FXElevator extends GridPane {
+public class FXElevator extends GridPane implements PropertyChangeListener {
 
-    private ILocalElevator e;
+    private ILocalElevator elevator;
     private int numberOfFloors;
     private Pane[] floors;
-    private HBox header;
+    private VBox header;
     private Label elevatorName;
     private Label elevatorDoorState;
     private Label elevatorDirection;
+    private Label elevatorMode;
 
-    public FXElevator(ILocalElevator e, int numberOfFloors) {
+    public FXElevator(ILocalElevator elevator, int numberOfFloors) {
         this.numberOfFloors = numberOfFloors;
-        this.e = e;
+        this.elevator = elevator;
         floors = new Pane[numberOfFloors];
         this.populateHeader();
         this.add(header, 0, 0);
         for (int i = 0; i < numberOfFloors; i++) {
-            floors[i] = new Pane();
-            this.add(floors[i], i + 1, 0);
+            floors[i] = generatePane();
+            floors[i].minWidth(80);
+            floors[i].minHeight(80);
+            this.add(floors[i], 0, i + 1);
         }
+        this.setMinWidth(100);
+        this.elevator.addSelectedFloorsListener(this);
+        this.elevator.addTargetListener(this);
+        this.elevator.addFloorListener(this);
+        this.elevator.addDirectionListener(this);
+        this.elevator.addDoorStateListener(this);
+        this.elevator.addModeListener(this);
+        this.elevator.addStateListener(this);
+        this.updateView();
+    }
+
+    private Pane generatePane() {
+        var p = new Pane();
+        p.setMinSize(80, 80);
+        p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        return p;
     }
 
     /**
@@ -52,13 +78,15 @@ public class FXElevator extends GridPane {
      * state and direction
      */
     private void populateHeader() {
-        this.header = new HBox();
-        this.elevatorName = new Label("E " + e.getElevatorNumber());
-        this.elevatorDoorState = new Label(e.getDoorState().name());
-        this.elevatorDirection = new Label(e.getDirection().name());
+        this.header = new VBox();
+        this.elevatorName = new Label("E " + elevator.getElevatorNumber());
+        this.elevatorDoorState = new Label(elevator.getDoorState().name());
+        this.elevatorDirection = new Label(elevator.getDirection().name());
+        this.elevatorMode = new Label(elevator.getCurrentMode().getModeType().name());
         header.getChildren().add(elevatorName);
         header.getChildren().add(elevatorDoorState);
         header.getChildren().add(elevatorDirection);
+        header.getChildren().add(elevatorMode);
     }
 
     /**
@@ -68,13 +96,11 @@ public class FXElevator extends GridPane {
      */
     public void updateView() {
         clearAll();
-        for (int floor : this.e.getSelectedFloors()) {
+        for (int floor : this.elevator.getSelectedFloors()) {
             this.setSelection(floor);
         }
-        this.setPosition(this.e.getCurrentFloor());
-        this.setTarget(this.e.getTargetFloor());
-        this.elevatorDirection.setText(this.e.getDirection().name());
-        this.elevatorDoorState.setText(this.e.getDoorState().name());
+        this.setPosition(this.elevator.getCurrentFloor());
+        this.setTarget(this.elevator.getTargetFloor());
     }
 
     /**
@@ -83,7 +109,8 @@ public class FXElevator extends GridPane {
     private void clearAll() {
         for (Pane p : floors) {
             p.setBackground(Background.EMPTY);
-            p.setBorder(Border.EMPTY);
+            p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         }
     }
 
@@ -93,8 +120,10 @@ public class FXElevator extends GridPane {
      * @param floor int number of the floor that is the target ID
      */
     private void setTarget(int floor) {
-        floors[floor].setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
-                CornerRadii.EMPTY, Insets.EMPTY)));
+        floors[floor].setBorder(new Border(new BorderStroke(Color.DARKGREEN,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
+                /*setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
+                CornerRadii.EMPTY, Insets.EMPTY)));*/
     }
 
     /**
@@ -115,7 +144,7 @@ public class FXElevator extends GridPane {
      */
     private void setSelection(int floor) {
         floors[floor].setBorder(new Border(new BorderStroke(Color.LIGHTBLUE,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
     }
 
     /**
@@ -148,4 +177,38 @@ public class FXElevator extends GridPane {
         }
     }
 
+    public void setSelected(ILocalElevator e) {
+        if (this.elevator.equals(e)) {
+            setBorder(new Border(new BorderStroke(Color.BLACK,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
+        }
+
+    }
+
+    public ILocalElevator getElevator() {
+        return this.elevator;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        switch (evt.getPropertyName()) {
+            case ElevatorEvent.SELECTED_FLOORS:
+            case ElevatorEvent.TARGET_FLOOR:
+            case ElevatorEvent.CURRENT_FLOOR:
+                updateView();
+                break;
+            case ElevatorEvent.DIRECTION:
+                this.elevatorDirection.setText(((ElevatorDirection) evt.getNewValue()).name());
+                break;
+            case ElevatorEvent.DOOR_STATE:
+                this.elevatorDoorState.setText(((DoorState) evt.getNewValue()).name());
+                break;
+            case ElevatorEvent.MODE:
+                this.elevatorMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
+                break;
+            case ElevatorEvent.CURRENT_STATE:
+                this.setElevatorState((ElevatorState) evt.getNewValue());
+                break;
+        }
+    }
 }

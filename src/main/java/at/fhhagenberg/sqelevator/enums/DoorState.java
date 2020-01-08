@@ -11,5 +11,5 @@ package at.fhhagenberg.sqelevator.enums;
  * State of the elevator doors
  */
 public enum DoorState {
-    OPEN,CLOSED
+    OPEN,CLOSED,UNKNOWN
 }

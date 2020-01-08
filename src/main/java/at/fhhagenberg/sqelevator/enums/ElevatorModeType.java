@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.fhhagenberg.sqelevator.controller;
-
-import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
+package at.fhhagenberg.sqelevator.enums;
 
 /**
  *
  * @author jmayr
  */
-public class CoreMapper implements ICoreMapper{
-    
+public enum ElevatorModeType {
+    AUTOMATIC, MANUAL
 }
