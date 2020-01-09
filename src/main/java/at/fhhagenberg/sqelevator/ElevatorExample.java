@@ -1,15 +1,8 @@
 package at.fhhagenberg.sqelevator;
 
-import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
-import at.fhhagenberg.sqelevator.enums.DoorState;
-import at.fhhagenberg.sqelevator.controller.dummy.CoreMapper;
-import at.fhhagenberg.sqelevator.model.Environment;
-import at.fhhagenberg.sqelevator.model.Floor;
-import at.fhhagenberg.sqelevator.model.LocalElevator;
-import at.fhhagenberg.sqelevator.ui.fx.ElevatorFxGUI;
-import java.net.MalformedURLException;
+import sqelevator.IElevator;
+
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class ElevatorExample {
@@ -22,7 +15,7 @@ public class ElevatorExample {
 
     public static void main(String[] args) {
 
-        /*try {
+        try {
 			IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
 			ElevatorExample client = new ElevatorExample(controller);
 
@@ -31,7 +24,7 @@ public class ElevatorExample {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 
     }
 
