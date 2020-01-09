@@ -124,7 +124,7 @@ public class ElevatorExample {
 
         // Set the committed direction to uncommitted when back at the ground floor
         controller.setCommittedDirection(elevator, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
-
+        // test
     }
 
 }
