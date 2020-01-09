@@ -140,21 +140,17 @@ public class CoreMapper implements ICoreMapper {
         Thread t = new Thread() {
             public void run() {
                 System.out.println("Generating environment");
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        dummyGenerateEnvironment();
-                        System.out.println("Generating Floors");
-                        dummyGenerateFloors();
-                        System.out.println("Generating elevators");
-                        dummyElevators();
-                        System.out.println("Generating calls");
 
-                        dummyCalls();
-                    }
-                });
+                dummyGenerateEnvironment();
+                System.out.println("Generating Floors");
+                dummyGenerateFloors();
+                System.out.println("Generating elevators");
+                dummyElevators();
+                System.out.println("Generating calls");
+
+                dummyCalls();
+
             }
-        ;
         };
 
         t.start();

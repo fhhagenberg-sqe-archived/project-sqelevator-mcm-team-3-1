@@ -16,6 +16,7 @@ import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import at.fhhagenberg.sqelevator.propertychanged.event.EnvironmentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -107,13 +108,18 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
-            case EnvironmentEvent.ELEVATOR_CALL_ADDED:
-                this.setSelection((IElevatorCall) evt.getNewValue());
-                break;
-            case EnvironmentEvent.ELEVATOR_CALL_REMOVED:
-                this.clearCall((IElevatorCall) evt.getOldValue());
-                break;
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                switch (evt.getPropertyName()) {
+                    case EnvironmentEvent.ELEVATOR_CALL_ADDED:
+                        setSelection((IElevatorCall) evt.getNewValue());
+                        break;
+                    case EnvironmentEvent.ELEVATOR_CALL_REMOVED:
+                        clearCall((IElevatorCall) evt.getOldValue());
+                        break;
+                }
+            }
+        });
     }
 }

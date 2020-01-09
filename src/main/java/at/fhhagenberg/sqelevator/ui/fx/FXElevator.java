@@ -13,6 +13,7 @@ import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -122,7 +123,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     private void setTarget(int floor) {
         floors[floor].setBorder(new Border(new BorderStroke(Color.DARKGREEN,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
-                /*setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
+        /*setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
                 CornerRadii.EMPTY, Insets.EMPTY)));*/
     }
 
@@ -191,24 +192,29 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
-            case ElevatorEvent.SELECTED_FLOORS:
-            case ElevatorEvent.TARGET_FLOOR:
-            case ElevatorEvent.CURRENT_FLOOR:
-                updateView();
-                break;
-            case ElevatorEvent.DIRECTION:
-                this.elevatorDirection.setText(((ElevatorDirection) evt.getNewValue()).name());
-                break;
-            case ElevatorEvent.DOOR_STATE:
-                this.elevatorDoorState.setText(((DoorState) evt.getNewValue()).name());
-                break;
-            case ElevatorEvent.MODE:
-                this.elevatorMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
-                break;
-            case ElevatorEvent.CURRENT_STATE:
-                this.setElevatorState((ElevatorState) evt.getNewValue());
-                break;
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                switch (evt.getPropertyName()) {
+                    case ElevatorEvent.SELECTED_FLOORS:
+                    case ElevatorEvent.TARGET_FLOOR:
+                    case ElevatorEvent.CURRENT_FLOOR:
+                        updateView();
+                        break;
+                    case ElevatorEvent.DIRECTION:
+                        elevatorDirection.setText(((ElevatorDirection) evt.getNewValue()).name());
+                        break;
+                    case ElevatorEvent.DOOR_STATE:
+                        elevatorDoorState.setText(((DoorState) evt.getNewValue()).name());
+                        break;
+                    case ElevatorEvent.MODE:
+                        elevatorMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
+                        break;
+                    case ElevatorEvent.CURRENT_STATE:
+                        setElevatorState((ElevatorState) evt.getNewValue());
+                        break;
+                }
+            }
+        });
     }
 }

@@ -113,16 +113,21 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
-            case UIEvent.ENVIRONMENT_LOADED:
-                this.handleFloorDisplay((IEnvironment) evt.getNewValue());
-                break;
-            case UIEvent.NEW_ELEVATOR_ADDED:
-                this.handleElevator((ILocalElevator) evt.getNewValue());
-                break;
-            case UIEvent.UPDATE_ERROR_MESSAGE:
-                System.out.println("TODO: Add proper error output " + evt.getNewValue());
-                break;
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                switch (evt.getPropertyName()) {
+                    case UIEvent.ENVIRONMENT_LOADED:
+                        handleFloorDisplay((IEnvironment) evt.getNewValue());
+                        break;
+                    case UIEvent.NEW_ELEVATOR_ADDED:
+                        handleElevator((ILocalElevator) evt.getNewValue());
+                        break;
+                    case UIEvent.UPDATE_ERROR_MESSAGE:
+                        System.out.println("TODO: Add proper error output " + evt.getNewValue());
+                        break;
+                }
+            }
+        });
     }
 }
