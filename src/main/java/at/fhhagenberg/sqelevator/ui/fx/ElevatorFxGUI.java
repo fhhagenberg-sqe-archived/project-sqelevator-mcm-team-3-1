@@ -73,61 +73,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         mapper.addEnvironmentListener(this);
         mapper.addSelectedElevatorListener(this.selectedElevator);
         mapper.addSaveFloorEnabledListener(this.selectedElevator);
-        //core.dummyCalls();
-        this.localCalls();
-
-    }
-
-    private void localCalls() {
-
-        var environment = new Environment();
-        environment.setNumberOfFloors(4);
-        environment.setFloorHeight(8);
-        environment.setNumberOfElevators(3);
-        this.handleFloorDisplay(environment);
-        LocalElevator e1 = new LocalElevator(0);
-        LocalElevator e2 = new LocalElevator(1);
-        LocalElevator e3 = new LocalElevator(2);
-        int[] selectedFloors1 = {1, 3};
-        //
-        e1.setCurrentAcceleration(0);
-        e1.setCurrentFloor(0);
-        e1.setCurrentPosition(0);
-        e1.setTargetFloor(1);
-        e1.setDoorState(DoorState.OPEN);
-        e1.setSelectedFloors(selectedFloors1);
-        e1.setMaxLoad(670);
-        e1.setLbsWeight(300);
-        e1.setCurrentSpeed(0);
-        e1.setMode(new ElevatorModeAuto());
-
-        int[] selectedFloors2 = {1};
-        e2.setSelectedFloors(selectedFloors2);
-        e2.setCurrentAcceleration(0);
-        e2.setCurrentFloor(3);
-        e2.setCurrentPosition(0);
-        e2.setTargetFloor(2);
-        e2.setDoorState(DoorState.CLOSED);
-        e2.setMaxLoad(670);
-        e2.setLbsWeight(300);
-        e2.setCurrentSpeed(0);
-        e2.setMode(new ElevatorModeAuto());
-
-        int[] selectedFloors3 = {0, 1, 3};
-        e3.setSelectedFloors(selectedFloors3);
-        e3.setCurrentAcceleration(0);
-        e3.setCurrentFloor(2);
-        e3.setCurrentPosition(0);
-        e3.setTargetFloor(1);
-        e3.setDoorState(DoorState.OPEN);
-        e3.setMaxLoad(670);
-        e3.setLbsWeight(300);
-        e3.setCurrentSpeed(0);
-        e3.setMode(new ElevatorModeManual());
-
-        this.handleElevator(e1);
-        this.handleElevator(e2);
-        this.handleElevator(e3);
+        core.dummyFakeLoad();
     }
 
     private HBox renderLayout() {
@@ -145,7 +91,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
             if (this.environment != null && this.evtrs.stream().filter(evtr -> evtr.getElevator().equals(e)).count() == 0) {
                 System.out.println("Elevator added!");
                 var evtr = new FXElevator(e, environment.getNumberOfFloors());
-                evtr.setOnMouseClicked((MouseEvent t)->{
+                evtr.setOnMouseClicked((MouseEvent t) -> {
                     this.mapper.selectElevator(e);
                 });
                 this.evtrs.add(evtr);

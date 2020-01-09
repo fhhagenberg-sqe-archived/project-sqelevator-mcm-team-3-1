@@ -16,7 +16,10 @@ import java.beans.PropertyChangeSupport;
 import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.model.ElevatorCall;
+import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
+import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeManual;
 import at.fhhagenberg.sqelevator.propertychanged.event.CoreMapperEvent;
+import javafx.application.Platform;
 
 /**
  *
@@ -78,17 +81,19 @@ public class CoreMapper implements ICoreMapper {
         e1.setMaxLoad(670);
         e1.setLbsWeight(300);
         e1.setCurrentSpeed(0);
+        e1.setMode(new ElevatorModeAuto());
 
         int[] selectedFloors2 = {1};
         e2.setSelectedFloors(selectedFloors2);
         e2.setCurrentAcceleration(0);
-        e2.setCurrentFloor(4);
+        e2.setCurrentFloor(3);
         e2.setCurrentPosition(0);
         e2.setTargetFloor(2);
         e2.setDoorState(DoorState.CLOSED);
         e2.setMaxLoad(670);
         e2.setLbsWeight(300);
         e2.setCurrentSpeed(0);
+        e2.setMode(new ElevatorModeAuto());
 
         int[] selectedFloors3 = {0, 1, 3};
         e3.setSelectedFloors(selectedFloors3);
@@ -100,6 +105,7 @@ public class CoreMapper implements ICoreMapper {
         e3.setMaxLoad(670);
         e3.setLbsWeight(300);
         e3.setCurrentSpeed(0);
+        e3.setMode(new ElevatorModeManual());
         pause();
         this.elevatorLoadedListener.firePropertyChange(CoreMapperEvent.ELEVATOR_LOADED, null, e1);
         this.elevatorLoadedListener.firePropertyChange(CoreMapperEvent.ELEVATOR_LOADED, null, e2);
@@ -131,24 +137,31 @@ public class CoreMapper implements ICoreMapper {
     }
 
     public void dummyFakeLoad() {
-        //Thread t = new Thread() {
-          //  public void run() {
+        Thread t = new Thread() {
+            public void run() {
                 System.out.println("Generating environment");
-                dummyGenerateEnvironment();
-                System.out.println("Generating Floors");
-                dummyGenerateFloors();
-                System.out.println("Generating elevators");
-                dummyElevators();
-                System.out.println("Generating calls");
-                
-                dummyCalls();
-            //}
-       // };
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        dummyGenerateEnvironment();
+                        System.out.println("Generating Floors");
+                        dummyGenerateFloors();
+                        System.out.println("Generating elevators");
+                        dummyElevators();
+                        System.out.println("Generating calls");
 
-       // t.start();
+                        dummyCalls();
+                    }
+                });
+            }
+        ;
+        };
+
+        t.start();
     }
 
     @Override
+
     public void setBackendMapper(IBackendInteractionMapper mapper) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

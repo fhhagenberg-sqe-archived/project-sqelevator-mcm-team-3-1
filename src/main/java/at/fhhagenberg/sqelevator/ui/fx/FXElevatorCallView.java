@@ -110,8 +110,10 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
         switch (evt.getPropertyName()) {
             case EnvironmentEvent.ELEVATOR_CALL_ADDED:
                 this.setSelection((IElevatorCall) evt.getNewValue());
+                break;
             case EnvironmentEvent.ELEVATOR_CALL_REMOVED:
                 this.clearCall((IElevatorCall) evt.getOldValue());
+                break;
         }
     }
 }
