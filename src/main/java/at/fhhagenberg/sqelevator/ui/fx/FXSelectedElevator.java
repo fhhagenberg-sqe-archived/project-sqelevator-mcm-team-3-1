@@ -12,6 +12,7 @@ import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -182,40 +183,45 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
-            case ElevatorEvent.CURRENT_ACCELERATION_FTSQR:
-                this.currentAcceleration.setText(evt.getNewValue().toString());
-                break;
-            case ElevatorEvent.CURRENT_FLOOR:
-                this.currentFloor.setText(evt.getNewValue().toString());
-                break;
-            case ElevatorEvent.CURRENT_POSITION:
-                this.currentPosition.setText(evt.getNewValue().toString());
-                break;
-            case ElevatorEvent.CURRENT_SPEED_FTS:
-                this.currentSpeed.setText(evt.getNewValue().toString());
-                break;
-            case ElevatorEvent.DIRECTION:
-                this.currentDirection.setText(evt.getNewValue().toString());
-                break;
-            case ElevatorEvent.DOOR_STATE:
-                this.currentDoorState.setText(((DoorState) evt.getNewValue()).name());
-                break;
-            case ElevatorEvent.LBS_MAX_LOAD:
-                this.maxLoad.setText(evt.getNewValue().toString());
-                break;
-            case ElevatorEvent.LBS_WEIGHT:
-                this.currentLoad.setText(evt.getNewValue().toString());
-                break;
-            case ElevatorEvent.MODE:
-                this.currentMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
-                break;
-            case ElevatorEvent.TARGET_FLOOR:
-                this.nextFloor.setText(evt.getNewValue().toString());
-                break;
-            case ElevatorEvent.CURRENT_STATE:
-                this.currentState.setText(((ElevatorState) evt.getNewValue()).name());
-                break;
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                switch (evt.getPropertyName()) {
+                    case ElevatorEvent.CURRENT_ACCELERATION_FTSQR:
+                        currentAcceleration.setText(evt.getNewValue().toString());
+                        break;
+                    case ElevatorEvent.CURRENT_FLOOR:
+                        currentFloor.setText(evt.getNewValue().toString());
+                        break;
+                    case ElevatorEvent.CURRENT_POSITION:
+                        currentPosition.setText(evt.getNewValue().toString());
+                        break;
+                    case ElevatorEvent.CURRENT_SPEED_FTS:
+                        currentSpeed.setText(evt.getNewValue().toString());
+                        break;
+                    case ElevatorEvent.DIRECTION:
+                        currentDirection.setText(evt.getNewValue().toString());
+                        break;
+                    case ElevatorEvent.DOOR_STATE:
+                        currentDoorState.setText(((DoorState) evt.getNewValue()).name());
+                        break;
+                    case ElevatorEvent.LBS_MAX_LOAD:
+                        maxLoad.setText(evt.getNewValue().toString());
+                        break;
+                    case ElevatorEvent.LBS_WEIGHT:
+                        currentLoad.setText(evt.getNewValue().toString());
+                        break;
+                    case ElevatorEvent.MODE:
+                        currentMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
+                        break;
+                    case ElevatorEvent.TARGET_FLOOR:
+                        nextFloor.setText(evt.getNewValue().toString());
+                        break;
+                    case ElevatorEvent.CURRENT_STATE:
+                        currentState.setText(((ElevatorState) evt.getNewValue()).name());
+                        break;
+                }
+            }
+        });
     }
 }

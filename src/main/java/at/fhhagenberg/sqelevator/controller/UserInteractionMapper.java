@@ -24,7 +24,7 @@ import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 public class UserInteractionMapper implements IUserInteractionMapper {
 
     private ILocalElevator selectedElevator;
-    private LinkedList<ILocalElevator> elevators;
+    private LinkedList<ILocalElevator> elevators= new LinkedList<>();
     private IEnvironment environment;
     private int enteredFloor;
     private final PropertyChangeSupport selectedElevatorListener

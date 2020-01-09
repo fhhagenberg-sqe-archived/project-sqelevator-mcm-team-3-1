@@ -26,11 +26,11 @@ public class Environment implements IEnvironment {
 
     private LinkedList<IElevatorCall> unhandledCalls = new LinkedList<>();
     private LinkedList<IElevatorCall> handledCalls = new LinkedList<>();
+    private LinkedList<IFloor> floors = new LinkedList<>();
     private PropertyChangeSupport callRemovedHandler
             = new PropertyChangeSupport(this);
     private PropertyChangeSupport newCallHandler
             = new PropertyChangeSupport(this);
-    private LinkedList<IFloor> floors;
     private int floorHeight = 0;
     private int numberOfFloors;
     private int numberOfElevators;
