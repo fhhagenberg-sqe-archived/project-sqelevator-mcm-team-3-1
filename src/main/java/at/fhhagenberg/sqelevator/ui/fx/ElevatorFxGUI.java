@@ -56,7 +56,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         core = new CoreMapper();
         var userInteractionHandler = new UserInteractionMapper(core);
         this.mapper = userInteractionHandler;
-        selectedElevator = new FXSelectedElevator();
+        selectedElevator = new FXSelectedElevator(mapper);
         evtrs = new LinkedList<>();
         this.elevatorArea = new HBox();
         this.floorCallArea = new HBox();
@@ -82,7 +82,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         layout.getChildren().add(floorCallArea);
         layout.getChildren().add(selectedElevator);
         layout.setPadding(new Insets(10, 20, 50, 10));
-        layout.setSpacing(10);
+        layout.setSpacing(5);
         return layout;
     }
 

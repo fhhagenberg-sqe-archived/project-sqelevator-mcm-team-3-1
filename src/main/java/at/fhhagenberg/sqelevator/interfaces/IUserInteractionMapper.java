@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
 public interface IUserInteractionMapper extends PropertyChangeListener {
 
     public void toggleMode();
-    
+
     public void toggleDorrState();
 
     public void processInput(String input);
@@ -43,6 +43,4 @@ public interface IUserInteractionMapper extends PropertyChangeListener {
     public void removeUpdateErrorMessageListener(PropertyChangeListener l);
 
     public void storeFloor();
-
-    public boolean isStorable();
 }

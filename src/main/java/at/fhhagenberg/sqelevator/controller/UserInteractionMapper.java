@@ -24,7 +24,7 @@ import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 public class UserInteractionMapper implements IUserInteractionMapper {
 
     private ILocalElevator selectedElevator;
-    private LinkedList<ILocalElevator> elevators= new LinkedList<>();
+    private LinkedList<ILocalElevator> elevators = new LinkedList<>();
     private IEnvironment environment;
     private int enteredFloor;
     private final PropertyChangeSupport selectedElevatorListener
@@ -49,10 +49,15 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     }
 
     public void processInput(String input) {
-        try {
-            this.enteredFloor = Integer.parseInt(input);
-
-        } catch (NumberFormatException ex) {
+        if (this.selectedElevator != null) {
+            try {
+                this.enteredFloor = Integer.parseInt(input);
+                System.out.println("Input passed processing " + input);
+                System.out.println("Input is " + (this.isStorable() ? "Storable" : "not storable"));
+                this.saveFloorEnabledListener.firePropertyChange(UIEvent.SAVE_FLOOR_ENABLED, null, this.isStorable());
+            } catch (NumberFormatException ex) {
+                this.enteredFloor = - 1;
+            }
         }
     }
 
@@ -64,7 +69,6 @@ public class UserInteractionMapper implements IUserInteractionMapper {
             this.selectedElevator = null;
         }
         this.selectedElevatorListener.firePropertyChange(UIEvent.SELECTED_ELEVATOR_CHANGED, prev, this.selectedElevator);
-
     }
 
     public void addSelectedElevatorListener(PropertyChangeListener l) {
@@ -109,12 +113,16 @@ public class UserInteractionMapper implements IUserInteractionMapper {
 
     public void storeFloor() {
         //TODO: Store floor
-        System.out.println("TODO: Store floor on update!");
+        if (this.isStorable()) {
+            System.out.println("TODO: Store floor on update!");
+        }
     }
 
-    public boolean isStorable() {
-        return this.environment != null && this.selectedElevator != null
+    private boolean isStorable() {
+        return this.environment != null
+                && this.selectedElevator != null
                 && this.environment.isServicedBy(selectedElevator, enteredFloor)
+                && this.selectedElevator.getCurrentFloor() != this.enteredFloor
                 && this.selectedElevator.getCurrentMode().getModeType() == ElevatorModeType.MANUAL
                 && this.enteredFloor >= 0 && this.enteredFloor < this.environment.getNumberOfFloors();
     }
