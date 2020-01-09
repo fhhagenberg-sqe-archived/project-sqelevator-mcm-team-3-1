@@ -74,6 +74,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         mapper.addSelectedElevatorListener(this.selectedElevator);
         mapper.addSaveFloorEnabledListener(this.selectedElevator);
         core.dummyFakeLoad();
+        //test
     }
 
     private HBox renderLayout() {
