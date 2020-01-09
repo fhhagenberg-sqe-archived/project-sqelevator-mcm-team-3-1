@@ -29,6 +29,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 
 /**
@@ -45,6 +46,12 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
     public FXElevatorCallView(IEnvironment e) {
         this.e = e;
         this.minWidth(160);
+        RowConstraints r1 = new RowConstraints();
+        r1.setMinHeight(100);
+        this.getRowConstraints().add(r1);
+        this.setPadding(new Insets(5, 5, 5, 5));
+        setBorder(new Border(new BorderStroke(Color.TRANSPARENT,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         this.populateHeader();
         this.upFloors = new Pane[e.getNumberOfFloors()];
         this.downFloors = new Pane[e.getNumberOfFloors()];
@@ -66,13 +73,17 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
      * state and direction
      */
     private void populateHeader() {
-        this.add(new Label("DOWN"), 0, 0);
-        this.add(new Label("UP"), 1, 0);
+        var up = new Label("UP");
+        var down = new Label("DOWN");
+        this.add(up, 0, 0);
+        this.add(down, 1, 0);
     }
 
     private Pane generatePane() {
         var p = new Pane();
+        //p.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
         p.setMinSize(80, 80);
+        p.setPadding(new Insets(5, 5, 5, 5));
         p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         return p;

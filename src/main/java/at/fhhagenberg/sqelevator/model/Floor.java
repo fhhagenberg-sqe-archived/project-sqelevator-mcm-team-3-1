@@ -40,7 +40,7 @@ public class Floor implements IFloor {
     @Override
     public boolean setServicedBy(int elevatorNumber) {
         if (!this.servicedBy.contains(elevatorNumber)) {
-            this.servicedBy.add(floorNumber);
+            this.servicedBy.add(elevatorNumber);
         }
         return this.servicedBy.contains(elevatorNumber);
     }

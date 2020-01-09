@@ -6,17 +6,23 @@
 package at.fhhagenberg.sqelevator.ui.fx;
 
 import at.fhhagenberg.sqelevator.enums.DoorState;
+import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
+import at.fhhagenberg.sqelevator.propertychanged.event.EnvironmentEvent;
+import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 
 /**
  *
@@ -49,10 +55,11 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
     private final Label nextFloorLabel;
     private final TextField nextFloor;
     private final Button submitNextFloor;
-
+    private IUserInteractionMapper m;
     private ILocalElevator elevator;
 
-    public FXSelectedElevator() {
+    public FXSelectedElevator(IUserInteractionMapper m) {
+        this.m = m;
         header = new Label();
         speedLabel = new Label("Current Speed");
         accelerationLabel = new Label("Current Acceleration");
@@ -79,7 +86,13 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
 
         changeMode = new Button("Switch Mode");
         submitNextFloor = new Button("Submit");
+        submitNextFloor.setOnMouseClicked((MouseEvent t) -> {
+            m.storeFloor();
+        });
         nextFloor = new TextField();
+        nextFloor.textProperty().addListener((observable, oldValue, newValue) -> {
+            m.processInput(newValue);
+        });
         this.setupUI();
         this.updateUI();
     }
@@ -88,6 +101,11 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
      * Function that sets up the ui elements to their position
      */
     private void setupUI() {
+        for (int i = 0; i < 10; i++) {
+            RowConstraints r1 = new RowConstraints();
+            r1.setMinHeight(35);
+            this.getRowConstraints().add(r1);
+        }
         this.add(header, 0, 0, 5, 1);
         this.add(stateLabel, 0, 1);
         this.add(currentState, 1, 1);
@@ -143,8 +161,8 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
      */
     private void updateUI() {
         this.changeMode.setDisable(elevator == null);
-        this.submitNextFloor.setDisable(elevator == null);
-        this.nextFloor.setDisable(elevator == null);
+        this.submitNextFloor.setDisable(true);
+        this.nextFloor.setDisable(elevator == null || elevator.getCurrentMode().getModeType() != ElevatorModeType.MANUAL);
         if (elevator == null) {
             this.header.setText("");
             this.currentLoad.setText("");
@@ -157,6 +175,8 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
             this.currentState.setText("");
             this.currentDirection.setText("");
             this.currentPosition.setText("");
+            this.nextFloor.setText("");
+
         } else {
             this.header.setText("Elevator E " + this.elevator.getElevatorNumber());
             this.currentLoad.setText(Integer.toString(elevator.getCurrentWeightInLbs()));
@@ -178,6 +198,8 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
             this.elevator.addDirectionListener(this);
             this.currentPosition.setText(Integer.toString(this.elevator.getCurrentPosition()));
             this.elevator.addPositionListener(this);
+            this.nextFloor.setText(Integer.toString(this.elevator.getTargetFloor()));
+            this.elevator.addTargetListener(this);
         }
     }
 
@@ -187,6 +209,12 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
             @Override
             public void run() {
                 switch (evt.getPropertyName()) {
+                    case UIEvent.SELECTED_ELEVATOR_CHANGED:
+                        setSelectedElevator((ILocalElevator) evt.getNewValue());
+                        break;
+                    case UIEvent.SAVE_FLOOR_ENABLED:
+                        submitNextFloor.setDisable(!(boolean) evt.getNewValue());
+                        break;
                     case ElevatorEvent.CURRENT_ACCELERATION_FTSQR:
                         currentAcceleration.setText(evt.getNewValue().toString());
                         break;

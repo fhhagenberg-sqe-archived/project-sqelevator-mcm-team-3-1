@@ -11,6 +11,7 @@ import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
+import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.application.Platform;
@@ -25,6 +26,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -55,7 +57,11 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
             floors[i].minHeight(80);
             this.add(floors[i], 0, i + 1);
         }
+        RowConstraints r1 = new RowConstraints();
+        r1.setMinHeight(100);
+        this.getRowConstraints().add(r1);
         this.setMinWidth(100);
+        this.setPadding(new Insets(5, 5, 5, 5));
         this.elevator.addSelectedFloorsListener(this);
         this.elevator.addTargetListener(this);
         this.elevator.addFloorListener(this);
@@ -63,12 +69,15 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         this.elevator.addDoorStateListener(this);
         this.elevator.addModeListener(this);
         this.elevator.addStateListener(this);
+        this.setSelected(null);
         this.updateView();
     }
 
     private Pane generatePane() {
         var p = new Pane();
         p.setMinSize(80, 80);
+        //p.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        p.setPadding(new Insets(5, 5, 5, 5));
         p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         return p;
@@ -181,7 +190,10 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     public void setSelected(ILocalElevator e) {
         if (this.elevator.equals(e)) {
             setBorder(new Border(new BorderStroke(Color.BLACK,
-                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
+        } else {
+            setBorder(new Border(new BorderStroke(Color.TRANSPARENT,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         }
 
     }
@@ -196,6 +208,9 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
             @Override
             public void run() {
                 switch (evt.getPropertyName()) {
+                    case UIEvent.SELECTED_ELEVATOR_CHANGED:
+                        setSelected((ILocalElevator) evt.getNewValue());
+                        break;
                     case ElevatorEvent.SELECTED_FLOORS:
                     case ElevatorEvent.TARGET_FLOOR:
                     case ElevatorEvent.CURRENT_FLOOR:
