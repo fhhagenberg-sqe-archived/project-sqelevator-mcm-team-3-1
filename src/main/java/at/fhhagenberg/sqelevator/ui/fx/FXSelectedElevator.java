@@ -37,8 +37,6 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
     private final Label currentAcceleration;
     private final Label currentLoad;
     private final Label loadLabel;
-    private final Label maxLoad;
-    private final Label maxLoadLabel;
     private final Label floorLabel;
     private final Label currentFloor;
     private final Label modeLabel;
@@ -67,7 +65,6 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         nextFloorLabel = new Label("Next floor");
         modeLabel = new Label("Current Mode");
         loadLabel = new Label("Current Load");
-        maxLoadLabel = new Label("MAX Load");
         doorStateLabel = new Label("Door State");
         stateLabel = new Label("Elevator State");
         directionLabel = new Label("Direction");
@@ -77,7 +74,6 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         currentAcceleration = new Label();
         currentFloor = new Label();
         currentMode = new Label();
-        maxLoad = new Label();
         currentLoad = new Label();
         currentDoorState = new Label();
         currentState = new Label();
@@ -114,8 +110,6 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
 
         this.add(loadLabel, 0, 2);
         this.add(currentLoad, 1, 2);
-        this.add(maxLoadLabel, 3, 2);
-        this.add(maxLoad, 4, 2);
 
         this.add(doorStateLabel, 0, 3);
         this.add(currentDoorState, 1, 3);
@@ -166,7 +160,6 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         if (elevator == null) {
             this.header.setText("");
             this.currentLoad.setText("");
-            this.maxLoad.setText("");
             this.currentAcceleration.setText("");
             this.currentFloor.setText("");
             this.currentDoorState.setText("");
@@ -181,7 +174,6 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
             this.header.setText("Elevator E " + this.elevator.getElevatorNumber());
             this.currentLoad.setText(Integer.toString(elevator.getCurrentWeightInLbs()));
             this.elevator.addCurrentWeightListener(this);
-            this.maxLoad.setText(Integer.toString(this.elevator.getLoadCapacityInLbs()));
             this.currentAcceleration.setText(Double.toString(this.elevator.getAccelerationInFtsqr()));
             this.elevator.addAccelerationListener(this);
             this.currentFloor.setText(Integer.toString(this.elevator.getCurrentFloor()));
@@ -232,9 +224,6 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
                         break;
                     case ElevatorEvent.DOOR_STATE:
                         currentDoorState.setText(((DoorState) evt.getNewValue()).name());
-                        break;
-                    case ElevatorEvent.LBS_MAX_LOAD:
-                        maxLoad.setText(evt.getNewValue().toString());
                         break;
                     case ElevatorEvent.LBS_WEIGHT:
                         currentLoad.setText(evt.getNewValue().toString());

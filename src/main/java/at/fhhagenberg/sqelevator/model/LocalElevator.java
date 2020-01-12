@@ -13,7 +13,9 @@ import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -30,7 +32,6 @@ public class LocalElevator implements ILocalElevator {
     private int currentFloor = -1;
     private int targetFloor = -1;
     private int lbsWeight = -1;
-    private int lbsMaxLoad = -1;
     private int currentSpeedFts = 0;
     private int currentAccelerationFtsqr = 0;
     private int currentPosition = 0;
@@ -127,17 +128,6 @@ public class LocalElevator implements ILocalElevator {
         }
     }
 
-    private void checkElevatorState() {
-
-        if (this.lbsWeight > this.lbsMaxLoad) {
-            var state = ElevatorState.ERROR;
-            if (state != this.lastState) {
-                this.setElevatorState(state);
-            }
-        }
-
-    }
-
     /**
      * @inheritDoc
      */
@@ -168,14 +158,6 @@ public class LocalElevator implements ILocalElevator {
     @Override
     public int getCurrentWeightInLbs() {
         return this.currentPosition;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public int getLoadCapacityInLbs() {
-        return this.lbsMaxLoad;
     }
 
     /**
@@ -294,7 +276,6 @@ public class LocalElevator implements ILocalElevator {
     }
 
     public void setCurrentFloor(int floor) {
-
         if (this.currentFloor != floor) {
             var old = this.currentFloor;
             this.currentFloor = floor;
@@ -315,13 +296,6 @@ public class LocalElevator implements ILocalElevator {
             var old = this.lbsWeight;
             this.lbsWeight = weight;
             this.weightListener.firePropertyChange(ElevatorEvent.LBS_WEIGHT, old, this.lbsWeight);
-            this.updateElevatorData(this);
-        }
-    }
-
-    public void setMaxLoad(int maxLoad) {
-        if (this.lbsMaxLoad != maxLoad) {
-            this.lbsMaxLoad = maxLoad;
             this.updateElevatorData(this);
         }
     }

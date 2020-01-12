@@ -7,19 +7,19 @@ package at.fhhagenberg.sqelevator.controller.dummy;
 
 import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
-import at.fhhagenberg.sqelevator.interfaces.IBackendInteractionMapper;
-import at.fhhagenberg.sqelevator.model.Environment;
-import at.fhhagenberg.sqelevator.model.Floor;
-import at.fhhagenberg.sqelevator.model.LocalElevator;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.model.ElevatorCall;
+import at.fhhagenberg.sqelevator.model.Environment;
+import at.fhhagenberg.sqelevator.model.Floor;
+import at.fhhagenberg.sqelevator.model.LocalElevator;
 import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
 import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeManual;
 import at.fhhagenberg.sqelevator.propertychanged.event.CoreMapperEvent;
-import javafx.application.Platform;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -78,7 +78,7 @@ public class CoreMapper implements ICoreMapper {
         e1.setTargetFloor(1);
         e1.setDoorState(DoorState.OPEN);
         e1.setSelectedFloors(selectedFloors1);
-        e1.setMaxLoad(670);
+        //e1.setMaxLoad(670);
         e1.setLbsWeight(300);
         e1.setCurrentSpeed(0);
         e1.setMode(new ElevatorModeAuto());
@@ -90,7 +90,7 @@ public class CoreMapper implements ICoreMapper {
         e2.setCurrentPosition(0);
         e2.setTargetFloor(2);
         e2.setDoorState(DoorState.CLOSED);
-        e2.setMaxLoad(670);
+        //e2.setMaxLoad(670);
         e2.setLbsWeight(300);
         e2.setCurrentSpeed(0);
         e2.setMode(new ElevatorModeAuto());
@@ -102,7 +102,7 @@ public class CoreMapper implements ICoreMapper {
         e3.setCurrentPosition(0);
         e3.setTargetFloor(1);
         e3.setDoorState(DoorState.OPEN);
-        e3.setMaxLoad(670);
+        //e3.setMaxLoad(670);
         e3.setLbsWeight(300);
         e3.setCurrentSpeed(0);
         e3.setMode(new ElevatorModeManual());
@@ -156,11 +156,6 @@ public class CoreMapper implements ICoreMapper {
         t.start();
     }
 
-    @Override
-
-    public void setBackendMapper(IBackendInteractionMapper mapper) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void addEnvironmentLoadedEventListener(PropertyChangeListener listener) {
@@ -200,6 +195,11 @@ public class CoreMapper implements ICoreMapper {
     @Override
     public void removeElevatorLoadedEventListener(PropertyChangeListener listener) {
         this.elevatorLoadedListener.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void updateElevators() throws RemoteException {
+
     }
 
     @Override

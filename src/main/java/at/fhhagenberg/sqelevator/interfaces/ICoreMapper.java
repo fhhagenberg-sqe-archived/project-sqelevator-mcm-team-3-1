@@ -6,6 +6,7 @@
 package at.fhhagenberg.sqelevator.interfaces;
 
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -14,10 +15,15 @@ import java.beans.PropertyChangeListener;
 public interface ICoreMapper {
 
     /**
-     *
-     * @param mapper
+     * The interval in milliseconds on which the elevator data is going to be fetched from the remote
      */
-    public void setBackendMapper(IBackendInteractionMapper mapper);
+    int REMOTE_FETCH_INTERVAL = 100;
+
+    /**
+     * Updates the accessible values of the elevators
+     * @throws RemoteException
+     */
+    public void updateElevators() throws RemoteException;
 
     /**
      * Function is used to navigate the elevator.
@@ -25,7 +31,7 @@ public interface ICoreMapper {
      * @param e ILocalElevator elevator that should go to the defined floor
      * @param floorNumber number of floor, the elevator should go to
      */
-    public void setTargetFloor(ILocalElevator e, int floorNumber);
+    public void setTargetFloor(ILocalElevator e, int floorNumber) throws RemoteException;
 
     /**
      *

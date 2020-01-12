@@ -89,13 +89,6 @@ public interface ILocalElevator {
     public int getCurrentWeightInLbs();
 
     /**
-     * Gets the maximum load capacity of the elevator in Lb
-     *
-     * @return int load capacity of the elevator
-     */
-    public int getLoadCapacityInLbs();
-
-    /**
      * Gets the floor the elevator is targeting to.
      *
      * @return int number of the floor the elevator is heading to.
