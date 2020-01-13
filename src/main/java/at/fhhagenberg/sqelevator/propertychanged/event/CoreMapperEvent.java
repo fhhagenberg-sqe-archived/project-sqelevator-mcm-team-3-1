@@ -15,6 +15,7 @@ public class CoreMapperEvent {
     public static final String ELEVATOR_LOADED = "CoreMapperEvent.ElevatorLoaded";
     public static final String ELEVATOR_CALL_LOADED = "CoreMapperEvent.ElevatorCallLoaded";
     public static final String FLOOR_LOADED = "CoreMapperEvent.FloorLoaded";
+    public static final String FLOOR_UPDATED = "CoreMapperEvent.FloorUpdated";
     public static final String ENVIRONMENT_LOADED = "CoreMapperEvent.EnvironmentLoaded";
 
     private CoreMapperEvent() {

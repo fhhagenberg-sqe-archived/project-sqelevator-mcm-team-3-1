@@ -35,28 +35,20 @@ public class LocalElevator implements ILocalElevator {
     private int currentSpeedFts = 0;
     private int currentAccelerationFtsqr = 0;
     private int currentPosition = 0;
-    private PropertyChangeSupport selectedFloorsListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport doorStateListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport directionListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport stateListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport floorListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport targetListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport weightListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport accelerationListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport positionListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport speedListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport modeListener
-            = new PropertyChangeSupport(this);
+    private int capacity = 0;
+
+    private PropertyChangeSupport selectedFloorsListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport doorStateListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport directionListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport stateListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport floorListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport targetListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport weightListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport capacityListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport accelerationListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport positionListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport speedListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport modeListener = new PropertyChangeSupport(this);
 
     public LocalElevator(int elevatorNumber) {
         this.elevatorNumber = elevatorNumber;
@@ -158,6 +150,14 @@ public class LocalElevator implements ILocalElevator {
     @Override
     public int getCurrentWeightInLbs() {
         return this.currentPosition;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public int getCapacity() {
+        return this.capacity;
     }
 
     /**
@@ -297,6 +297,13 @@ public class LocalElevator implements ILocalElevator {
             this.lbsWeight = weight;
             this.weightListener.firePropertyChange(ElevatorEvent.LBS_WEIGHT, old, this.lbsWeight);
             this.updateElevatorData(this);
+        }
+    }
+
+    public void setCapacity(int capacity) {
+        if (this.capacity != capacity && capacity > 0) {
+            this.capacityListener.firePropertyChange(ElevatorEvent.CAPACITY, this.capacity, capacity);
+            this.capacity = capacity;
         }
     }
 

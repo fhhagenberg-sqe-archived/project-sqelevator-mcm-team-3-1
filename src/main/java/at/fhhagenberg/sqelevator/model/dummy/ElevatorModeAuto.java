@@ -15,19 +15,14 @@ import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
  */
 public class ElevatorModeAuto implements IElevatorMode {
 
-    @Override
-    public int getNextFloor() {
-        return 0;
-    }
-
-    @Override
-    public void setEnvironment(IEnvironment e) {
-
-    }
 
     @Override
     public ElevatorModeType getModeType() {
         return ElevatorModeType.AUTOMATIC;
     }
 
+    @Override
+    public void setModeType(ElevatorModeType type) {
+
+    }
 }

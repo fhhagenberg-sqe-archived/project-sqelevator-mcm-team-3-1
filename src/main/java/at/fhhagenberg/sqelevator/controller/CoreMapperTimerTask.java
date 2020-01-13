@@ -16,7 +16,9 @@ public class CoreMapperTimerTask extends TimerTask {
     @Override
     public void run() {
         try {
+            coreMapper.updateEnvironment();
             coreMapper.updateElevators();
+            coreMapper.updateFloors();
         } catch (RemoteException rme) {
             System.err.println("Remote exception: " + rme.getMessage());
         }

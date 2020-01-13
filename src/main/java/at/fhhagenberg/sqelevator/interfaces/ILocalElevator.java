@@ -8,10 +8,10 @@ package at.fhhagenberg.sqelevator.interfaces;
 import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
+
 import java.beans.PropertyChangeListener;
 
 /**
- *
  * @author jmayr
  */
 public interface ILocalElevator {
@@ -29,14 +29,6 @@ public interface ILocalElevator {
      * @return integer array containing the selected floors;
      */
     public int[] getSelectedFloors();
-
-    /**
-     * Sets the mode of the elevator
-     *
-     * @param mode IElevatorMode the new mode that will be used for navigation
-     * @return boolean true when the mode was changed
-     */
-    public boolean setMode(IElevatorMode mode);
 
     /**
      * Gets the floor the elevator is currently located
@@ -89,11 +81,25 @@ public interface ILocalElevator {
     public int getCurrentWeightInLbs();
 
     /**
+     * Retrieves the maximum number of passengers that can fit on the elevator
+     *
+     * @return maximum number of passengers that can fit
+     */
+    public int getCapacity();
+
+    /**
      * Gets the floor the elevator is targeting to.
      *
      * @return int number of the floor the elevator is heading to.
      */
     public int getTargetFloor();
+
+    /**
+     * Gets the direction the elevator going to
+     *
+     * @return ElevatorDirection direction the elevator is heading
+     */
+    public ElevatorDirection getDirection();
 
     /**
      * Updates alle the elevator data and it's states, but not it's mode The id
@@ -105,11 +111,12 @@ public interface ILocalElevator {
     public boolean updateElevatorData(ILocalElevator other);
 
     /**
-     * Gets the direction the elevator going to
+     * Sets the mode of the elevator
      *
-     * @return ElevatorDirection direction the elevator is heading
+     * @param mode IElevatorMode the new mode that will be used for navigation
+     * @return boolean true when the mode was changed
      */
-    public ElevatorDirection getDirection();
+    public boolean setMode(IElevatorMode mode);
 
     /**
      * Function takes a listener, that is notified on changes
@@ -264,8 +271,8 @@ public interface ILocalElevator {
      * @param l ElevatorChangedListener listener that should be removed
      */
     public void removeModeListener(PropertyChangeListener l);
-    
-        /**
+
+    /**
      * Function removes a listener, that is notified on changes
      *
      * @param l ElevatorChangedListener listener that should be removed
