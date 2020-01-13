@@ -27,16 +27,11 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     private LinkedList<ILocalElevator> elevators = new LinkedList<>();
     private IEnvironment environment;
     private int enteredFloor;
-    private final PropertyChangeSupport selectedElevatorListener
-            = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport elevatorListener
-            = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport environmentLoadedListener
-            = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport saveFloorEnabledListener
-            = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport updateErrorMessageListener
-            = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport selectedElevatorListener = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport elevatorListener = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport environmentLoadedListener = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport saveFloorEnabledListener = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport updateErrorMessageListener = new PropertyChangeSupport(this);
 
     public UserInteractionMapper(ICoreMapper shader) {
         shader.addEnvironmentLoadedEventListener(this);

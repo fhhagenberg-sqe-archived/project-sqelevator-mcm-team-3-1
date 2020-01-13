@@ -38,7 +38,7 @@ public interface IFloor {
     /**
      * Function that adds an elevator, that services the specific floor.
      *
-     * @param e int number of the elevator that services this floor
+     * @param elevatorNumber int number of the elevator that services this floor
      * @return true when the elevator can be added.
      */
     public boolean setServicedBy(int elevatorNumber);

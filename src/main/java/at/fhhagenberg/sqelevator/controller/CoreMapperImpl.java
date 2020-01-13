@@ -4,10 +4,11 @@ import at.fhhagenberg.sqelevator.IElevator;
 import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
-import at.fhhagenberg.sqelevator.model.Environment;
+import at.fhhagenberg.sqelevator.model.EnvironmentImpl;
 import at.fhhagenberg.sqelevator.model.Floor;
 import at.fhhagenberg.sqelevator.model.LocalElevator;
 import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
+import at.fhhagenberg.sqelevator.propertychanged.event.CoreMapperEvent;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -15,22 +16,26 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 import java.util.Timer;
 
 public class CoreMapperImpl implements ICoreMapper {
-    private Environment environment;
     private IElevator elevator;
     private Timer coreMapperTimer;
     private CoreMapperTimerTask coreMapperTimerTask;
 
-    private PropertyChangeSupport environmentLoadedListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport elevatorCallLoadedListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport elevatorLoadedListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport floorLoadedListener
-            = new PropertyChangeSupport(this);
+    private EnvironmentImpl environment;
+    private Set<LocalElevator> elevators = new HashSet<>();
+
+    private PropertyChangeSupport environmentLoadedListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport elevatorUpdatedListener = new PropertyChangeSupport(this);
+
+
+    private PropertyChangeSupport elevatorCallLoadedListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport elevatorLoadedListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport floorLoadedListener = new PropertyChangeSupport(this);
 
     public CoreMapperImpl() throws MalformedURLException, RemoteException, NotBoundException {
         this.elevator = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
@@ -39,10 +44,24 @@ public class CoreMapperImpl implements ICoreMapper {
         this.coreMapperTimer.schedule(this.coreMapperTimerTask, REMOTE_FETCH_INTERVAL);
     }
 
+    public void updateEnvironment() throws RemoteException {
+        var environment = new EnvironmentImpl();
+        environment.setNumberOfElevators(elevator.getElevatorNum());
+        environment.setNumberOfFloors(elevator.getFloorNum());
+        environment.setFloorHeight(elevator.getFloorHeight());
+        environment.setClockTick(elevator.getClockTick());
+        environmentLoadedListener.firePropertyChange(CoreMapperEvent.ENVIRONMENT_LOADED, this.environment, environment);
+        this.environment = environment;
+    }
+
     public void updateFloors() throws RemoteException {
         for (int i = 0; i < elevator.getFloorNum(); ++i) {
             var floor = new Floor(i);
-
+            for (int j = 0; j < elevator.getElevatorNum(); ++j) {
+                if (elevator.getServicesFloors(j, i)) {
+                    floor.setServicedBy(j);
+                }
+            }
         }
     }
 
@@ -58,6 +77,7 @@ public class CoreMapperImpl implements ICoreMapper {
             localElevator.setLbsWeight(elevator.getElevatorWeight(i));
             localElevator.setCurrentSpeed(elevator.getElevatorSpeed(i));
             localElevator.setMode(new ElevatorModeAuto());
+            elevatorUpdatedListener.firePropertyChange(CoreMapperEvent.ELEVATOR_UPDATED, null, elevator);
         }
     }
 
