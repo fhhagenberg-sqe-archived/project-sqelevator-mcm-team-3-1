@@ -11,7 +11,6 @@ package at.fhhagenberg.sqelevator.propertychanged.event;
  */
 public class CoreMapperEvent {
 
-    public static final String ELEVATOR_UPDATED = "CoreMapperEvent.ElevatorUpdated";
     public static final String ELEVATOR_LOADED = "CoreMapperEvent.ElevatorLoaded";
     public static final String ELEVATOR_CALL_LOADED = "CoreMapperEvent.ElevatorCallLoaded";
     public static final String FLOOR_LOADED = "CoreMapperEvent.FloorLoaded";

@@ -20,11 +20,9 @@ public class Floor implements IFloor {
     private int floorNumber;
     private boolean floorButtonDown;
     private boolean floorButtonUp;
-    private LinkedList<Integer> servicedBy = new LinkedList<>();
 
     private PropertyChangeSupport floorButtonDownListener = new PropertyChangeSupport(this);
     private PropertyChangeSupport floorButtonUpListener = new PropertyChangeSupport(this);
-    private PropertyChangeSupport servicedByListener = new PropertyChangeSupport(this);
 
     public Floor(int floorNumber) {
         this.floorNumber = floorNumber;
@@ -61,26 +59,6 @@ public class Floor implements IFloor {
         }
     }
 
-    @Override
-    public boolean isServicedBy(ILocalElevator e) {
-        return this.servicedBy.contains(e.getElevatorNumber());
-    }
-
-    @Override
-    public boolean setServicedBy(ILocalElevator e, boolean service) {
-        return this.setServicedBy(e.getElevatorNumber(), service);
-    }
-
-    @Override
-    public boolean setServicedBy(int elevatorNumber, boolean service) {
-        if (service && !this.servicedBy.contains(elevatorNumber)) {
-            // TODO: Well old number should rather be all serviced floors?
-            servicedByListener.firePropertyChange(FloorEvent.SERVICED_BY, null, elevatorNumber);
-            this.servicedBy.add(elevatorNumber);
-        }
-        return this.servicedBy.contains(elevatorNumber);
-    }
-
     public void addFloorButtonDownListener(PropertyChangeListener listener) {
         this.floorButtonDownListener.addPropertyChangeListener(listener);
     }
@@ -95,13 +73,5 @@ public class Floor implements IFloor {
 
     public void removeFloorButtonUpListener(PropertyChangeListener listener) {
         this.floorButtonUpListener.removePropertyChangeListener(listener);
-    }
-
-    public void addServicedByListener(PropertyChangeListener listener) {
-        this.servicedByListener.addPropertyChangeListener(listener);
-    }
-
-    public void removeServicedByListener(PropertyChangeListener listener) {
-        this.servicedByListener.removePropertyChangeListener(listener);
     }
 }

@@ -216,6 +216,10 @@ public interface ILocalElevator {
      */
     public void removeCurrentWeightListener(PropertyChangeListener l);
 
+    public void addCapacityListener(PropertyChangeListener l);
+
+    public void removeCapacityListener(PropertyChangeListener l);
+
     /**
      * Function takes a listener, that is notified on changes
      *

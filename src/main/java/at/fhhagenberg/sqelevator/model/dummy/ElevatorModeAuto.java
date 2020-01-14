@@ -7,10 +7,8 @@ package at.fhhagenberg.sqelevator.model.dummy;
 
 import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
-import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
 
 /**
- *
  * @author jmayr
  */
 public class ElevatorModeAuto implements IElevatorMode {

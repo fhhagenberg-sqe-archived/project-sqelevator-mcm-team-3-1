@@ -5,35 +5,19 @@
  */
 package at.fhhagenberg.sqelevator.ui.fx;
 
-import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
-import at.fhhagenberg.sqelevator.enums.ElevatorState;
-import at.fhhagenberg.sqelevator.interfaces.IElevatorCall;
-import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
-import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
-import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
-import at.fhhagenberg.sqelevator.propertychanged.event.EnvironmentEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import at.fhhagenberg.sqelevator.propertychanged.event.FloorEvent;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 /**
- *
  * @author jmayr
  */
 public class FXElevatorCallView extends GridPane implements PropertyChangeListener {
@@ -61,11 +45,7 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
             downFloors[i] = generatePane();
             this.add(upFloors[i], 0, i + 1);
             this.add(downFloors[i], 1, i + 1);
-
         }
-
-        e.addCallRemovedListener(this);
-        e.addCallAddedListener(this);
     }
 
     /**
@@ -81,24 +61,11 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
 
     private Pane generatePane() {
         var p = new Pane();
-        //p.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
         p.setMinSize(80, 80);
         p.setPadding(new Insets(5, 5, 5, 5));
         p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         return p;
-    }
-
-    /**
-     * clears all the floors
-     */
-    private void clearCall(IElevatorCall c) {
-        if (c.getDirection() == ElevatorDirection.DOWN) {
-            this.downFloors[c.getFloorNumber()].setBackground(Background.EMPTY);
-        } else if (c.getDirection() == ElevatorDirection.UP) {
-            this.upFloors[c.getFloorNumber()].setBackground(Background.EMPTY);
-        }
-
     }
 
     /**
@@ -123,11 +90,9 @@ public class FXElevatorCallView extends GridPane implements PropertyChangeListen
             @Override
             public void run() {
                 switch (evt.getPropertyName()) {
-                    case EnvironmentEvent.ELEVATOR_CALL_ADDED:
-                        setSelection((IElevatorCall) evt.getNewValue());
+                    case FloorEvent.FLOOR_BUTTON_DOWN:
                         break;
-                    case EnvironmentEvent.ELEVATOR_CALL_REMOVED:
-                        clearCall((IElevatorCall) evt.getOldValue());
+                    case FloorEvent.FLOOR_BUTTON_UP:
                         break;
                 }
             }

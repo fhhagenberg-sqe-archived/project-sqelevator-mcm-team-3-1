@@ -19,16 +19,13 @@ public interface ICoreMapper {
     int REMOTE_FETCH_INTERVAL = 100;
 
 
+    public void loadEnvironment() throws RemoteException;
     public void updateEnvironment() throws RemoteException;
 
+    public void loadFloors() throws RemoteException;
     public void updateFloors() throws RemoteException;
 
-
-    /**
-     * Updates the accessible values of the elevators
-     *
-     * @throws RemoteException
-     */
+    public void loadElevators() throws RemoteException;
     public void updateElevators() throws RemoteException;
 
     /**
@@ -39,44 +36,13 @@ public interface ICoreMapper {
      */
     public void setTargetFloor(ILocalElevator e, int floorNumber) throws RemoteException;
 
-    /**
-     * @param listener
-     */
     public void addEnvironmentLoadedEventListener(PropertyChangeListener listener);
-
-    /**
-     * @param listener
-     */
     public void removeEnvironmentLoadedEventListener(PropertyChangeListener listener);
 
-    /**
-     * @param listener
-     */
-    public void addElevatorCallLoadedEventListener(PropertyChangeListener listener);
-
-    /**
-     * @param listener
-     */
-    public void removeElevatorCallLoadedEventListener(PropertyChangeListener listener);
-
-    /**
-     * @param listener
-     */
     public void addFloorLoadedEventListener(PropertyChangeListener listener);
-
-    /**
-     * @param listener
-     */
     public void removeFloorLoadedEventListener(PropertyChangeListener listener);
 
-    /**
-     * @param listener
-     */
     public void addElevatorLoadedEventListener(PropertyChangeListener listener);
-
-    /**
-     * @param listener
-     */
     public void removeElevatorLoadedEventListener(PropertyChangeListener listener);
 
 }

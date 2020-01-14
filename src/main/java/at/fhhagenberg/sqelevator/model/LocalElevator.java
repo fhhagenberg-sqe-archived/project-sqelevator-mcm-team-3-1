@@ -402,6 +402,16 @@ public class LocalElevator implements ILocalElevator {
     }
 
     @Override
+    public void addCapacityListener(PropertyChangeListener l) {
+        this.capacityListener.addPropertyChangeListener(l);
+    }
+
+    @Override
+    public void removeCapacityListener(PropertyChangeListener l) {
+        this.capacityListener.removePropertyChangeListener(l);
+    }
+
+    @Override
     public void addCurrentSpeedListener(PropertyChangeListener l) {
         this.speedListener.addPropertyChangeListener(l);
     }

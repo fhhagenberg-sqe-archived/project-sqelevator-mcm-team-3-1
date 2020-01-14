@@ -9,8 +9,6 @@ import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
-import at.fhhagenberg.sqelevator.model.ElevatorCall;
-import at.fhhagenberg.sqelevator.model.Environment;
 import at.fhhagenberg.sqelevator.model.Floor;
 import at.fhhagenberg.sqelevator.model.LocalElevator;
 import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
@@ -44,18 +42,18 @@ public class CoreMapper implements ICoreMapper {
         Floor f3 = new Floor(2);
         Floor f4 = new Floor(3);
 
-        f1.setServicedBy(0);
-        f1.setServicedBy(1);
-        f1.setServicedBy(2);
+        f1.setServicedBy(0, true);
+        f1.setServicedBy(1, true);
+        f1.setServicedBy(2, true);
 
-        f2.setServicedBy(0);
-        f2.setServicedBy(1);
-        f2.setServicedBy(2);
+        f2.setServicedBy(0,true);
+        f2.setServicedBy(1, true);
+        f2.setServicedBy(2, true);
 
-        f3.setServicedBy(2);
+        f3.setServicedBy(2, true);
 
-        f4.setServicedBy(0);
-        f4.setServicedBy(2);
+        f4.setServicedBy(0, true);
+        f4.setServicedBy(2, true);
 
         pause();
         this.floorLoadedListener.firePropertyChange(CoreMapperEvent.FLOOR_LOADED, null, f1);
@@ -195,6 +193,16 @@ public class CoreMapper implements ICoreMapper {
     @Override
     public void removeElevatorLoadedEventListener(PropertyChangeListener listener) {
         this.elevatorLoadedListener.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void updateEnvironment() throws RemoteException {
+
+    }
+
+    @Override
+    public void updateFloors() throws RemoteException {
+
     }
 
     @Override

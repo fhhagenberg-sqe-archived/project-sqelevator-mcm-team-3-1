@@ -7,14 +7,9 @@ package at.fhhagenberg.sqelevator.ui.fx;
 
 import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
 import at.fhhagenberg.sqelevator.controller.dummy.CoreMapper;
-import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
-import at.fhhagenberg.sqelevator.model.Environment;
-import at.fhhagenberg.sqelevator.model.LocalElevator;
-import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
-import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeManual;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -87,7 +82,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         return layout;
     }
 
-    private void handleElevator(ILocalElevator e) {
+    private void handleElevatorLoaded(ILocalElevator e) {
         if (e != null) {
             if (this.environment != null && this.evtrs.stream().filter(evtr -> evtr.getElevator().equals(e)).count() == 0) {
                 System.out.println("Elevator added!");
@@ -122,7 +117,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
                         handleFloorDisplay((IEnvironment) evt.getNewValue());
                         break;
                     case UIEvent.NEW_ELEVATOR_ADDED:
-                        handleElevator((ILocalElevator) evt.getNewValue());
+                        handleElevatorLoaded((ILocalElevator) evt.getNewValue());
                         break;
                     case UIEvent.UPDATE_ERROR_MESSAGE:
                         System.out.println("TODO: Add proper error output " + evt.getNewValue());

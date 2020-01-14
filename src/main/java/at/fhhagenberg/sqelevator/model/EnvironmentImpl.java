@@ -1,11 +1,19 @@
 package at.fhhagenberg.sqelevator.model;
 
-public class EnvironmentImpl {
+import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
+public class EnvironmentImpl implements IEnvironment {
     private int numberOfElevators;
     private int numberOfFloors;
     private int floorHeight;
     private long clockTick;
 
+    private PropertyChangeSupport clockTickListener = new PropertyChangeSupport(this);
+
+    @Override
     public int getNumberOfElevators() {
         return numberOfElevators;
     }
@@ -14,6 +22,7 @@ public class EnvironmentImpl {
         this.numberOfElevators = numberOfElevators;
     }
 
+    @Override
     public int getNumberOfFloors() {
         return numberOfFloors;
     }
@@ -22,6 +31,7 @@ public class EnvironmentImpl {
         this.numberOfFloors = numberOfFloors;
     }
 
+    @Override
     public int getFloorHeight() {
         return floorHeight;
     }
@@ -36,5 +46,15 @@ public class EnvironmentImpl {
 
     public void setClockTick(long clockTick) {
         this.clockTick = clockTick;
+    }
+
+    @Override
+    public void addClockTickListener(PropertyChangeListener l) {
+        this.clockTickListener.addPropertyChangeListener(l);
+    }
+
+    @Override
+    public void removeClockTickListener(PropertyChangeListener l) {
+        this.clockTickListener.removePropertyChangeListener(l);
     }
 }

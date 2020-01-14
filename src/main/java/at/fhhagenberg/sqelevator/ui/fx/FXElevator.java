@@ -195,7 +195,6 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
             setBorder(new Border(new BorderStroke(Color.TRANSPARENT,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         }
-
     }
 
     public ILocalElevator getElevator() {
@@ -219,14 +218,8 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
                     case ElevatorEvent.DIRECTION:
                         elevatorDirection.setText(((ElevatorDirection) evt.getNewValue()).name());
                         break;
-                    case ElevatorEvent.DOOR_STATE:
-                        elevatorDoorState.setText(((DoorState) evt.getNewValue()).name());
-                        break;
                     case ElevatorEvent.MODE:
                         elevatorMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
-                        break;
-                    case ElevatorEvent.CURRENT_STATE:
-                        setElevatorState((ElevatorState) evt.getNewValue());
                         break;
                 }
             }
