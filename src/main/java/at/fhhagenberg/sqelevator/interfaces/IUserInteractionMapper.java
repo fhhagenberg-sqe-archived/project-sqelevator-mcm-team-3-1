@@ -16,7 +16,7 @@ public interface IUserInteractionMapper extends PropertyChangeListener {
 
     public void toggleMode();
 
-    public void toggleDorrState();
+    public void toggleDoorState();
 
     public void processInput(String input);
 

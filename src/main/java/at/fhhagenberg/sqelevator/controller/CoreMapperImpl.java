@@ -112,7 +112,7 @@ public class CoreMapperImpl implements ICoreMapper {
 
     @Override
     public void removeFloorLoadedEventListener(PropertyChangeListener listener) {
-        this.floorLoadedListener.addPropertyChangeListener(listener);
+        this.floorLoadedListener.removePropertyChangeListener(listener);
     }
 
     @Override

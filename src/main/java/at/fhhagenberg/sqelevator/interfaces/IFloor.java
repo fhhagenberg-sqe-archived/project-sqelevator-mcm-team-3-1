@@ -5,6 +5,8 @@
  */
 package at.fhhagenberg.sqelevator.interfaces;
 
+import java.beans.PropertyChangeListener;
+
 /**
  * @author jmayr
  */
@@ -24,4 +26,14 @@ public interface IFloor {
     public void setFloorButtonDown(boolean active);
 
     public void setFloorButtonUp(boolean active);
+
+    public void addFloorButtonDownListener(PropertyChangeListener listener);
+
+    public void removeFloorButtonDownListener(PropertyChangeListener listener);
+
+    public void addFloorButtonUpListener(PropertyChangeListener listener);
+
+    public void removeFloorButtonUpListener(PropertyChangeListener listener);
+
+    public void removeAllListeners(PropertyChangeListener listener);
 }

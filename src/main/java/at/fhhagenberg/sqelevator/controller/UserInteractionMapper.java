@@ -6,16 +6,13 @@
 package at.fhhagenberg.sqelevator.controller;
 
 import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
-import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
-import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
-import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
+import at.fhhagenberg.sqelevator.interfaces.*;
 import at.fhhagenberg.sqelevator.propertychanged.event.CoreMapperEvent;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.LinkedList;
-import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 
 /**
  *
@@ -36,6 +33,7 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     public UserInteractionMapper(ICoreMapper shader) {
         shader.addEnvironmentLoadedEventListener(this);
         shader.addElevatorLoadedEventListener(this);
+        shader.addFloorLoadedEventListener(this);
     }
 
     public void toggleMode() {
@@ -116,7 +114,6 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     private boolean isStorable() {
         return this.environment != null
                 && this.selectedElevator != null
-                && this.environment.isServicedBy(selectedElevator, enteredFloor)
                 && this.selectedElevator.getCurrentFloor() != this.enteredFloor
                 && this.selectedElevator.getCurrentMode().getModeType() == ElevatorModeType.MANUAL
                 && this.enteredFloor >= 0 && this.enteredFloor < this.environment.getNumberOfFloors();
@@ -141,11 +138,16 @@ public class UserInteractionMapper implements IUserInteractionMapper {
                     this.elevatorListener.firePropertyChange(UIEvent.NEW_ELEVATOR_ADDED, null, e);
                 }
             }
+        } else if (evt.getPropertyName().equals(CoreMapperEvent.FLOOR_LOADED)) {
+            IFloor floor = (IFloor) evt.getNewValue();
+            if (floor != null) {
+                this.elevatorListener.firePropertyChange(UIEvent.FLOOR_LOADED, null, floor);
+            }
         }
     }
 
     @Override
-    public void toggleDorrState() {
+    public void toggleDoorState() {
         System.out.println("TODO: Toggle door state");
     }
 }

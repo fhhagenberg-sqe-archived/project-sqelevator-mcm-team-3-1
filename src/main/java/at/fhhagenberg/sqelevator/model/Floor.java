@@ -6,12 +6,10 @@
 package at.fhhagenberg.sqelevator.model;
 
 import at.fhhagenberg.sqelevator.interfaces.IFloor;
-import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.propertychanged.event.FloorEvent;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.LinkedList;
 
 /**
  * @author jmayr
@@ -59,19 +57,29 @@ public class Floor implements IFloor {
         }
     }
 
+    @Override
     public void addFloorButtonDownListener(PropertyChangeListener listener) {
         this.floorButtonDownListener.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void removeFloorButtonDownListener(PropertyChangeListener listener) {
         this.floorButtonDownListener.removePropertyChangeListener(listener);
     }
 
+    @Override
     public void addFloorButtonUpListener(PropertyChangeListener listener) {
         this.floorButtonUpListener.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void removeFloorButtonUpListener(PropertyChangeListener listener) {
+        this.floorButtonUpListener.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removeAllListeners(PropertyChangeListener listener) {
+        this.floorButtonDownListener.removePropertyChangeListener(listener);
         this.floorButtonUpListener.removePropertyChangeListener(listener);
     }
 }

@@ -5,15 +5,10 @@
  */
 package at.fhhagenberg.sqelevator.ui.fx;
 
+import at.fhhagenberg.sqelevator.controller.CoreMapperImpl;
 import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
-import at.fhhagenberg.sqelevator.controller.dummy.CoreMapper;
-import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
-import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
-import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
+import at.fhhagenberg.sqelevator.interfaces.*;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.LinkedList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -22,25 +17,28 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.LinkedList;
+
 /**
- *
  * @author jmayr
- *
+ * <p>
  * NOTES from the lecture: in the used Objects someclasspropertyProperty():
  * StringProperty; adding change listeners for javaFX also provides binding
  * properties WARNING: JAVA FX PROPERITARY!!!! SO INTERMEDIATE OBJECTS HAVE TO
  * BE CREATED!!!!
- *
  */
 public class ElevatorFxGUI extends Application implements PropertyChangeListener {
 
     private FXSelectedElevator selectedElevator;
+    private FXElevatorCallView elevatorCallView;
     private LinkedList<FXElevator> evtrs;
     private HBox floorCallArea;
     private HBox elevatorArea;
     private IUserInteractionMapper mapper;
     private IEnvironment environment;
-    private CoreMapper core;
+    private ICoreMapper core;
 
     public static void main(String[] args) {
         launch();
@@ -48,7 +46,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        core = new CoreMapper();
+        core = new CoreMapperImpl();
         var userInteractionHandler = new UserInteractionMapper(core);
         this.mapper = userInteractionHandler;
         selectedElevator = new FXSelectedElevator(mapper);
@@ -68,8 +66,6 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         mapper.addEnvironmentListener(this);
         mapper.addSelectedElevatorListener(this.selectedElevator);
         mapper.addSaveFloorEnabledListener(this.selectedElevator);
-        core.dummyFakeLoad();
-        //test
     }
 
     private HBox renderLayout() {
@@ -82,13 +78,23 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         return layout;
     }
 
-    private void handleElevatorLoaded(ILocalElevator e) {
-        if (e != null) {
-            if (this.environment != null && this.evtrs.stream().filter(evtr -> evtr.getElevator().equals(e)).count() == 0) {
+    private void handleEnvironmentLoaded(IEnvironment environment) {
+        if (environment != null) {
+            System.out.println("Floor view added!");
+            this.environment = environment;
+            elevatorCallView = new FXElevatorCallView(this.environment);
+            this.floorCallArea.getChildren().clear();
+            this.floorCallArea.getChildren().add(elevatorCallView);
+        }
+    }
+
+    private void handleElevatorLoaded(ILocalElevator elevator) {
+        if (elevator != null) {
+            if (this.environment != null && this.evtrs.stream().filter(evtr -> evtr.getElevator().equals(elevator)).count() == 0) {
                 System.out.println("Elevator added!");
-                var evtr = new FXElevator(e, environment.getNumberOfFloors());
+                var evtr = new FXElevator(elevator, environment.getNumberOfFloors());
                 evtr.setOnMouseClicked((MouseEvent t) -> {
-                    this.mapper.selectElevator(e);
+                    this.mapper.selectElevator(elevator);
                 });
                 this.evtrs.add(evtr);
                 this.elevatorArea.getChildren().add(evtr);
@@ -97,13 +103,9 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         }
     }
 
-    private void handleFloorDisplay(IEnvironment e) {
-        if (e != null) {
-            System.out.println("Floor view added!");
-            this.environment = e;
-            var v = new FXElevatorCallView(environment);
-            this.floorCallArea.getChildren().clear();
-            this.floorCallArea.getChildren().add(v);
+    private void handleFloorLoaded(IFloor floor) {
+        if (floor != null && elevatorCallView != null) {
+            elevatorCallView.addFloor(floor);
         }
     }
 
@@ -114,10 +116,13 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
             public void run() {
                 switch (evt.getPropertyName()) {
                     case UIEvent.ENVIRONMENT_LOADED:
-                        handleFloorDisplay((IEnvironment) evt.getNewValue());
+                        handleEnvironmentLoaded((IEnvironment) evt.getNewValue());
                         break;
                     case UIEvent.NEW_ELEVATOR_ADDED:
                         handleElevatorLoaded((ILocalElevator) evt.getNewValue());
+                        break;
+                    case UIEvent.FLOOR_LOADED:
+                        handleFloorLoaded((IFloor) evt.getNewValue());
                         break;
                     case UIEvent.UPDATE_ERROR_MESSAGE:
                         System.out.println("TODO: Add proper error output " + evt.getNewValue());
