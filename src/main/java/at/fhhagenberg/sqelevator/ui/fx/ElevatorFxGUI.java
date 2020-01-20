@@ -61,11 +61,17 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
             Platform.exit();
+            // Todo: Proper shutdown
+            System.exit(0);
         });
         mapper.addElevatorListener(this);
         mapper.addEnvironmentListener(this);
         mapper.addSelectedElevatorListener(this.selectedElevator);
         mapper.addSaveFloorEnabledListener(this.selectedElevator);
+
+        core.loadEnvironment();
+        core.loadElevators();
+        core.loadFloors();
     }
 
     private HBox renderLayout() {

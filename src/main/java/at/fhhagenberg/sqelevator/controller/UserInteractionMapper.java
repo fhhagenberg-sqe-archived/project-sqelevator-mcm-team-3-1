@@ -12,6 +12,7 @@ import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 /**
@@ -30,7 +31,7 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     private final PropertyChangeSupport saveFloorEnabledListener = new PropertyChangeSupport(this);
     private final PropertyChangeSupport updateErrorMessageListener = new PropertyChangeSupport(this);
 
-    public UserInteractionMapper(ICoreMapper shader) {
+    public UserInteractionMapper(ICoreMapper shader) throws RemoteException {
         shader.addEnvironmentLoadedEventListener(this);
         shader.addElevatorLoadedEventListener(this);
         shader.addFloorLoadedEventListener(this);

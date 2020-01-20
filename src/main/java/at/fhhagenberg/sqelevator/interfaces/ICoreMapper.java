@@ -44,5 +44,4 @@ public interface ICoreMapper {
 
     public void addElevatorLoadedEventListener(PropertyChangeListener listener);
     public void removeElevatorLoadedEventListener(PropertyChangeListener listener);
-
 }

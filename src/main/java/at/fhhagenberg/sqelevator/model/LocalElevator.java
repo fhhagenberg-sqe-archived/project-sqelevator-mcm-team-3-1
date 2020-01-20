@@ -10,6 +10,7 @@ import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -27,7 +28,7 @@ public class LocalElevator implements ILocalElevator {
     private int[] selectedFloors = {};
     private DoorState doorState = DoorState.UNKNOWN;
     private ElevatorDirection direction = ElevatorDirection.UNSET;
-    private IElevatorMode mode;
+    private IElevatorMode mode = new ElevatorModeAuto();
     private ElevatorState lastState = ElevatorState.UNKNOWN;
     private int currentFloor = -1;
     private int targetFloor = -1;
