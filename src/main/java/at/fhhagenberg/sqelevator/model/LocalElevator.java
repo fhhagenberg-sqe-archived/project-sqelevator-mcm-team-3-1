@@ -10,10 +10,13 @@ import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
+import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -25,37 +28,28 @@ public class LocalElevator implements ILocalElevator {
     private int[] selectedFloors = {};
     private DoorState doorState = DoorState.UNKNOWN;
     private ElevatorDirection direction = ElevatorDirection.UNSET;
-    private IElevatorMode mode;
+    private IElevatorMode mode = new ElevatorModeAuto();
     private ElevatorState lastState = ElevatorState.UNKNOWN;
     private int currentFloor = -1;
     private int targetFloor = -1;
     private int lbsWeight = -1;
-    private int lbsMaxLoad = -1;
     private int currentSpeedFts = 0;
     private int currentAccelerationFtsqr = 0;
     private int currentPosition = 0;
-    private PropertyChangeSupport selectedFloorsListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport doorStateListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport directionListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport stateListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport floorListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport targetListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport weightListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport accelerationListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport positionListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport speedListener
-            = new PropertyChangeSupport(this);
-    private PropertyChangeSupport modeListener
-            = new PropertyChangeSupport(this);
+    private int capacity = 0;
+
+    private PropertyChangeSupport selectedFloorsListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport doorStateListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport directionListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport stateListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport floorListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport targetListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport weightListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport capacityListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport accelerationListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport positionListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport speedListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport modeListener = new PropertyChangeSupport(this);
 
     public LocalElevator(int elevatorNumber) {
         this.elevatorNumber = elevatorNumber;
@@ -127,17 +121,6 @@ public class LocalElevator implements ILocalElevator {
         }
     }
 
-    private void checkElevatorState() {
-
-        if (this.lbsWeight > this.lbsMaxLoad) {
-            var state = ElevatorState.ERROR;
-            if (state != this.lastState) {
-                this.setElevatorState(state);
-            }
-        }
-
-    }
-
     /**
      * @inheritDoc
      */
@@ -174,8 +157,8 @@ public class LocalElevator implements ILocalElevator {
      * @inheritDoc
      */
     @Override
-    public int getLoadCapacityInLbs() {
-        return this.lbsMaxLoad;
+    public int getCapacity() {
+        return this.capacity;
     }
 
     /**
@@ -294,7 +277,6 @@ public class LocalElevator implements ILocalElevator {
     }
 
     public void setCurrentFloor(int floor) {
-
         if (this.currentFloor != floor) {
             var old = this.currentFloor;
             this.currentFloor = floor;
@@ -319,10 +301,10 @@ public class LocalElevator implements ILocalElevator {
         }
     }
 
-    public void setMaxLoad(int maxLoad) {
-        if (this.lbsMaxLoad != maxLoad) {
-            this.lbsMaxLoad = maxLoad;
-            this.updateElevatorData(this);
+    public void setCapacity(int capacity) {
+        if (this.capacity != capacity && capacity > 0) {
+            this.capacityListener.firePropertyChange(ElevatorEvent.CAPACITY, this.capacity, capacity);
+            this.capacity = capacity;
         }
     }
 
@@ -418,6 +400,16 @@ public class LocalElevator implements ILocalElevator {
     @Override
     public void removeCurrentWeightListener(PropertyChangeListener l) {
         this.weightListener.removePropertyChangeListener(l);
+    }
+
+    @Override
+    public void addCapacityListener(PropertyChangeListener l) {
+        this.capacityListener.addPropertyChangeListener(l);
+    }
+
+    @Override
+    public void removeCapacityListener(PropertyChangeListener l) {
+        this.capacityListener.removePropertyChangeListener(l);
     }
 
     @Override

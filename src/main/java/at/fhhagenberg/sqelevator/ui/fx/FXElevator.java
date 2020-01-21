@@ -52,7 +52,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         this.populateHeader();
         this.add(header, 0, 0);
         for (int i = 0; i < numberOfFloors; i++) {
-            floors[i] = generatePane();
+            floors[i] = UiUtils.generatePane();
             floors[i].minWidth(80);
             floors[i].minHeight(80);
             this.add(floors[i], 0, i + 1);
@@ -71,16 +71,6 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         this.elevator.addStateListener(this);
         this.setSelected(null);
         this.updateView();
-    }
-
-    private Pane generatePane() {
-        var p = new Pane();
-        p.setMinSize(80, 80);
-        //p.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        p.setPadding(new Insets(5, 5, 5, 5));
-        p.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        return p;
     }
 
     /**
@@ -195,7 +185,6 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
             setBorder(new Border(new BorderStroke(Color.TRANSPARENT,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5))));
         }
-
     }
 
     public ILocalElevator getElevator() {
@@ -219,14 +208,8 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
                     case ElevatorEvent.DIRECTION:
                         elevatorDirection.setText(((ElevatorDirection) evt.getNewValue()).name());
                         break;
-                    case ElevatorEvent.DOOR_STATE:
-                        elevatorDoorState.setText(((DoorState) evt.getNewValue()).name());
-                        break;
                     case ElevatorEvent.MODE:
                         elevatorMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
-                        break;
-                    case ElevatorEvent.CURRENT_STATE:
-                        setElevatorState((ElevatorState) evt.getNewValue());
                         break;
                 }
             }

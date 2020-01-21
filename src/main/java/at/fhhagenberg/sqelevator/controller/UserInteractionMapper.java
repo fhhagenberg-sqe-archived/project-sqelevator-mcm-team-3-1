@@ -6,16 +6,14 @@
 package at.fhhagenberg.sqelevator.controller;
 
 import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
-import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
-import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
-import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
+import at.fhhagenberg.sqelevator.interfaces.*;
 import at.fhhagenberg.sqelevator.propertychanged.event.CoreMapperEvent;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
-import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 
 /**
  *
@@ -27,20 +25,16 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     private LinkedList<ILocalElevator> elevators = new LinkedList<>();
     private IEnvironment environment;
     private int enteredFloor;
-    private final PropertyChangeSupport selectedElevatorListener
-            = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport elevatorListener
-            = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport environmentLoadedListener
-            = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport saveFloorEnabledListener
-            = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport updateErrorMessageListener
-            = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport selectedElevatorListener = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport elevatorListener = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport environmentLoadedListener = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport saveFloorEnabledListener = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport updateErrorMessageListener = new PropertyChangeSupport(this);
 
-    public UserInteractionMapper(ICoreMapper shader) {
+    public UserInteractionMapper(ICoreMapper shader) throws RemoteException {
         shader.addEnvironmentLoadedEventListener(this);
         shader.addElevatorLoadedEventListener(this);
+        shader.addFloorLoadedEventListener(this);
     }
 
     public void toggleMode() {
@@ -121,7 +115,6 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     private boolean isStorable() {
         return this.environment != null
                 && this.selectedElevator != null
-                && this.environment.isServicedBy(selectedElevator, enteredFloor)
                 && this.selectedElevator.getCurrentFloor() != this.enteredFloor
                 && this.selectedElevator.getCurrentMode().getModeType() == ElevatorModeType.MANUAL
                 && this.enteredFloor >= 0 && this.enteredFloor < this.environment.getNumberOfFloors();
@@ -146,11 +139,16 @@ public class UserInteractionMapper implements IUserInteractionMapper {
                     this.elevatorListener.firePropertyChange(UIEvent.NEW_ELEVATOR_ADDED, null, e);
                 }
             }
+        } else if (evt.getPropertyName().equals(CoreMapperEvent.FLOOR_LOADED)) {
+            IFloor floor = (IFloor) evt.getNewValue();
+            if (floor != null) {
+                this.elevatorListener.firePropertyChange(UIEvent.FLOOR_LOADED, null, floor);
+            }
         }
     }
 
     @Override
-    public void toggleDorrState() {
+    public void toggleDoorState() {
         System.out.println("TODO: Toggle door state");
     }
 }

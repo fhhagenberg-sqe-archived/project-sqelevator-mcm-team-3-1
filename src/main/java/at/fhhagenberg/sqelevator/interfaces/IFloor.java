@@ -5,8 +5,9 @@
  */
 package at.fhhagenberg.sqelevator.interfaces;
 
+import java.beans.PropertyChangeListener;
+
 /**
- *
  * @author jmayr
  */
 public interface IFloor {
@@ -18,28 +19,21 @@ public interface IFloor {
      */
     public int getFloorNumber();
 
-    /**
-     * Function that checks if it can be serviced by a specific elevator
-     *
-     * @param e ILocalElevator elevator that should be checked for
-     * @return boolean true if the elevator can be serviced by the floor,
-     * returns false otherwhise
-     */
-    public boolean isServicedBy(ILocalElevator e);
+    public boolean getFloorButtonDown();
 
-    /**
-     * Function that adds an elevator, that services the specific floor.
-     *
-     * @param e ILocalElevator elevator that services this floor
-     * @return true when the elevator can be added.
-     */
-    public boolean setServicedBy(ILocalElevator e);
+    public boolean getFloorButtonUp();
 
-    /**
-     * Function that adds an elevator, that services the specific floor.
-     *
-     * @param e int number of the elevator that services this floor
-     * @return true when the elevator can be added.
-     */
-    public boolean setServicedBy(int elevatorNumber);
+    public void setFloorButtonDown(boolean active);
+
+    public void setFloorButtonUp(boolean active);
+
+    public void addFloorButtonDownListener(PropertyChangeListener listener);
+
+    public void removeFloorButtonDownListener(PropertyChangeListener listener);
+
+    public void addFloorButtonUpListener(PropertyChangeListener listener);
+
+    public void removeFloorButtonUpListener(PropertyChangeListener listener);
+
+    public void removeAllListeners(PropertyChangeListener listener);
 }

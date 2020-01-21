@@ -6,17 +6,21 @@
 package at.fhhagenberg.sqelevator.model;
 
 import at.fhhagenberg.sqelevator.interfaces.IFloor;
-import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
-import java.util.LinkedList;
+import at.fhhagenberg.sqelevator.propertychanged.event.FloorEvent;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
- *
  * @author jmayr
  */
 public class Floor implements IFloor {
-
-    private LinkedList<Integer> servicedBy = new LinkedList<>();
     private int floorNumber;
+    private boolean floorButtonDown;
+    private boolean floorButtonUp;
+
+    private PropertyChangeSupport floorButtonDownListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport floorButtonUpListener = new PropertyChangeSupport(this);
 
     public Floor(int floorNumber) {
         this.floorNumber = floorNumber;
@@ -28,21 +32,54 @@ public class Floor implements IFloor {
     }
 
     @Override
-    public boolean isServicedBy(ILocalElevator e) {
-        return this.servicedBy.contains(e.getElevatorNumber());
+    public boolean getFloorButtonDown() {
+        return this.floorButtonDown;
     }
 
     @Override
-    public boolean setServicedBy(ILocalElevator e) {
-        return this.setServicedBy(e.getElevatorNumber());
+    public boolean getFloorButtonUp() {
+        return this.floorButtonUp;
     }
 
     @Override
-    public boolean setServicedBy(int elevatorNumber) {
-        if (!this.servicedBy.contains(elevatorNumber)) {
-            this.servicedBy.add(elevatorNumber);
+    public void setFloorButtonDown(boolean active) {
+        if (active != this.floorButtonDown) {
+            floorButtonDownListener.firePropertyChange(FloorEvent.FLOOR_BUTTON_DOWN, this.floorButtonDown, active);
+            this.floorButtonDown = active;
         }
-        return this.servicedBy.contains(elevatorNumber);
     }
 
+    @Override
+    public void setFloorButtonUp(boolean active) {
+        if (active != this.floorButtonUp) {
+            floorButtonUpListener.firePropertyChange(FloorEvent.FLOOR_BUTTON_UP, this.floorButtonUp, active);
+            this.floorButtonUp = active;
+        }
+    }
+
+    @Override
+    public void addFloorButtonDownListener(PropertyChangeListener listener) {
+        this.floorButtonDownListener.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removeFloorButtonDownListener(PropertyChangeListener listener) {
+        this.floorButtonDownListener.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void addFloorButtonUpListener(PropertyChangeListener listener) {
+        this.floorButtonUpListener.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removeFloorButtonUpListener(PropertyChangeListener listener) {
+        this.floorButtonUpListener.removePropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removeAllListeners(PropertyChangeListener listener) {
+        this.floorButtonDownListener.removePropertyChangeListener(listener);
+        this.floorButtonUpListener.removePropertyChangeListener(listener);
+    }
 }

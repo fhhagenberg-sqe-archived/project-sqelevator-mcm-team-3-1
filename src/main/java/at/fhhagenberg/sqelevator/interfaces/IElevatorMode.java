@@ -14,18 +14,11 @@ import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
 public interface IElevatorMode {
 
     /**
-     * Function returns the next floor, the elevator should go to
+     * Sets the mode of the elevator
      *
-     * @return int containing the number of the next floor.
+     * @param type ElevatorModeType
      */
-    public int getNextFloor();
-
-    /**
-     * Sets the environment, the elevator mode uses
-     *
-     * @param e
-     */
-    public void setEnvironment(IEnvironment e);
+    public void setModeType(ElevatorModeType type);
 
     /**
      * Returns the current type of the current elevatorMode

@@ -6,14 +6,12 @@
 package at.fhhagenberg.sqelevator.propertychanged.event;
 
 /**
- *
  * @author jmayr
  */
 public class EnvironmentEvent {
-    public static final String ELEVATOR_CALL_REMOVED = "EnvironmentEvent.ElevatorCallRemoved";
+    public static final String CLOCK_TICK = "EnvironmentEvent.ClockTick";
     public static final String ELEVATOR_CALL_ADDED = "EnvironmentEvent.ElevatorCallAdded";
-    // public static final String  = "EnvironmentEvent.";
-    
-            
-            private EnvironmentEvent(){}
+
+    private EnvironmentEvent() {
+    }
 }

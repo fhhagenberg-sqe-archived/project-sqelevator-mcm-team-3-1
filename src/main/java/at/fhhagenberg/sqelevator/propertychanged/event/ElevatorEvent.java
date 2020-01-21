@@ -20,7 +20,7 @@ public class ElevatorEvent {
     public static final String CURRENT_FLOOR = "ILocalElevator.currentFloor";
     public static final String TARGET_FLOOR = "ILocalElevator.targetFloor";
     public static final String LBS_WEIGHT = "ILocalElevator.lbsWeight";
-    public static final String LBS_MAX_LOAD = "ILocalElevator.lbsMaxLoad";
+    public static final String CAPACITY = "ILocalElevator.capacity";
     public static final String CURRENT_SPEED_FTS = "ILocalElevator.currentSpeedFts";
     public static final String CURRENT_ACCELERATION_FTSQR = "ILocalElevator.currentAccelerationFtsqr";
     public static final String CURRENT_POSITION = "ILocalElevator.currentPosition";

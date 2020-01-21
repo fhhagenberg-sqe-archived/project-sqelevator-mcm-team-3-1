@@ -1,15 +1,7 @@
 package at.fhhagenberg.sqelevator;
 
-import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
-import at.fhhagenberg.sqelevator.enums.DoorState;
-import at.fhhagenberg.sqelevator.controller.dummy.CoreMapper;
-import at.fhhagenberg.sqelevator.model.Environment;
-import at.fhhagenberg.sqelevator.model.Floor;
-import at.fhhagenberg.sqelevator.model.LocalElevator;
-import at.fhhagenberg.sqelevator.ui.fx.ElevatorFxGUI;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
+import sqelevator.IElevator;
+
 import java.rmi.RemoteException;
 
 public class ElevatorExample {

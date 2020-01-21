@@ -1,4 +1,4 @@
-package at.fhhagenberg.sqelevator;
+package sqelevator;
 
 /**
  * High-level interface to access and control the elevator system.
@@ -180,7 +180,7 @@ public interface IElevator extends java.rmi.Remote {
 	 * Retrieves the height of the floors in the building. 
 	 * @return floor height (ft)
 	 */
-	public int getFloorHeight() throws java.rmi.RemoteException; 
+	public int getFloorHeight() throws java.rmi.RemoteException;
 
 	/**
 	 * Retrieves the number of floors in the building. 
