@@ -15,6 +15,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.beans.PropertyChangeEvent;
@@ -31,11 +32,14 @@ import java.util.LinkedList;
  */
 public class ElevatorFxGUI extends Application implements PropertyChangeListener {
 
+    private static final double ELEVATOR_DISPLAY_HEIGHT = 500;
+
+    private HBox generalElevatorInformation = new HBox();
+    private HBox floorCallArea = new HBox();
+    private HBox elevatorArea = new HBox();
     private FXSelectedElevator selectedElevator;
     private FXElevatorCallView elevatorCallView;
     private LinkedList<FXElevator> evtrs;
-    private HBox floorCallArea;
-    private HBox elevatorArea;
     private IUserInteractionMapper mapper;
     private IEnvironment environment;
     private ICoreMapper core;
@@ -47,16 +51,13 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
     @Override
     public void start(Stage primaryStage) throws Exception {
         core = new CoreMapperImpl();
-        var userInteractionHandler = new UserInteractionMapper(core);
-        this.mapper = userInteractionHandler;
+        this.mapper = new UserInteractionMapper(core);
         selectedElevator = new FXSelectedElevator(mapper);
         evtrs = new LinkedList<>();
-        this.elevatorArea = new HBox();
-        this.floorCallArea = new HBox();
         Scene scene = new Scene(renderLayout(), 1080, 600);
         primaryStage.setTitle("DataManager FX");
         primaryStage.setMinWidth(1080);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinHeight(600 + 40);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
@@ -74,13 +75,17 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         core.loadFloors();
     }
 
-    private HBox renderLayout() {
-        HBox layout = new HBox();
-        layout.getChildren().add(elevatorArea);
-        layout.getChildren().add(floorCallArea);
-        layout.getChildren().add(selectedElevator);
-        layout.setPadding(new Insets(10, 20, 50, 10));
-        layout.setSpacing(5);
+    private VBox renderLayout() {
+        VBox layout = new VBox();
+        HBox elevatorColumns = new HBox();
+        elevatorColumns.getChildren().add(elevatorArea);
+        elevatorColumns.getChildren().add(floorCallArea);
+        elevatorColumns.getChildren().add(selectedElevator);
+        elevatorColumns.setPadding(new Insets(10, 20, 10, 10));
+        elevatorColumns.setMinHeight(500);
+
+        layout.getChildren().add(elevatorColumns);
+        layout.getChildren().add(generalElevatorInformation);
         return layout;
     }
 
@@ -88,23 +93,25 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         if (environment != null) {
             System.out.println("Floor view added!");
             this.environment = environment;
-            elevatorCallView = new FXElevatorCallView(this.environment);
+            elevatorCallView = new FXElevatorCallView(environment, ELEVATOR_DISPLAY_HEIGHT);
             this.floorCallArea.getChildren().clear();
             this.floorCallArea.getChildren().add(elevatorCallView);
+            var fxGeneralElevatorInformation = new FXGeneralElevatorInformation(environment);
+            this.generalElevatorInformation.getChildren().add(fxGeneralElevatorInformation);
         }
     }
 
     private void handleElevatorLoaded(ILocalElevator elevator) {
         if (elevator != null) {
-            if (this.environment != null && this.evtrs.stream().filter(evtr -> evtr.getElevator().equals(elevator)).count() == 0) {
+            if (this.environment != null && this.evtrs.stream().noneMatch(fxElevator -> fxElevator.getElevator().equals(elevator))) {
                 System.out.println("Elevator added!");
-                var evtr = new FXElevator(elevator, environment.getNumberOfFloors());
-                evtr.setOnMouseClicked((MouseEvent t) -> {
+                var fxElevator = new FXElevator(elevator, environment.getNumberOfFloors(), ELEVATOR_DISPLAY_HEIGHT);
+                fxElevator.setOnMouseClicked((MouseEvent t) -> {
                     this.mapper.selectElevator(elevator);
                 });
-                this.evtrs.add(evtr);
-                this.elevatorArea.getChildren().add(evtr);
-                this.mapper.addSelectedElevatorListener(evtr);
+                this.evtrs.add(fxElevator);
+                this.elevatorArea.getChildren().add(fxElevator);
+                this.mapper.addSelectedElevatorListener(fxElevator);
             }
         }
     }

@@ -17,8 +17,16 @@ import javafx.scene.paint.Color;
  */
 public class FXElevatorCallView extends VBox {
 
-    public FXElevatorCallView(IEnvironment e) {
-        this.minWidth(160);
+    private static final double COLUMN_WIDTH = 80;
+    private static final double HEADER_HEIGHT = 100;
+
+    private IEnvironment environment;
+    private double availableHeight;
+
+    public FXElevatorCallView(IEnvironment environment, double availableHeight) {
+        this.environment = environment;
+        this.availableHeight = availableHeight;
+        this.minWidth(COLUMN_WIDTH * 2);
         RowConstraints r1 = new RowConstraints();
         r1.setMinHeight(100);
         this.setPadding(new Insets(5, 5, 5, 5));
@@ -28,7 +36,8 @@ public class FXElevatorCallView extends VBox {
     }
 
     public void addFloor(IFloor floor) {
-        var floorCallView = new FXFloorCallView(floor);
+        double uiHeight = (availableHeight - HEADER_HEIGHT) / environment.getNumberOfFloors();
+        var floorCallView = new FXFloorCallView(floor, COLUMN_WIDTH, uiHeight);
         this.getChildren().add(floorCallView);
     }
 
@@ -39,7 +48,10 @@ public class FXElevatorCallView extends VBox {
     private void populateHeader() {
         var up = new Label("UP");
         var down = new Label("DOWN");
+        up.setMinWidth(COLUMN_WIDTH);
+        down.setMinWidth(COLUMN_WIDTH);
         var header = new HBox();
+        header.setMinHeight(HEADER_HEIGHT);
         header.getChildren().add(up);
         header.getChildren().add(down);
         this.getChildren().add(header);

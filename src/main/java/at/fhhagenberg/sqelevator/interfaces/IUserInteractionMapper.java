@@ -7,6 +7,7 @@ package at.fhhagenberg.sqelevator.interfaces;
 
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -14,7 +15,7 @@ import java.beans.PropertyChangeListener;
  */
 public interface IUserInteractionMapper extends PropertyChangeListener {
 
-    public void toggleMode();
+    public void toggleMode(int elevatorNumber, IElevatorMode mode) throws RemoteException;
 
     public void toggleDoorState();
 
@@ -42,5 +43,5 @@ public interface IUserInteractionMapper extends PropertyChangeListener {
 
     public void removeUpdateErrorMessageListener(PropertyChangeListener l);
 
-    public void storeFloor();
+    public void storeFloor() throws RemoteException;
 }

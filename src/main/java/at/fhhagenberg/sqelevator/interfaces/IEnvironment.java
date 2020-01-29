@@ -33,6 +33,14 @@ public interface IEnvironment {
      */
     public int getFloorHeight();
 
+    /**
+     * Gets the clock tick rate of the elevator control system
+     *
+     * @return clock tick rate of the elevator control system
+     */
+    public long getClockTick();
+
     public void addClockTickListener(PropertyChangeListener l);
+
     public void removeClockTickListener(PropertyChangeListener l);
 }
