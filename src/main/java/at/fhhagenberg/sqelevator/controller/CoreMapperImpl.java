@@ -1,5 +1,7 @@
 package at.fhhagenberg.sqelevator.controller;
 
+import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
+import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeManual;
 import sqelevator.IElevator;
 import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
@@ -88,6 +90,11 @@ public class CoreMapperImpl implements ICoreMapper {
     @Override
     public void setTargetFloor(ILocalElevator e, int floorNumber) throws RemoteException {
         elevator.setTarget(e.getElevatorNumber(), floorNumber);
+    }
+
+    @Override
+    public void setMode(int elevatorNumber, IElevatorMode mode) throws RemoteException {
+        elevators.get(elevatorNumber).setMode(mode);
     }
 
     @Override

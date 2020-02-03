@@ -16,9 +16,9 @@ public class FXFloorCallView extends HBox implements PropertyChangeListener {
     private final Pane downButtonPane;
     private final Pane upButtonPane;
 
-    public FXFloorCallView(IFloor floor) {
-        this.downButtonPane = UiUtils.generatePane();
-        this.upButtonPane = UiUtils.generatePane();
+    public FXFloorCallView(IFloor floor, double availableWidth, double availableHeight) {
+        this.downButtonPane = UiUtils.generatePane(availableWidth, availableHeight);
+        this.upButtonPane = UiUtils.generatePane(availableWidth, availableHeight);
         this.getChildren().add(downButtonPane);
         this.getChildren().add(upButtonPane);
         setFloor(floor);
@@ -52,7 +52,7 @@ public class FXFloorCallView extends HBox implements PropertyChangeListener {
     }
 
     private void updatePane(Pane pane, boolean active) {
-        var color = active ? Color.LIGHTBLUE : Color.TRANSPARENT;
+        var color = active ? Color.LIGHTBLUE : Color.RED;
         pane.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 }

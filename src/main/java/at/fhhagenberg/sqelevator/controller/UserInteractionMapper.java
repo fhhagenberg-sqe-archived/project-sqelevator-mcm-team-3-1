@@ -9,6 +9,7 @@ import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
 import at.fhhagenberg.sqelevator.interfaces.*;
 import at.fhhagenberg.sqelevator.propertychanged.event.CoreMapperEvent;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -16,11 +17,11 @@ import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 /**
- *
  * @author jmayr
  */
 public class UserInteractionMapper implements IUserInteractionMapper {
 
+    private ICoreMapper shader;
     private ILocalElevator selectedElevator;
     private LinkedList<ILocalElevator> elevators = new LinkedList<>();
     private IEnvironment environment;
@@ -32,14 +33,20 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     private final PropertyChangeSupport updateErrorMessageListener = new PropertyChangeSupport(this);
 
     public UserInteractionMapper(ICoreMapper shader) throws RemoteException {
+        this.shader = shader;
         shader.addEnvironmentLoadedEventListener(this);
         shader.addElevatorLoadedEventListener(this);
         shader.addFloorLoadedEventListener(this);
     }
 
-    public void toggleMode() {
-        System.out.println("TODO: Toggle Elevator mode!");
+    public void storeFloor() throws RemoteException {
+        if (this.isStorable()) {
+            shader.setTargetFloor(selectedElevator, enteredFloor);
+        }
+    }
 
+    public void toggleMode(int elevatorNumber, IElevatorMode mode) throws RemoteException {
+        shader.setMode(elevatorNumber, mode);
     }
 
     public void processInput(String input) {
@@ -50,7 +57,7 @@ public class UserInteractionMapper implements IUserInteractionMapper {
                 System.out.println("Input is " + (this.isStorable() ? "Storable" : "not storable"));
                 this.saveFloorEnabledListener.firePropertyChange(UIEvent.SAVE_FLOOR_ENABLED, null, this.isStorable());
             } catch (NumberFormatException ex) {
-                this.enteredFloor = - 1;
+                this.enteredFloor = -1;
             }
         }
     }
@@ -103,13 +110,6 @@ public class UserInteractionMapper implements IUserInteractionMapper {
 
     public void removeUpdateErrorMessageListener(PropertyChangeListener l) {
         this.updateErrorMessageListener.removePropertyChangeListener(l);
-    }
-
-    public void storeFloor() {
-        //TODO: Store floor
-        if (this.isStorable()) {
-            System.out.println("TODO: Store floor on update!");
-        }
     }
 
     private boolean isStorable() {

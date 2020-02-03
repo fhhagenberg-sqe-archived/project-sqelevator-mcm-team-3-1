@@ -5,36 +5,27 @@
  */
 package at.fhhagenberg.sqelevator.ui.fx;
 
-import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 /**
- *
  * @author jmayr
  */
 public class FXElevator extends GridPane implements PropertyChangeListener {
+
+    private static final double COLUMN_WIDTH = 80;
 
     private ILocalElevator elevator;
     private int numberOfFloors;
@@ -45,16 +36,15 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     private Label elevatorDirection;
     private Label elevatorMode;
 
-    public FXElevator(ILocalElevator elevator, int numberOfFloors) {
+    public FXElevator(ILocalElevator elevator, int numberOfFloors, double availableHeight) {
         this.numberOfFloors = numberOfFloors;
         this.elevator = elevator;
         floors = new Pane[numberOfFloors];
         this.populateHeader();
         this.add(header, 0, 0);
         for (int i = 0; i < numberOfFloors; i++) {
-            floors[i] = UiUtils.generatePane();
-            floors[i].minWidth(80);
-            floors[i].minHeight(80);
+            double columnHeight = (availableHeight - 100) / numberOfFloors;
+            floors[i] = UiUtils.generatePane(COLUMN_WIDTH, columnHeight);
             this.add(floors[i], 0, i + 1);
         }
         RowConstraints r1 = new RowConstraints();
@@ -92,7 +82,6 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     /**
      * updates the view data This function clears and re-sets the selected
      * floors, the elevator position and the target floor
-     *
      */
     public void updateView() {
         clearAll();

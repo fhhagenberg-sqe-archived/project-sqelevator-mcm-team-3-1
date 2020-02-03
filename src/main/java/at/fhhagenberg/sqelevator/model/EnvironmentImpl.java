@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqelevator.model;
 
 import at.fhhagenberg.sqelevator.interfaces.IEnvironment;
+import at.fhhagenberg.sqelevator.propertychanged.event.EnvironmentEvent;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -40,12 +41,17 @@ public class EnvironmentImpl implements IEnvironment {
         this.floorHeight = floorHeight;
     }
 
+    @Override
     public long getClockTick() {
         return clockTick;
     }
 
     public void setClockTick(long clockTick) {
-        this.clockTick = clockTick;
+        if (this.clockTick != clockTick) {
+            var old = this.clockTick;
+            this.clockTick = clockTick;
+            this.clockTickListener.firePropertyChange(EnvironmentEvent.CLOCK_TICK, old, clockTick);
+        }
     }
 
     @Override

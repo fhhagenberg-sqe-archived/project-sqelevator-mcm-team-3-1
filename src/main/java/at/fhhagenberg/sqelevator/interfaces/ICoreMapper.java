@@ -20,12 +20,15 @@ public interface ICoreMapper {
 
 
     public void loadEnvironment() throws RemoteException;
+
     public void updateEnvironment() throws RemoteException;
 
     public void loadFloors() throws RemoteException;
+
     public void updateFloors() throws RemoteException;
 
     public void loadElevators() throws RemoteException;
+
     public void updateElevators() throws RemoteException;
 
     /**
@@ -36,12 +39,17 @@ public interface ICoreMapper {
      */
     public void setTargetFloor(ILocalElevator e, int floorNumber) throws RemoteException;
 
+    public void setMode(int elevatorNumber, IElevatorMode mode) throws RemoteException;
+
     public void addEnvironmentLoadedEventListener(PropertyChangeListener listener);
+
     public void removeEnvironmentLoadedEventListener(PropertyChangeListener listener);
 
     public void addFloorLoadedEventListener(PropertyChangeListener listener);
+
     public void removeFloorLoadedEventListener(PropertyChangeListener listener);
 
     public void addElevatorLoadedEventListener(PropertyChangeListener listener);
+
     public void removeElevatorLoadedEventListener(PropertyChangeListener listener);
 }

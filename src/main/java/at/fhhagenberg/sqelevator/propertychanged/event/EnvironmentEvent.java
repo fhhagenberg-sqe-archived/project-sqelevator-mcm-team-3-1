@@ -10,7 +10,6 @@ package at.fhhagenberg.sqelevator.propertychanged.event;
  */
 public class EnvironmentEvent {
     public static final String CLOCK_TICK = "EnvironmentEvent.ClockTick";
-    public static final String ELEVATOR_CALL_ADDED = "EnvironmentEvent.ElevatorCallAdded";
 
     private EnvironmentEvent() {
     }

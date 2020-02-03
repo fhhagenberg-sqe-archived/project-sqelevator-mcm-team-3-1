@@ -77,10 +77,8 @@ public class LocalElevator implements ILocalElevator {
     @Override
     public boolean setMode(IElevatorMode mode) {
         if (mode != null) {
-            var old = mode;
             this.mode = mode;
-            this.modeListener.firePropertyChange(ElevatorEvent.MODE, old, this.mode);
-
+            this.modeListener.firePropertyChange(ElevatorEvent.MODE, null, this.mode);
         }
         return mode != null;
     }

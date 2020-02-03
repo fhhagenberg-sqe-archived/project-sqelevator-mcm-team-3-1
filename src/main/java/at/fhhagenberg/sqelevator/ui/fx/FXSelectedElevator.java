@@ -11,6 +11,8 @@ import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
+import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
+import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeManual;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import javafx.application.Platform;
@@ -23,6 +25,7 @@ import javafx.scene.layout.RowConstraints;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.RemoteException;
 
 /**
  * @author jmayr
@@ -84,15 +87,35 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         currentPosition = new Label();
         changeMode = new Button("Switch Mode");
         submitNextFloor = new Button("Submit");
-        submitNextFloor.setOnMouseClicked((MouseEvent t) -> {
-            m.storeFloor();
-        });
+
         nextFloor = new TextField();
+
+        this.setupUI();
+        this.updateUI();
+
+        changeMode.setOnMouseClicked((MouseEvent t) -> {
+            var mode = elevator.getCurrentMode() instanceof ElevatorModeAuto ?
+                    new ElevatorModeManual() : new ElevatorModeAuto();
+            //Todo: handling remote exception
+            try {
+                m.toggleMode(elevator.getElevatorNumber(), mode);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
+
+        submitNextFloor.setOnMouseClicked((MouseEvent t) -> {
+            //Todo: handling remote exception
+            try {
+                m.storeFloor();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
+
         nextFloor.textProperty().addListener((observable, oldValue, newValue) -> {
             m.processInput(newValue);
         });
-        this.setupUI();
-        this.updateUI();
     }
 
     /**
@@ -239,6 +262,7 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
                         currentCapacity.setText(evt.getNewValue().toString());
                     case ElevatorEvent.MODE:
                         currentMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
+                        updateUI();
                         break;
                     case ElevatorEvent.TARGET_FLOOR:
                         nextFloor.setText(evt.getNewValue().toString());
