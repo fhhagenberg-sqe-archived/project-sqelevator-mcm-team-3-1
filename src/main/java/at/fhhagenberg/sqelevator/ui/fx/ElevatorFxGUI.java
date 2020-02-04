@@ -8,6 +8,9 @@ package at.fhhagenberg.sqelevator.ui.fx;
 import at.fhhagenberg.sqelevator.controller.CoreMapperImpl;
 import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
 import at.fhhagenberg.sqelevator.interfaces.*;
+import at.fhhagenberg.sqelevator.model.factory.ElevatorFactory;
+import at.fhhagenberg.sqelevator.model.factory.EnvironmentFactory;
+import at.fhhagenberg.sqelevator.model.factory.FloorFactory;
 import at.fhhagenberg.sqelevator.propertychanged.event.UIEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,9 +20,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import sqelevator.IElevator;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.rmi.Naming;
 import java.util.LinkedList;
 
 /**
@@ -50,7 +55,9 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        core = new CoreMapperImpl();
+        IElevator elevator = (IElevator) Naming.lookup("rmi://localhost:1099/ElevatorSim");
+        core = new CoreMapperImpl(elevator,
+                new EnvironmentFactory(), new ElevatorFactory(), new FloorFactory());
         this.mapper = new UserInteractionMapper(core);
         selectedElevator = new FXSelectedElevator(mapper);
         evtrs = new LinkedList<>();

@@ -19,8 +19,7 @@ public class Floor implements IFloor {
     private boolean floorButtonDown;
     private boolean floorButtonUp;
 
-    private PropertyChangeSupport floorButtonDownListener = new PropertyChangeSupport(this);
-    private PropertyChangeSupport floorButtonUpListener = new PropertyChangeSupport(this);
+    private PropertyChangeSupport floorUpdatedListener = new PropertyChangeSupport(this);
 
     public Floor(int floorNumber) {
         this.floorNumber = floorNumber;
@@ -44,7 +43,7 @@ public class Floor implements IFloor {
     @Override
     public void setFloorButtonDown(boolean active) {
         if (active != this.floorButtonDown) {
-            floorButtonDownListener.firePropertyChange(FloorEvent.FLOOR_BUTTON_DOWN, this.floorButtonDown, active);
+            floorUpdatedListener.firePropertyChange(FloorEvent.FLOOR_BUTTON_DOWN, this.floorButtonDown, active);
             this.floorButtonDown = active;
         }
     }
@@ -52,34 +51,18 @@ public class Floor implements IFloor {
     @Override
     public void setFloorButtonUp(boolean active) {
         if (active != this.floorButtonUp) {
-            floorButtonUpListener.firePropertyChange(FloorEvent.FLOOR_BUTTON_UP, this.floorButtonUp, active);
+            floorUpdatedListener.firePropertyChange(FloorEvent.FLOOR_BUTTON_UP, this.floorButtonUp, active);
             this.floorButtonUp = active;
         }
     }
 
     @Override
-    public void addFloorButtonDownListener(PropertyChangeListener listener) {
-        this.floorButtonDownListener.addPropertyChangeListener(listener);
+    public void addFloorUpdatedListener(PropertyChangeListener listener) {
+        this.floorUpdatedListener.addPropertyChangeListener(listener);
     }
 
     @Override
-    public void removeFloorButtonDownListener(PropertyChangeListener listener) {
-        this.floorButtonDownListener.removePropertyChangeListener(listener);
-    }
-
-    @Override
-    public void addFloorButtonUpListener(PropertyChangeListener listener) {
-        this.floorButtonUpListener.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void removeFloorButtonUpListener(PropertyChangeListener listener) {
-        this.floorButtonUpListener.removePropertyChangeListener(listener);
-    }
-
-    @Override
-    public void removeAllListeners(PropertyChangeListener listener) {
-        this.floorButtonDownListener.removePropertyChangeListener(listener);
-        this.floorButtonUpListener.removePropertyChangeListener(listener);
+    public void removeFloorUpdatedListener(PropertyChangeListener listener) {
+        this.floorUpdatedListener.addPropertyChangeListener(listener);
     }
 }

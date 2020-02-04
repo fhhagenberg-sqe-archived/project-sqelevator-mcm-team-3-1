@@ -94,7 +94,7 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         this.updateUI();
 
         changeMode.setOnMouseClicked((MouseEvent t) -> {
-            var mode = elevator.getCurrentMode() instanceof ElevatorModeAuto ?
+            var mode = elevator.getMode() instanceof ElevatorModeAuto ?
                     new ElevatorModeManual() : new ElevatorModeAuto();
             //Todo: handling remote exception
             try {
@@ -172,7 +172,7 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
      */
     public void setSelectedElevator(ILocalElevator e) {
         if (this.elevator != null) {
-            this.elevator.removeAllListener(this);
+            this.elevator.removeElevatorUpdatedListener(this);
         }
         this.elevator = e;
         this.updateUI();
@@ -184,7 +184,7 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
     private void updateUI() {
         this.changeMode.setDisable(elevator == null);
         this.submitNextFloor.setDisable(true);
-        this.nextFloor.setDisable(elevator == null || elevator.getCurrentMode().getModeType() != ElevatorModeType.MANUAL);
+        this.nextFloor.setDisable(elevator == null || elevator.getMode().getModeType() != ElevatorModeType.MANUAL);
         if (elevator == null) {
             this.header.setText("");
             this.currentLoad.setText("");
@@ -200,28 +200,17 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
             this.nextFloor.setText("");
         } else {
             this.header.setText("Elevator E " + this.elevator.getElevatorNumber());
-            this.currentLoad.setText(Integer.toString(elevator.getCurrentWeightInLbs()));
-            this.elevator.addCurrentWeightListener(this);
+            this.currentLoad.setText(Integer.toString(elevator.getWeight()));
             this.currentCapacity.setText(Integer.toString(elevator.getCapacity()));
-            this.elevator.addCapacityListener(this);
-            this.currentAcceleration.setText(Double.toString(this.elevator.getAccelerationInFtsqr()));
-            this.elevator.addAccelerationListener(this);
-            this.currentFloor.setText(Integer.toString(this.elevator.getCurrentFloor()));
-            this.elevator.addFloorListener(this);
+            this.currentAcceleration.setText(Double.toString(this.elevator.getAcceleration()));
+            this.currentFloor.setText(Integer.toString(this.elevator.getFloor()));
             this.currentDoorState.setText(this.elevator.getDoorState().name());
-            this.elevator.addDoorStateListener(this);
-            this.currentMode.setText(this.elevator.getCurrentMode().getModeType().name());
-            this.elevator.addModeListener(this);
-            this.currentSpeed.setText(Double.toString(this.elevator.getCurrentSpeedInFts()));
-            this.elevator.addCurrentSpeedListener(this);
+            this.currentMode.setText(this.elevator.getMode().getModeType().name());
+            this.currentSpeed.setText(Double.toString(this.elevator.getSpeed()));
             this.currentState.setText(this.elevator.getElevatorState().name());
-            this.elevator.addStateListener(this);
             this.currentDirection.setText(this.elevator.getDirection().name());
-            this.elevator.addDirectionListener(this);
-            this.currentPosition.setText(Integer.toString(this.elevator.getCurrentPosition()));
-            this.elevator.addPositionListener(this);
+            this.currentPosition.setText(Integer.toString(this.elevator.getPosition()));
             this.nextFloor.setText(Integer.toString(this.elevator.getTargetFloor()));
-            this.elevator.addTargetListener(this);
         }
     }
 

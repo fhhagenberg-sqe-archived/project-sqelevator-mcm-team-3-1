@@ -1,20 +1,18 @@
 package at.fhhagenberg.sqelevator.controller;
 
-import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
-import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeManual;
-import sqelevator.IElevator;
 import at.fhhagenberg.sqelevator.enums.DoorState;
-import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
-import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
-import at.fhhagenberg.sqelevator.model.EnvironmentImpl;
+import at.fhhagenberg.sqelevator.interfaces.*;
 import at.fhhagenberg.sqelevator.model.Floor;
 import at.fhhagenberg.sqelevator.model.LocalElevator;
+import at.fhhagenberg.sqelevator.model.factory.ElevatorFactory;
+import at.fhhagenberg.sqelevator.model.factory.EnvironmentFactory;
+import at.fhhagenberg.sqelevator.model.factory.FloorFactory;
 import at.fhhagenberg.sqelevator.propertychanged.event.CoreMapperEvent;
+import sqelevator.IElevator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -26,17 +24,24 @@ public class CoreMapperImpl implements ICoreMapper {
     private Timer coreMapperTimer;
     private CoreMapperTimerTask coreMapperTimerTask;
 
-    private EnvironmentImpl environment;
-    private HashMap<Integer, LocalElevator> elevators = new HashMap<>();
-    private HashMap<Integer, Floor> floors = new HashMap<>();
+    private final EnvironmentFactory environmentFactory;
+    private final ElevatorFactory elevatorFactory;
+    private final FloorFactory floorFactory;
 
-    private PropertyChangeSupport environmentLoadedListener = new PropertyChangeSupport(this);
-    private PropertyChangeSupport elevatorLoadedListener = new PropertyChangeSupport(this);
-    private PropertyChangeSupport floorLoadedListener = new PropertyChangeSupport(this);
+    private IEnvironment environment;
+    private HashMap<Integer, ILocalElevator> elevators = new HashMap<>();
+    private HashMap<Integer, IFloor> floors = new HashMap<>();
 
-    public CoreMapperImpl() throws MalformedURLException, RemoteException, NotBoundException {
-        this.environment = new EnvironmentImpl();
-        this.elevator = (IElevator) Naming.lookup("rmi://localhost:1099/ElevatorSim");
+    private PropertyChangeSupport mappingLoadedListener = new PropertyChangeSupport(this);
+
+    public CoreMapperImpl(final IElevator elevator,
+                          final EnvironmentFactory environmentFactory,
+                          final ElevatorFactory elevatorFactory,
+                          final FloorFactory floorFactory) throws MalformedURLException, RemoteException, NotBoundException {
+        this.elevator = elevator;
+        this.environmentFactory = environmentFactory;
+        this.elevatorFactory = elevatorFactory;
+        this.floorFactory = floorFactory;
         this.coreMapperTimerTask = new CoreMapperTimerTask(this);
         this.coreMapperTimer = new Timer("CoreMapper Timer");
         this.coreMapperTimer.scheduleAtFixedRate(this.coreMapperTimerTask, 0, REMOTE_FETCH_INTERVAL);
@@ -44,8 +49,9 @@ public class CoreMapperImpl implements ICoreMapper {
 
     @Override
     public void loadEnvironment() throws RemoteException {
+        this.environment = environmentFactory.createEnvironment();
         updateEnvironmentData(environment);
-        environmentLoadedListener.firePropertyChange(CoreMapperEvent.ENVIRONMENT_LOADED, null, environment);
+        mappingLoadedListener.firePropertyChange(CoreMapperEvent.ENVIRONMENT_LOADED, null, environment);
     }
 
     @Override
@@ -56,16 +62,16 @@ public class CoreMapperImpl implements ICoreMapper {
     @Override
     public void loadElevators() throws RemoteException {
         for (int elevatorNumber = 0; elevatorNumber < environment.getNumberOfElevators(); ++elevatorNumber) {
-            var localElevator = new LocalElevator(elevatorNumber);
+            var localElevator = elevatorFactory.createElevator(elevatorNumber);
             updateElevatorData(localElevator, elevatorNumber);
             elevators.put(localElevator.getElevatorNumber(), localElevator);
-            elevatorLoadedListener.firePropertyChange(CoreMapperEvent.ELEVATOR_LOADED, null, localElevator);
+            mappingLoadedListener.firePropertyChange(CoreMapperEvent.ELEVATOR_LOADED, null, localElevator);
         }
     }
 
     @Override
     public void updateElevators() throws RemoteException {
-        for (Map.Entry<Integer, LocalElevator> e : elevators.entrySet()) {
+        for (Map.Entry<Integer, ILocalElevator> e : elevators.entrySet()) {
             updateElevatorData(e.getValue(), e.getKey());
         }
     }
@@ -73,16 +79,16 @@ public class CoreMapperImpl implements ICoreMapper {
     @Override
     public void loadFloors() throws RemoteException {
         for (int floorNumber = 0; floorNumber < elevator.getFloorNum(); ++floorNumber) {
-            var floor = new Floor(floorNumber);
+            var floor = floorFactory.createFloor(floorNumber);
             updateFloorData(floor, floorNumber);
             floors.put(floor.getFloorNumber(), floor);
-            floorLoadedListener.firePropertyChange(CoreMapperEvent.FLOOR_LOADED, null, floor);
+            mappingLoadedListener.firePropertyChange(CoreMapperEvent.FLOOR_LOADED, null, floor);
         }
     }
 
     @Override
     public void updateFloors() throws RemoteException {
-        for (Map.Entry<Integer, Floor> f : floors.entrySet()) {
+        for (Map.Entry<Integer, IFloor> f : floors.entrySet()) {
             updateFloorData(f.getValue(), f.getKey());
         }
     }
@@ -98,36 +104,16 @@ public class CoreMapperImpl implements ICoreMapper {
     }
 
     @Override
-    public void addEnvironmentLoadedEventListener(PropertyChangeListener listener) {
-        this.environmentLoadedListener.addPropertyChangeListener(listener);
+    public void addMappingLoadedListener(PropertyChangeListener listener) {
+        this.mappingLoadedListener.addPropertyChangeListener(listener);
     }
 
     @Override
-    public void removeEnvironmentLoadedEventListener(PropertyChangeListener listener) {
-        this.environmentLoadedListener.removePropertyChangeListener(listener);
+    public void removeMappingLoadedListener(PropertyChangeListener listener) {
+        this.mappingLoadedListener.removePropertyChangeListener(listener);
     }
 
-    @Override
-    public void addFloorLoadedEventListener(PropertyChangeListener listener) {
-        this.floorLoadedListener.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void removeFloorLoadedEventListener(PropertyChangeListener listener) {
-        this.floorLoadedListener.removePropertyChangeListener(listener);
-    }
-
-    @Override
-    public void addElevatorLoadedEventListener(PropertyChangeListener listener) {
-        this.elevatorLoadedListener.addPropertyChangeListener(listener);
-    }
-
-    @Override
-    public void removeElevatorLoadedEventListener(PropertyChangeListener listener) {
-        this.elevatorLoadedListener.removePropertyChangeListener(listener);
-    }
-
-    private void updateEnvironmentData(EnvironmentImpl environment) throws RemoteException {
+    private void updateEnvironmentData(IEnvironment environment) throws RemoteException {
         if (environment != null) {
             environment.setNumberOfElevators(elevator.getElevatorNum());
             environment.setNumberOfFloors(elevator.getFloorNum());
@@ -136,20 +122,20 @@ public class CoreMapperImpl implements ICoreMapper {
         }
     }
 
-    private void updateElevatorData(LocalElevator localElevator, int elevatorNumber) throws RemoteException {
+    private void updateElevatorData(ILocalElevator localElevator, int elevatorNumber) throws RemoteException {
         if (localElevator != null) {
-            localElevator.setCurrentAcceleration(elevator.getElevatorAccel(elevatorNumber));
-            localElevator.setCurrentFloor(elevator.getElevatorFloor(elevatorNumber));
-            localElevator.setCurrentPosition(elevator.getElevatorPosition(elevatorNumber));
+            localElevator.setAcceleration(elevator.getElevatorAccel(elevatorNumber));
+            localElevator.setFloor(elevator.getElevatorFloor(elevatorNumber));
+            localElevator.setPosition(elevator.getElevatorPosition(elevatorNumber));
             localElevator.setTargetFloor(elevator.getTarget(elevatorNumber));
             localElevator.setDoorState(DoorState.from(elevator.getElevatorDoorStatus(elevatorNumber)));
-            localElevator.setLbsWeight(elevator.getElevatorWeight(elevatorNumber));
+            localElevator.setWeight(elevator.getElevatorWeight(elevatorNumber));
             localElevator.setCapacity(elevator.getElevatorCapacity(elevatorNumber));
-            localElevator.setCurrentSpeed(elevator.getElevatorSpeed(elevatorNumber));
+            localElevator.setSpeed(elevator.getElevatorSpeed(elevatorNumber));
         }
     }
 
-    private void updateFloorData(Floor floor, int floorNumber) throws RemoteException {
+    private void updateFloorData(IFloor floor, int floorNumber) throws RemoteException {
         if (floor != null) {
             floor.setFloorButtonDown(elevator.getFloorButtonDown(floorNumber));
             floor.setFloorButtonUp(elevator.getFloorButtonUp(floorNumber));

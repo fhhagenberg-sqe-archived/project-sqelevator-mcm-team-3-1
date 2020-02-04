@@ -52,13 +52,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         this.getRowConstraints().add(r1);
         this.setMinWidth(100);
         this.setPadding(new Insets(5, 5, 5, 5));
-        this.elevator.addSelectedFloorsListener(this);
-        this.elevator.addTargetListener(this);
-        this.elevator.addFloorListener(this);
-        this.elevator.addDirectionListener(this);
-        this.elevator.addDoorStateListener(this);
-        this.elevator.addModeListener(this);
-        this.elevator.addStateListener(this);
+        this.elevator.addElevatorUpdatedListener(this);
         this.setSelected(null);
         this.updateView();
     }
@@ -72,7 +66,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         this.elevatorName = new Label("E " + elevator.getElevatorNumber());
         this.elevatorDoorState = new Label(elevator.getDoorState().name());
         this.elevatorDirection = new Label(elevator.getDirection().name());
-        this.elevatorMode = new Label(elevator.getCurrentMode().getModeType().name());
+        this.elevatorMode = new Label(elevator.getMode().getModeType().name());
         header.getChildren().add(elevatorName);
         header.getChildren().add(elevatorDoorState);
         header.getChildren().add(elevatorDirection);
@@ -88,7 +82,7 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         for (int floor : this.elevator.getSelectedFloors()) {
             this.setSelection(floor);
         }
-        this.setPosition(this.elevator.getCurrentFloor());
+        this.setPosition(this.elevator.getFloor());
         this.setTarget(this.elevator.getTargetFloor());
     }
 
