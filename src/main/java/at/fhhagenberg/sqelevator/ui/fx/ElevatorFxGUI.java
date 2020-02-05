@@ -5,7 +5,7 @@
  */
 package at.fhhagenberg.sqelevator.ui.fx;
 
-import at.fhhagenberg.sqelevator.controller.CoreMapperImpl;
+import at.fhhagenberg.sqelevator.controller.CoreMapper;
 import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
 import at.fhhagenberg.sqelevator.interfaces.*;
 import at.fhhagenberg.sqelevator.model.factory.ElevatorFactory;
@@ -56,7 +56,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
     @Override
     public void start(Stage primaryStage) throws Exception {
         IElevator elevator = (IElevator) Naming.lookup("rmi://localhost:1099/ElevatorSim");
-        core = new CoreMapperImpl(elevator,
+        core = new CoreMapper(elevator,
                 new EnvironmentFactory(), new ElevatorFactory(), new FloorFactory());
         this.mapper = new UserInteractionMapper(core);
         selectedElevator = new FXSelectedElevator(mapper);
@@ -68,9 +68,8 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
+            core.cancelPeriodicUpdates();
             Platform.exit();
-            // Todo: Proper shutdown
-            System.exit(0);
         });
         mapper.addElevatorListener(this);
         mapper.addEnvironmentListener(this);
@@ -80,6 +79,8 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         core.loadEnvironment();
         core.loadElevators();
         core.loadFloors();
+
+        core.schedulePeriodicUpdates(ICoreMapper.DEFAULT_UPDATE_INTERVAL_MS);
     }
 
     private VBox renderLayout() {

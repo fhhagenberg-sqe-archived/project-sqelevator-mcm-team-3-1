@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 
-public class CoreMapperImpl implements ICoreMapper {
+public class CoreMapper implements ICoreMapper {
     private IElevator elevator;
     private Timer coreMapperTimer;
     private CoreMapperTimerTask coreMapperTimerTask;
@@ -34,17 +34,26 @@ public class CoreMapperImpl implements ICoreMapper {
 
     private PropertyChangeSupport mappingLoadedListener = new PropertyChangeSupport(this);
 
-    public CoreMapperImpl(final IElevator elevator,
-                          final EnvironmentFactory environmentFactory,
-                          final ElevatorFactory elevatorFactory,
-                          final FloorFactory floorFactory) throws MalformedURLException, RemoteException, NotBoundException {
+    public CoreMapper(final IElevator elevator,
+                      final EnvironmentFactory environmentFactory,
+                      final ElevatorFactory elevatorFactory,
+                      final FloorFactory floorFactory) throws MalformedURLException, RemoteException, NotBoundException {
         this.elevator = elevator;
         this.environmentFactory = environmentFactory;
         this.elevatorFactory = elevatorFactory;
         this.floorFactory = floorFactory;
         this.coreMapperTimerTask = new CoreMapperTimerTask(this);
         this.coreMapperTimer = new Timer("CoreMapper Timer");
-        this.coreMapperTimer.scheduleAtFixedRate(this.coreMapperTimerTask, 0, REMOTE_FETCH_INTERVAL);
+    }
+
+    @Override
+    public void schedulePeriodicUpdates(int intervalMs) {
+        this.coreMapperTimer.scheduleAtFixedRate(this.coreMapperTimerTask, 0, intervalMs);
+    }
+
+    @Override
+    public void cancelPeriodicUpdates() {
+        this.coreMapperTimer.cancel();
     }
 
     @Override

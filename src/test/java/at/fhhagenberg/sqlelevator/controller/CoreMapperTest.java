@@ -1,6 +1,6 @@
 package at.fhhagenberg.sqlelevator.controller;
 
-import at.fhhagenberg.sqelevator.controller.CoreMapperImpl;
+import at.fhhagenberg.sqelevator.controller.CoreMapper;
 import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.model.EnvironmentImpl;
@@ -12,6 +12,7 @@ import at.fhhagenberg.sqelevator.model.factory.ElevatorFactory;
 import at.fhhagenberg.sqelevator.model.factory.EnvironmentFactory;
 import at.fhhagenberg.sqelevator.model.factory.FloorFactory;
 import at.fhhagenberg.sqlelevator.ElevatorStub;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 public class CoreMapperTest {
 
     private ElevatorStub elevatorStub;
-    private CoreMapperImpl coreMapper;
+    private CoreMapper coreMapper;
 
     @BeforeEach
     public void setup() {
@@ -36,7 +37,7 @@ public class CoreMapperTest {
         var mappingLoadedListenerMock = mock(PropertyChangeListener.class);
         when(environmentFactoryMock.createEnvironment()).thenReturn(environmentMock);
 
-        coreMapper = new CoreMapperImpl(elevatorStub, environmentFactoryMock, new ElevatorFactory(), new FloorFactory());
+        coreMapper = new CoreMapper(elevatorStub, environmentFactoryMock, new ElevatorFactory(), new FloorFactory());
         coreMapper.addMappingLoadedListener(mappingLoadedListenerMock);
 
         coreMapper.loadEnvironment();
@@ -57,7 +58,7 @@ public class CoreMapperTest {
         when(elevatorFactoryMock.createElevator(1)).thenReturn(elevatorMock);
         when(elevatorFactoryMock.createElevator(2)).thenReturn(elevatorMock);
 
-        coreMapper = new CoreMapperImpl(elevatorStub, new EnvironmentFactory(), elevatorFactoryMock, new FloorFactory());
+        coreMapper = new CoreMapper(elevatorStub, new EnvironmentFactory(), elevatorFactoryMock, new FloorFactory());
         coreMapper.addMappingLoadedListener(mappingLoadedListenerMock);
 
         coreMapper.loadEnvironment();
@@ -86,7 +87,7 @@ public class CoreMapperTest {
         when(floorFactoryMock.createFloor(2)).thenReturn(floorMock);
         when(floorFactoryMock.createFloor(3)).thenReturn(floorMock);
 
-        coreMapper = new CoreMapperImpl(elevatorStub, new EnvironmentFactory(), new ElevatorFactory(), floorFactoryMock);
+        coreMapper = new CoreMapper(elevatorStub, new EnvironmentFactory(), new ElevatorFactory(), floorFactoryMock);
         coreMapper.addMappingLoadedListener(mappingLoadedListenerMock);
 
         coreMapper.loadEnvironment();
@@ -111,7 +112,7 @@ public class CoreMapperTest {
         when(elevatorFactoryMock.createElevator(1)).thenReturn(elevatorMock);
         when(elevatorFactoryMock.createElevator(2)).thenReturn(elevatorMock);
 
-        coreMapper = new CoreMapperImpl(elevatorStub, new EnvironmentFactory(), elevatorFactoryMock, new FloorFactory());
+        coreMapper = new CoreMapper(elevatorStub, new EnvironmentFactory(), elevatorFactoryMock, new FloorFactory());
         coreMapper.loadEnvironment();
         coreMapper.loadElevators();
         coreMapper.setMode(0, new ElevatorModeAuto());
@@ -128,7 +129,7 @@ public class CoreMapperTest {
         when(elevatorMock.getElevatorNumber()).thenReturn(elevatorNumber);
         var elevatorFactoryMock = mock(ElevatorFactory.class);
 
-        coreMapper = new CoreMapperImpl(elevatorStubMock, new EnvironmentFactory(), elevatorFactoryMock, new FloorFactory());
+        coreMapper = new CoreMapper(elevatorStubMock, new EnvironmentFactory(), elevatorFactoryMock, new FloorFactory());
         coreMapper.setTargetFloor(elevatorMock, floorNumber);
         
         verify(elevatorStubMock).setTarget(elevatorNumber, floorNumber);

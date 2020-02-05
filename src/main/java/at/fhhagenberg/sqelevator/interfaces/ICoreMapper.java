@@ -16,7 +16,11 @@ public interface ICoreMapper {
     /**
      * The interval in milliseconds on which the elevator data is going to be fetched from the remote
      */
-    int REMOTE_FETCH_INTERVAL = 100;
+    int DEFAULT_UPDATE_INTERVAL_MS = 100;
+
+    public void schedulePeriodicUpdates(int intervalMs);
+
+    public void cancelPeriodicUpdates();
 
 
     public void loadEnvironment() throws RemoteException;
