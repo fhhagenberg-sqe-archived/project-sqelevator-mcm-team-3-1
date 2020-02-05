@@ -199,6 +199,7 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
             this.currentPosition.setText("");
             this.nextFloor.setText("");
         } else {
+            this.elevator.addElevatorUpdatedListener(this);
             this.header.setText("Elevator E " + this.elevator.getElevatorNumber());
             this.currentLoad.setText(Integer.toString(elevator.getWeight()));
             this.currentCapacity.setText(Integer.toString(elevator.getCapacity()));
