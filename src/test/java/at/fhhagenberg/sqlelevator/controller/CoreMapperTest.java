@@ -12,7 +12,6 @@ import at.fhhagenberg.sqelevator.model.factory.ElevatorFactory;
 import at.fhhagenberg.sqelevator.model.factory.EnvironmentFactory;
 import at.fhhagenberg.sqelevator.model.factory.FloorFactory;
 import at.fhhagenberg.sqlelevator.ElevatorStub;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -131,7 +130,7 @@ public class CoreMapperTest {
 
         coreMapper = new CoreMapper(elevatorStubMock, new EnvironmentFactory(), elevatorFactoryMock, new FloorFactory());
         coreMapper.setTargetFloor(elevatorMock, floorNumber);
-        
+
         verify(elevatorStubMock).setTarget(elevatorNumber, floorNumber);
     }
 }

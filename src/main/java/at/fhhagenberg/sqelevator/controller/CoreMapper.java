@@ -2,8 +2,6 @@ package at.fhhagenberg.sqelevator.controller;
 
 import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.interfaces.*;
-import at.fhhagenberg.sqelevator.model.Floor;
-import at.fhhagenberg.sqelevator.model.LocalElevator;
 import at.fhhagenberg.sqelevator.model.factory.ElevatorFactory;
 import at.fhhagenberg.sqelevator.model.factory.EnvironmentFactory;
 import at.fhhagenberg.sqelevator.model.factory.FloorFactory;
@@ -12,8 +10,6 @@ import sqelevator.IElevator;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +33,7 @@ public class CoreMapper implements ICoreMapper {
     public CoreMapper(final IElevator elevator,
                       final EnvironmentFactory environmentFactory,
                       final ElevatorFactory elevatorFactory,
-                      final FloorFactory floorFactory) throws MalformedURLException, RemoteException, NotBoundException {
+                      final FloorFactory floorFactory) {
         this.elevator = elevator;
         this.environmentFactory = environmentFactory;
         this.elevatorFactory = elevatorFactory;
