@@ -16,7 +16,11 @@ public interface ICoreMapper {
     /**
      * The interval in milliseconds on which the elevator data is going to be fetched from the remote
      */
-    int REMOTE_FETCH_INTERVAL = 100;
+    int DEFAULT_UPDATE_INTERVAL_MS = 100;
+
+    public void schedulePeriodicUpdates(int intervalMs);
+
+    public void cancelPeriodicUpdates();
 
 
     public void loadEnvironment() throws RemoteException;
@@ -41,15 +45,7 @@ public interface ICoreMapper {
 
     public void setMode(int elevatorNumber, IElevatorMode mode) throws RemoteException;
 
-    public void addEnvironmentLoadedEventListener(PropertyChangeListener listener);
+    public void addMappingLoadedListener(PropertyChangeListener listener);
 
-    public void removeEnvironmentLoadedEventListener(PropertyChangeListener listener);
-
-    public void addFloorLoadedEventListener(PropertyChangeListener listener);
-
-    public void removeFloorLoadedEventListener(PropertyChangeListener listener);
-
-    public void addElevatorLoadedEventListener(PropertyChangeListener listener);
-
-    public void removeElevatorLoadedEventListener(PropertyChangeListener listener);
+    public void removeMappingLoadedListener(PropertyChangeListener listener);
 }

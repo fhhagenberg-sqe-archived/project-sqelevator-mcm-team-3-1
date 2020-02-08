@@ -12,33 +12,21 @@ import java.beans.PropertyChangeListener;
  */
 public interface IEnvironment {
 
-    /**
-     * Function returns the number of elevators in the environment
-     *
-     * @return int number of elevators
-     */
     public int getNumberOfElevators();
 
-    /**
-     * Gets the number of floors, the elevator goes to.
-     *
-     * @return int number of floors in the environment
-     */
+    public void setNumberOfElevators(int numberOfElevators);
+
     public int getNumberOfFloors();
 
-    /**
-     * Gets the height of a floor in the building.
-     *
-     * @return int height in ft.
-     */
+    public void setNumberOfFloors(int numberOfFloors);
+
     public int getFloorHeight();
 
-    /**
-     * Gets the clock tick rate of the elevator control system
-     *
-     * @return clock tick rate of the elevator control system
-     */
+    public void setFloorHeight(int floorHeight);
+
     public long getClockTick();
+
+    public void setClockTick(long clockTick);
 
     public void addClockTickListener(PropertyChangeListener l);
 

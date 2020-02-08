@@ -19,6 +19,7 @@ public class EnvironmentImpl implements IEnvironment {
         return numberOfElevators;
     }
 
+    @Override
     public void setNumberOfElevators(int numberOfElevators) {
         this.numberOfElevators = numberOfElevators;
     }
@@ -28,6 +29,7 @@ public class EnvironmentImpl implements IEnvironment {
         return numberOfFloors;
     }
 
+    @Override
     public void setNumberOfFloors(int numberOfFloors) {
         this.numberOfFloors = numberOfFloors;
     }
@@ -37,6 +39,7 @@ public class EnvironmentImpl implements IEnvironment {
         return floorHeight;
     }
 
+    @Override
     public void setFloorHeight(int floorHeight) {
         this.floorHeight = floorHeight;
     }
@@ -46,6 +49,7 @@ public class EnvironmentImpl implements IEnvironment {
         return clockTick;
     }
 
+    @Override
     public void setClockTick(long clockTick) {
         if (this.clockTick != clockTick) {
             var old = this.clockTick;

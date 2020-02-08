@@ -12,11 +12,6 @@ import java.beans.PropertyChangeListener;
  */
 public interface IFloor {
 
-    /**
-     * Function that returns the floor number.
-     *
-     * @return int representing the floor number
-     */
     public int getFloorNumber();
 
     public boolean getFloorButtonDown();
@@ -27,13 +22,7 @@ public interface IFloor {
 
     public void setFloorButtonUp(boolean active);
 
-    public void addFloorButtonDownListener(PropertyChangeListener listener);
+    public void addFloorUpdatedListener(PropertyChangeListener listener);
 
-    public void removeFloorButtonDownListener(PropertyChangeListener listener);
-
-    public void addFloorButtonUpListener(PropertyChangeListener listener);
-
-    public void removeFloorButtonUpListener(PropertyChangeListener listener);
-
-    public void removeAllListeners(PropertyChangeListener listener);
+    public void removeFloorUpdatedListener(PropertyChangeListener listener);
 }

@@ -16,286 +16,57 @@ import java.beans.PropertyChangeListener;
  */
 public interface ILocalElevator {
 
-    /**
-     * Gets the number of the elevator
-     *
-     * @return int number of the elevator
-     */
     public int getElevatorNumber();
 
-    /**
-     * Gets all floors that are selected within the elevator
-     *
-     * @return integer array containing the selected floors;
-     */
     public int[] getSelectedFloors();
 
-    /**
-     * Gets the floor the elevator is currently located
-     *
-     * @return int floor number
-     */
-    public int getCurrentFloor();
+    public void setSelectedFloors(int[] selectedFloors);
 
-    /**
-     * Gets the current state of the door.
-     *
-     * @return DoorState current state of the elevator doors
-     */
+    public int getFloor();
+
+    public void setFloor(int currentFloor);
+
     public DoorState getDoorState();
 
-    /**
-     * Gets the current state of the elevator
-     *
-     * @return ElevatorState state of the elevator
-     */
+    public void setDoorState(DoorState doorState);
+
     public ElevatorState getElevatorState();
 
-    /**
-     * Gets the current speed of the elevator in Ft/s
-     *
-     * @return int current speed ot the elevator in Ft/s
-     */
-    public int getCurrentSpeedInFts();
+    public void setElevatorState(ElevatorState elevatorState);
 
-    /**
-     * Gets the current acceleration of the Elevator in Ft/s^2
-     *
-     * @return int current acceleration of the elevator
-     */
-    public int getAccelerationInFtsqr();
+    public int getSpeed();
 
-    /**
-     * Gets the current position in the building (measured from the bottom of
-     * the building)
-     *
-     * @return int containing the position within the building
-     */
-    public int getCurrentPosition();
+    public void setSpeed(int speed);
 
-    /**
-     * Gets the current weight that is in the elevator
-     *
-     * @return int current weight within the elevator
-     */
-    public int getCurrentWeightInLbs();
+    public int getAcceleration();
 
-    /**
-     * Retrieves the maximum number of passengers that can fit on the elevator
-     *
-     * @return maximum number of passengers that can fit
-     */
+    public void setAcceleration(int acceleration);
+
+    public int getPosition();
+
+    public void setPosition(int position);
+
+    public int getWeight();
+
+    public void setWeight(int weight);
+
     public int getCapacity();
 
-    /**
-     * Gets the floor the elevator is targeting to.
-     *
-     * @return int number of the floor the elevator is heading to.
-     */
+    public void setCapacity(int capacity);
+
     public int getTargetFloor();
 
-    /**
-     * Gets the direction the elevator going to
-     *
-     * @return ElevatorDirection direction the elevator is heading
-     */
+    public void setTargetFloor(int targetFloor);
+
     public ElevatorDirection getDirection();
 
-    /**
-     * Updates alle the elevator data and it's states, but not it's mode The id
-     * of both elevators must match
-     *
-     * @param other ILocalElevator elevator from which the data should be taken
-     * @return boolean true if the data could be updated
-     */
-    public boolean updateElevatorData(ILocalElevator other);
+    public void setDirection(ElevatorDirection direction);
 
-    /**
-     * Sets the mode of the elevator
-     *
-     * @param mode IElevatorMode the new mode that will be used for navigation
-     * @return boolean true when the mode was changed
-     */
-    public boolean setMode(IElevatorMode mode);
+    public IElevatorMode getMode();
 
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addSelectedFloorsListener(PropertyChangeListener l);
+    public void setMode(IElevatorMode mode);
 
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeSelectedFloorsListener(PropertyChangeListener l);
+    public void addElevatorUpdatedListener(PropertyChangeListener l);
 
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addDoorStateListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeDoorStateListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addDirectionListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeDirectionListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addStateListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeStateListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addFloorListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeFloorListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addTargetListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeTargetListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addCurrentWeightListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeCurrentWeightListener(PropertyChangeListener l);
-
-    public void addCapacityListener(PropertyChangeListener l);
-
-    public void removeCapacityListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addCurrentSpeedListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeCurrentSpeedListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addAccelerationListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeAccelerationListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addPositionListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removePositionListener(PropertyChangeListener l);
-
-    /**
-     * Function takes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be added
-     */
-    public void addModeListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeModeListener(PropertyChangeListener l);
-
-    /**
-     * Function removes a listener, that is notified on changes
-     *
-     * @param l ElevatorChangedListener listener that should be removed
-     */
-    public void removeAllListener(PropertyChangeListener l);
-
-    public IElevatorMode getCurrentMode();
-
-    /**
-     * function returns the current state of the elevator
-     *
-     * @return ElevatorState current state of the elevator
-     */
-    public ElevatorState getCurrentState();
-
-    /**
-     * function sets the state of the elevator
-     *
-     * @param state ElevatorState current state of the elevator
-     */
-    public void setElevatorState(ElevatorState state);
+    public void removeElevatorUpdatedListener(PropertyChangeListener l);
 }

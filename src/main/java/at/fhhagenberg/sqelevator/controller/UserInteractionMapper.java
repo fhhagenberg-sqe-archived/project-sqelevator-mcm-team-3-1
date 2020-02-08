@@ -34,9 +34,7 @@ public class UserInteractionMapper implements IUserInteractionMapper {
 
     public UserInteractionMapper(ICoreMapper shader) throws RemoteException {
         this.shader = shader;
-        shader.addEnvironmentLoadedEventListener(this);
-        shader.addElevatorLoadedEventListener(this);
-        shader.addFloorLoadedEventListener(this);
+        shader.addMappingLoadedListener(this);
     }
 
     public void storeFloor() throws RemoteException {
@@ -115,8 +113,8 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     private boolean isStorable() {
         return this.environment != null
                 && this.selectedElevator != null
-                && this.selectedElevator.getCurrentFloor() != this.enteredFloor
-                && this.selectedElevator.getCurrentMode().getModeType() == ElevatorModeType.MANUAL
+                && this.selectedElevator.getFloor() != this.enteredFloor
+                && this.selectedElevator.getMode().getModeType() == ElevatorModeType.MANUAL
                 && this.enteredFloor >= 0 && this.enteredFloor < this.environment.getNumberOfFloors();
     }
 

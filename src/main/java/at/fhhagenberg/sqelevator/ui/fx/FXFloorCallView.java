@@ -26,12 +26,11 @@ public class FXFloorCallView extends HBox implements PropertyChangeListener {
 
     public void setFloor(IFloor floor) {
         if (this.floor != null) {
-            this.floor.removeAllListeners(this);
+            this.floor.removeFloorUpdatedListener(this);
         }
         this.floor = floor;
 
-        this.floor.addFloorButtonDownListener(this);
-        this.floor.addFloorButtonUpListener(this);
+        this.floor.addFloorUpdatedListener(this);
     }
 
     @Override
