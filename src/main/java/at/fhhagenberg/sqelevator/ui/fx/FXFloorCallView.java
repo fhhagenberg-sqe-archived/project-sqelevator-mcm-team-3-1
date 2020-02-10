@@ -19,6 +19,8 @@ public class FXFloorCallView extends HBox implements PropertyChangeListener {
     public FXFloorCallView(IFloor floor, double availableWidth, double availableHeight) {
         this.downButtonPane = UiUtils.generatePane(availableWidth, availableHeight);
         this.upButtonPane = UiUtils.generatePane(availableWidth, availableHeight);
+        this.downButtonPane.setId("DownButtonPane");
+        this.upButtonPane.setId("UpButtonPane");
         this.getChildren().add(downButtonPane);
         this.getChildren().add(upButtonPane);
         setFloor(floor);

@@ -2,6 +2,7 @@ package at.fhhagenberg.sqlelevator.ui.fx;
 
 import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
 import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
+import at.fhhagenberg.sqelevator.interfaces.IUserInteractionMapper;
 import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
 import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeManual;
 import at.fhhagenberg.sqelevator.ui.fx.FXElevator;
@@ -14,6 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.internal.matchers.Any;
 import org.testfx.api.FxAssert;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -31,7 +35,7 @@ public class FXSelectedElevatorTest {
 
     private LocalElevatorStub localElevatorStub;
     private FXSelectedElevator fxSelectedElevator;
-    private UserInteractionMapper userInteractionMapper;
+    private IUserInteractionMapper userInteractionMapper;
     private ICoreMapper coreMapperMock;
 
     @Start
@@ -39,7 +43,7 @@ public class FXSelectedElevatorTest {
         localElevatorStub = new LocalElevatorStub();
         coreMapperMock = mock(ICoreMapper.class);
         //userInteractionMapper = new UserInteractionMapper(coreMapperMock);
-        userInteractionMapper = mock(UserInteractionMapper.class);
+        userInteractionMapper = mock(IUserInteractionMapper.class);
         fxSelectedElevator = new FXSelectedElevator(userInteractionMapper);
         fxSelectedElevator.setSelectedElevator(localElevatorStub);
 
@@ -66,29 +70,29 @@ public class FXSelectedElevatorTest {
 
         var nextFloorTextField = (TextField) robot.lookup("#NextFloorTextField").queryAll().iterator().next();
         assertEquals(Integer.toString(localElevatorStub.getTargetFloor()), nextFloorTextField.getText());
-
-        /*
-        changeMode.setId("ChangeModeButton");
-        submitNextFloor.setId("SubmitButton");
-        */
-    }
-
-    /*
-    @Test
-    public void ToggleModeTest(FxRobot robot) throws RemoteException {
-        System.out.println(localElevatorStub.getMode().getModeType().name());
-        var nextFloorTextField = (Button) robot.lookup("#ChangeModeButton").queryAll().iterator().next();
-        robot.clickOn(nextFloorTextField);
-
-        verify(userInteractionMapper, times(1)).toggleMode(localElevatorStub.getElevatorNumber(), new ElevatorModeAuto());
     }
 
     @Test
     public void StoreFloorTest(FxRobot robot) throws RemoteException {
         var submitNextFloor = (Button) robot.lookup("#SubmitButton").queryAll().iterator().next();
+        var nextFloorTextField = (TextField) robot.lookup("#NextFloorTextField").queryAll().iterator().next();
+
+        robot.doubleClickOn(nextFloorTextField);
+        robot.write("3");
+        verify(userInteractionMapper, times(1)).processInput("3");
+
+        submitNextFloor.setDisable(false);
         robot.clickOn(submitNextFloor);
 
         verify(userInteractionMapper, times(1)).storeFloor();
     }
-     */
+
+    @Test
+    public void ToggleModeTest(FxRobot robot) throws RemoteException {
+        var nextFloorTextField = (Button) robot.lookup("#ChangeModeButton").queryAll().iterator().next();
+        robot.clickOn(nextFloorTextField);
+
+        verify(userInteractionMapper, times(1)).toggleMode(eq(localElevatorStub.getElevatorNumber()), any(ElevatorModeAuto.class));
+    }
+
 }
