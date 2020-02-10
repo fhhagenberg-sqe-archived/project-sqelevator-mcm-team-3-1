@@ -90,6 +90,21 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
 
         nextFloor = new TextField();
 
+        header.setId("HeaderLabel");
+        currentSpeed.setId("CurrentSpeed");
+        currentAcceleration.setId("CurrentAcceleration");
+        currentFloor.setId("CurrentFloor");
+        currentMode.setId("CurrentMode");
+        currentLoad.setId("CurrentLoad");
+        currentCapacity.setId("CurrentCapacity");
+        currentDoorState.setId("CurrentDoorState");
+        currentState.setId("CurrentState");
+        currentDirection.setId("CurrentDirection");
+        currentPosition.setId("CurrentPosition");
+        changeMode.setId("ChangeModeButton");
+        submitNextFloor.setId("SubmitButton");
+        nextFloor.setId("NextFloorTextField");
+
         this.setupUI();
         this.updateUI();
 
