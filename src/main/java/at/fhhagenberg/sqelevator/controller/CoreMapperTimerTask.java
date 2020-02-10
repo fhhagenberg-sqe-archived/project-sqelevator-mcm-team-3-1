@@ -9,7 +9,7 @@ public class CoreMapperTimerTask extends TimerTask {
 
     private ICoreMapper coreMapper;
 
-    CoreMapperTimerTask(ICoreMapper coreMapper) {
+    public CoreMapperTimerTask(ICoreMapper coreMapper) {
         this.coreMapper = coreMapper;
     }
 

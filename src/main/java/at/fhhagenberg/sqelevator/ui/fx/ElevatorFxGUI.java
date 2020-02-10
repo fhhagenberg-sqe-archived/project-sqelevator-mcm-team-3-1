@@ -71,10 +71,8 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
             core.cancelPeriodicUpdates();
             Platform.exit();
         });
-        mapper.addElevatorListener(this);
-        mapper.addEnvironmentListener(this);
-        mapper.addSelectedElevatorListener(this.selectedElevator);
-        mapper.addSaveFloorEnabledListener(this.selectedElevator);
+        mapper.addUiEventListener(this);
+        mapper.addUiEventListener(this.selectedElevator);
 
         core.loadEnvironment();
         core.loadElevators();
@@ -119,7 +117,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
                 });
                 this.evtrs.add(fxElevator);
                 this.elevatorArea.getChildren().add(fxElevator);
-                this.mapper.addSelectedElevatorListener(fxElevator);
+                this.mapper.addUiEventListener(fxElevator);
             }
         }
     }

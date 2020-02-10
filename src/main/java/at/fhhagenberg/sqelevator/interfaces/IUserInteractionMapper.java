@@ -23,25 +23,9 @@ public interface IUserInteractionMapper extends PropertyChangeListener {
 
     public void selectElevator(ILocalElevator e);
 
-    public void addSelectedElevatorListener(PropertyChangeListener l);
+    public void addUiEventListener(PropertyChangeListener l);
 
-    public void removeSelectedElevatorListener(PropertyChangeListener l);
-
-    public void addElevatorListener(PropertyChangeListener l);
-
-    public void removeElevatorListener(PropertyChangeListener l);
-
-    public void addEnvironmentListener(PropertyChangeListener l);
-
-    public void removeEnvironmentListener(PropertyChangeListener l);
-
-    public void addSaveFloorEnabledListener(PropertyChangeListener l);
-
-    public void removeSaveFloorEnabledListener(PropertyChangeListener l);
-
-    public void addUpdateErrorMessageListener(PropertyChangeListener l);
-
-    public void removeUpdateErrorMessageListener(PropertyChangeListener l);
+    public void removeUiEventListener(PropertyChangeListener l);
 
     public void storeFloor() throws RemoteException;
 }

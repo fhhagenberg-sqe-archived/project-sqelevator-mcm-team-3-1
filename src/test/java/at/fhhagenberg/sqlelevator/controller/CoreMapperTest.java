@@ -29,6 +29,22 @@ public class CoreMapperTest {
         elevatorStub = new ElevatorStub();
     }
 
+
+    @Test
+    public void testRemovingListener() throws Exception {
+        var mappingLoadedListenerMock = mock(PropertyChangeListener.class);
+        var mappingLoadedListenerRemovedMock = mock(PropertyChangeListener.class);
+
+        coreMapper = new CoreMapper(elevatorStub, new EnvironmentFactory(), new ElevatorFactory(), new FloorFactory());
+        coreMapper.addMappingLoadedListener(mappingLoadedListenerMock);
+        coreMapper.addMappingLoadedListener(mappingLoadedListenerRemovedMock);
+        coreMapper.removeMappingLoadedListener(mappingLoadedListenerRemovedMock);
+        coreMapper.loadEnvironment();
+
+        verify(mappingLoadedListenerMock, times(1)).propertyChange(any());
+        verify(mappingLoadedListenerRemovedMock, times(0)).propertyChange(any());
+    }
+
     @Test
     public void testEnvironmentLoaded() throws Exception {
         var environmentMock = mock(EnvironmentImpl.class);
@@ -75,6 +91,7 @@ public class CoreMapperTest {
         verify(elevatorMock, times(elevatorStub.getElevatorNum())).setCapacity(elevatorStub.getElevatorCapacity(elevatorMock.getElevatorNumber()));
         verify(elevatorMock, times(elevatorStub.getElevatorNum())).setSpeed(elevatorStub.getElevatorSpeed(elevatorMock.getElevatorNumber()));
     }
+
 
     @Test
     public void testFloorsLoaded() throws Exception {
