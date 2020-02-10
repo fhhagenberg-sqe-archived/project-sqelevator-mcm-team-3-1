@@ -14,7 +14,6 @@ import at.fhhagenberg.sqelevator.model.factory.FloorFactory;
 import at.fhhagenberg.sqlelevator.ElevatorStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.beans.PropertyChangeListener;
 
@@ -30,14 +29,6 @@ public class CoreMapperTest {
         elevatorStub = new ElevatorStub();
     }
 
-    @Test
-    public void test() throws Exception {
-        var coreMapperMock = mock(CoreMapper.class);
-        coreMapperMock.schedulePeriodicUpdates(0);
-        verify(coreMapperMock, times(1)).updateEnvironment();
-        verify(coreMapperMock, times(1)).updateElevators();
-        verify(coreMapperMock, times(1)).updateFloors();
-    }
 
     @Test
     public void testRemovingListener() throws Exception {
@@ -74,26 +65,6 @@ public class CoreMapperTest {
     }
 
     @Test
-    public void testEnvironmentUpdated() throws Exception {
-        var environmentMock = mock(EnvironmentImpl.class);
-        var environmentFactoryMock = mock(EnvironmentFactory.class);
-        var mappingLoadedListenerMock = mock(PropertyChangeListener.class);
-        when(environmentFactoryMock.createEnvironment()).thenReturn(environmentMock);
-
-        coreMapper = new CoreMapper(elevatorStub, environmentFactoryMock, new ElevatorFactory(), new FloorFactory());
-        coreMapper.addMappingLoadedListener(mappingLoadedListenerMock);
-
-        coreMapper.loadEnvironment();
-        verify(mappingLoadedListenerMock, times(1)).propertyChange(any());
-        coreMapper.updateEnvironment();
-
-        verify(environmentMock, times(2)).setClockTick(elevatorStub.getClockTick());
-        verify(environmentMock, times(2)).setFloorHeight(elevatorStub.getFloorHeight());
-        verify(environmentMock, times(2)).setNumberOfElevators(elevatorStub.getElevatorNum());
-        verify(environmentMock, times(2)).setNumberOfFloors(elevatorStub.getFloorNum());
-    }
-
-    @Test
     public void testElevatorsLoaded() throws Exception {
         var elevatorMock = mock(LocalElevator.class);
         var elevatorFactoryMock = mock(ElevatorFactory.class);
@@ -121,39 +92,6 @@ public class CoreMapperTest {
         verify(elevatorMock, times(elevatorStub.getElevatorNum())).setSpeed(elevatorStub.getElevatorSpeed(elevatorMock.getElevatorNumber()));
     }
 
-    @Test
-    public void testElevatorsUpdated() throws Exception {
-        var elevatorMock1 = mock(LocalElevator.class);
-        var elevatorMock2 = mock(LocalElevator.class);
-        var elevatorMock3 = mock(LocalElevator.class);
-        when(elevatorMock1.getElevatorNumber()).thenReturn(0);
-        when(elevatorMock2.getElevatorNumber()).thenReturn(1);
-        when(elevatorMock3.getElevatorNumber()).thenReturn(2);
-        var elevatorFactoryMock = mock(ElevatorFactory.class);
-        var mappingLoadedListenerMock = mock(PropertyChangeListener.class);
-        when(elevatorFactoryMock.createElevator(0)).thenReturn(elevatorMock1);
-        when(elevatorFactoryMock.createElevator(1)).thenReturn(elevatorMock2);
-        when(elevatorFactoryMock.createElevator(2)).thenReturn(elevatorMock3);
-
-        coreMapper = new CoreMapper(elevatorStub, new EnvironmentFactory(), elevatorFactoryMock, new FloorFactory());
-        coreMapper.addMappingLoadedListener(mappingLoadedListenerMock);
-
-        coreMapper.loadEnvironment();
-        verify(mappingLoadedListenerMock, times(1)).propertyChange(any());
-
-        coreMapper.loadElevators();
-        verify(mappingLoadedListenerMock, times(1 + elevatorStub.getElevatorNum())).propertyChange(any());
-        coreMapper.updateElevators();
-
-        verify(elevatorMock1, times(1)).setAcceleration(elevatorStub.getElevatorAccel(elevatorMock1.getElevatorNumber()));
-        verify(elevatorMock1, times(elevatorStub.getElevatorNum())).setFloor(elevatorStub.getElevatorFloor(elevatorMock1.getElevatorNumber()));
-        verify(elevatorMock1, times(elevatorStub.getElevatorNum())).setPosition(elevatorStub.getElevatorPosition(elevatorMock1.getElevatorNumber()));
-        verify(elevatorMock1, times(elevatorStub.getElevatorNum())).setTargetFloor(elevatorStub.getTarget(elevatorMock1.getElevatorNumber()));
-        verify(elevatorMock1, times(elevatorStub.getElevatorNum())).setDoorState(DoorState.from(elevatorStub.getElevatorDoorStatus(elevatorMock1.getElevatorNumber())));
-        verify(elevatorMock1, times(elevatorStub.getElevatorNum())).setWeight(elevatorStub.getElevatorWeight(elevatorMock1.getElevatorNumber()));
-        verify(elevatorMock1, times(elevatorStub.getElevatorNum())).setCapacity(elevatorStub.getElevatorCapacity(elevatorMock1.getElevatorNumber()));
-        verify(elevatorMock1, times(elevatorStub.getElevatorNum())).setSpeed(elevatorStub.getElevatorSpeed(elevatorMock1.getElevatorNumber()));
-    }
 
     @Test
     public void testFloorsLoaded() throws Exception {
