@@ -67,6 +67,11 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
         this.elevatorDoorState = new Label(elevator.getDoorState().name());
         this.elevatorDirection = new Label(elevator.getDirection().name());
         this.elevatorMode = new Label(elevator.getMode().getModeType().name());
+        this.elevatorName.setId("ElevatorNameLabel");
+        this.elevatorDoorState.setId("ElevatorDoorStateLabel");
+        this.elevatorDirection.setId("ElevatorDirectionLabel");
+        this.elevatorMode.setId("ElevatorModeLabel");
+        this.header.setId("Header");
         header.getChildren().add(elevatorName);
         header.getChildren().add(elevatorDoorState);
         header.getChildren().add(elevatorDirection);
