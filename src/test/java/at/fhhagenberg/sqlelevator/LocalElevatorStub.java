@@ -10,6 +10,7 @@ import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeManual;
 import java.beans.PropertyChangeListener;
 
 public class LocalElevatorStub implements ILocalElevator {
+
     @Override
     public int getElevatorNumber() {
         return 1;
