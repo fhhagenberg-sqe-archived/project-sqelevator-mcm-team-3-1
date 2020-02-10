@@ -26,11 +26,8 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     private LinkedList<ILocalElevator> elevators = new LinkedList<>();
     private IEnvironment environment;
     private int enteredFloor;
-    private final PropertyChangeSupport selectedElevatorListener = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport elevatorListener = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport environmentLoadedListener = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport saveFloorEnabledListener = new PropertyChangeSupport(this);
-    private final PropertyChangeSupport updateErrorMessageListener = new PropertyChangeSupport(this);
+
+    private final PropertyChangeSupport uiEventListener = new PropertyChangeSupport(this);
 
     public UserInteractionMapper(ICoreMapper shader) throws RemoteException {
         this.shader = shader;
@@ -51,9 +48,7 @@ public class UserInteractionMapper implements IUserInteractionMapper {
         if (this.selectedElevator != null) {
             try {
                 this.enteredFloor = Integer.parseInt(input);
-                System.out.println("Input passed processing " + input);
-                System.out.println("Input is " + (this.isStorable() ? "Storable" : "not storable"));
-                this.saveFloorEnabledListener.firePropertyChange(UIEvent.SAVE_FLOOR_ENABLED, null, this.isStorable());
+                this.uiEventListener.firePropertyChange(UIEvent.SAVE_FLOOR_ENABLED, null, this.isStorable());
             } catch (NumberFormatException ex) {
                 this.enteredFloor = -1;
             }
@@ -67,47 +62,15 @@ public class UserInteractionMapper implements IUserInteractionMapper {
         } else {
             this.selectedElevator = null;
         }
-        this.selectedElevatorListener.firePropertyChange(UIEvent.SELECTED_ELEVATOR_CHANGED, prev, this.selectedElevator);
+        this.uiEventListener.firePropertyChange(UIEvent.SELECTED_ELEVATOR_CHANGED, prev, this.selectedElevator);
     }
 
-    public void addSelectedElevatorListener(PropertyChangeListener l) {
-        this.selectedElevatorListener.addPropertyChangeListener(l);
+    public void addUiEventListener(PropertyChangeListener l) {
+        this.uiEventListener.addPropertyChangeListener(l);
     }
 
-    public void removeSelectedElevatorListener(PropertyChangeListener l) {
-        this.selectedElevatorListener.removePropertyChangeListener(l);
-    }
-
-    public void addElevatorListener(PropertyChangeListener l) {
-        this.elevatorListener.addPropertyChangeListener(l);
-    }
-
-    public void removeElevatorListener(PropertyChangeListener l) {
-        this.elevatorListener.removePropertyChangeListener(l);
-    }
-
-    public void addEnvironmentListener(PropertyChangeListener l) {
-        this.environmentLoadedListener.addPropertyChangeListener(l);
-    }
-
-    public void removeEnvironmentListener(PropertyChangeListener l) {
-        this.environmentLoadedListener.removePropertyChangeListener(l);
-    }
-
-    public void addSaveFloorEnabledListener(PropertyChangeListener l) {
-        this.saveFloorEnabledListener.addPropertyChangeListener(l);
-    }
-
-    public void removeSaveFloorEnabledListener(PropertyChangeListener l) {
-        this.saveFloorEnabledListener.removePropertyChangeListener(l);
-    }
-
-    public void addUpdateErrorMessageListener(PropertyChangeListener l) {
-        this.updateErrorMessageListener.addPropertyChangeListener(l);
-    }
-
-    public void removeUpdateErrorMessageListener(PropertyChangeListener l) {
-        this.updateErrorMessageListener.removePropertyChangeListener(l);
+    public void removeUiEventListener(PropertyChangeListener l) {
+        this.uiEventListener.removePropertyChangeListener(l);
     }
 
     private boolean isStorable() {
@@ -120,27 +83,26 @@ public class UserInteractionMapper implements IUserInteractionMapper {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println("UI Mapper received: " + evt.getPropertyName());
         if (evt.getPropertyName().equals(CoreMapperEvent.ENVIRONMENT_LOADED)) {
             if (evt.getNewValue() != null) {
                 this.environment = (IEnvironment) evt.getNewValue();
-                this.environmentLoadedListener.firePropertyChange(UIEvent.ENVIRONMENT_LOADED, null, this.environment);
-                this.elevators.forEach((e) -> {
-                    this.elevatorListener.firePropertyChange(UIEvent.NEW_ELEVATOR_ADDED, null, e);
+                this.uiEventListener.firePropertyChange(UIEvent.ENVIRONMENT_LOADED, null, environment);
+                this.elevators.forEach((localElevator) -> {
+                    this.uiEventListener.firePropertyChange(UIEvent.NEW_ELEVATOR_ADDED, null, localElevator);
                 });
             }
         } else if (evt.getPropertyName().equals(CoreMapperEvent.ELEVATOR_LOADED)) {
-            ILocalElevator e = (ILocalElevator) evt.getNewValue();
-            if (!this.elevators.contains(e)) {
-                this.elevators.add(e);
+            ILocalElevator localElevator = (ILocalElevator) evt.getNewValue();
+            if (!this.elevators.contains(localElevator)) {
+                this.elevators.add(localElevator);
                 if (this.environment != null) {
-                    this.elevatorListener.firePropertyChange(UIEvent.NEW_ELEVATOR_ADDED, null, e);
+                    this.uiEventListener.firePropertyChange(UIEvent.NEW_ELEVATOR_ADDED, null, localElevator);
                 }
             }
         } else if (evt.getPropertyName().equals(CoreMapperEvent.FLOOR_LOADED)) {
             IFloor floor = (IFloor) evt.getNewValue();
             if (floor != null) {
-                this.elevatorListener.firePropertyChange(UIEvent.FLOOR_LOADED, null, floor);
+                this.uiEventListener.firePropertyChange(UIEvent.FLOOR_LOADED, null, floor);
             }
         }
     }
@@ -148,5 +110,9 @@ public class UserInteractionMapper implements IUserInteractionMapper {
     @Override
     public void toggleDoorState() {
         System.out.println("TODO: Toggle door state");
+    }
+
+    public void setEnvironment(IEnvironment environment) {
+        this.environment = environment;
     }
 }
