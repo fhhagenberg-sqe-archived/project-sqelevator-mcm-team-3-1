@@ -18,6 +18,8 @@ public class FXGeneralElevatorInformation extends HBox implements PropertyChange
         final Label labelClockTick = new Label("Clock:");
         valueClockTick = new Label();
         valueClockTick.setPadding(new Insets(0, 5, 0, 5));
+        valueClockTick.setId("ClockTickLabel");
+
         setPadding(new Insets(5, 10, 5, 20));
         getChildren().addAll(labelClockTick, valueClockTick);
 
