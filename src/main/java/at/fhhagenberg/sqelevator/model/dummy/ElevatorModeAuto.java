@@ -29,4 +29,9 @@ public class ElevatorModeAuto implements IElevatorMode {
         ElevatorModeAuto mode = (ElevatorModeAuto) other;
         return mode.getModeType().equals(this.getModeType());
     }
+
+    @Override
+    public int hashCode() {
+        return getModeType().hashCode();
+    }
 }
