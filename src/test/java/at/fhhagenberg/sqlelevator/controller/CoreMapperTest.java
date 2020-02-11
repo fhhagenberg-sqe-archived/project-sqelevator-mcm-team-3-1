@@ -3,7 +3,7 @@ package at.fhhagenberg.sqlelevator.controller;
 import at.fhhagenberg.sqelevator.controller.CoreMapper;
 import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
-import at.fhhagenberg.sqelevator.model.EnvironmentImpl;
+import at.fhhagenberg.sqelevator.model.Environment;
 import at.fhhagenberg.sqelevator.model.Floor;
 import at.fhhagenberg.sqelevator.model.LocalElevator;
 import at.fhhagenberg.sqelevator.model.dummy.ElevatorModeAuto;
@@ -47,7 +47,7 @@ public class CoreMapperTest {
 
     @Test
     public void testEnvironmentLoaded() throws Exception {
-        var environmentMock = mock(EnvironmentImpl.class);
+        var environmentMock = mock(Environment.class);
         var environmentFactoryMock = mock(EnvironmentFactory.class);
         var mappingLoadedListenerMock = mock(PropertyChangeListener.class);
         when(environmentFactoryMock.createEnvironment()).thenReturn(environmentMock);

@@ -18,4 +18,15 @@ public class ElevatorModeAuto implements IElevatorMode {
         return ElevatorModeType.AUTOMATIC;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        ElevatorModeAuto mode = (ElevatorModeAuto) other;
+        return mode.getModeType().equals(this.getModeType());
+    }
 }
