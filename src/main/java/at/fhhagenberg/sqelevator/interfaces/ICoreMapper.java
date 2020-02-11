@@ -13,11 +13,6 @@ import java.rmi.RemoteException;
  */
 public interface ICoreMapper {
 
-    /**
-     * The interval in milliseconds on which the elevator data is going to be fetched from the remote
-     */
-    int DEFAULT_UPDATE_INTERVAL_MS = 100;
-
     public void schedulePeriodicUpdates(int intervalMs);
 
     public void cancelPeriodicUpdates();

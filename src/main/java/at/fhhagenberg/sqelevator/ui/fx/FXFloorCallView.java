@@ -37,17 +37,16 @@ public class FXFloorCallView extends HBox implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                switch (evt.getPropertyName()) {
-                    case FloorEvent.FLOOR_BUTTON_DOWN:
-                        updatePane(downButtonPane, (boolean) evt.getNewValue());
-                        break;
-                    case FloorEvent.FLOOR_BUTTON_UP:
-                        updatePane(upButtonPane, (boolean) evt.getNewValue());
-                        break;
-                }
+        Platform.runLater(() -> {
+            switch (evt.getPropertyName()) {
+                case FloorEvent.FLOOR_BUTTON_DOWN:
+                    updatePane(downButtonPane, (boolean) evt.getNewValue());
+                    break;
+                case FloorEvent.FLOOR_BUTTON_UP:
+                    updatePane(upButtonPane, (boolean) evt.getNewValue());
+                    break;
+                default:
+                    break;
             }
         });
     }
