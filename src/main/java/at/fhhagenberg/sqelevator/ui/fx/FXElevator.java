@@ -6,7 +6,6 @@
 package at.fhhagenberg.sqelevator.ui.fx;
 
 import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
-import at.fhhagenberg.sqelevator.enums.ElevatorState;
 import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
 import at.fhhagenberg.sqelevator.interfaces.ILocalElevator;
 import at.fhhagenberg.sqelevator.propertychanged.event.ElevatorEvent;
