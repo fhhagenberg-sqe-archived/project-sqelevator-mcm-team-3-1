@@ -1,6 +1,6 @@
 package at.fhhagenberg.sqlelevator.ui.fx;
 
-import at.fhhagenberg.sqelevator.model.EnvironmentImpl;
+import at.fhhagenberg.sqelevator.model.Environment;
 import at.fhhagenberg.sqelevator.model.Floor;
 import at.fhhagenberg.sqelevator.ui.fx.FXElevatorCallView;
 import javafx.application.Platform;
@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(ApplicationExtension.class)
 public class FXElevatorCallViewTest {
 
-    private EnvironmentImpl environment;
+    private Environment environment;
     private FXElevatorCallView fxElevatorCallView;
 
     @Start
     public void start(Stage stage) throws Exception {
         Floor floor = new Floor(2);
-        environment = new EnvironmentImpl();
+        environment = new Environment();
         environment.setNumberOfFloors(5);
         environment.setNumberOfElevators(2);
         fxElevatorCallView = new FXElevatorCallView(environment, 500);

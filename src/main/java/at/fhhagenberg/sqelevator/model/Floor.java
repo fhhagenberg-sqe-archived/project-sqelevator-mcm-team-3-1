@@ -63,6 +63,6 @@ public class Floor implements IFloor {
 
     @Override
     public void removeFloorUpdatedListener(PropertyChangeListener listener) {
-        this.floorUpdatedListener.addPropertyChangeListener(listener);
+        this.floorUpdatedListener.removePropertyChangeListener(listener);
     }
 }

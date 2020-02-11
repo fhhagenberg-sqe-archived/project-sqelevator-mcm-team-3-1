@@ -6,7 +6,7 @@ import at.fhhagenberg.sqelevator.propertychanged.event.EnvironmentEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class EnvironmentImpl implements IEnvironment {
+public class Environment implements IEnvironment {
     private int numberOfElevators;
     private int numberOfFloors;
     private int floorHeight;

@@ -54,7 +54,7 @@ public class LocalElevator implements ILocalElevator {
 
     @Override
     public void setMode(IElevatorMode mode) {
-        if (mode != null) {
+        if (!mode.equals(this.mode)) {
             this.mode = mode;
             this.elevatorUpdatedListener.firePropertyChange(ElevatorEvent.MODE, null, this.mode);
         }
@@ -92,7 +92,7 @@ public class LocalElevator implements ILocalElevator {
 
     @Override
     public int getWeight() {
-        return this.currentPosition;
+        return this.lbsWeight;
     }
 
     @Override
@@ -126,7 +126,7 @@ public class LocalElevator implements ILocalElevator {
 
     @Override
     public void setDoorState(DoorState state) {
-        if (this.doorState != state && state != null) {
+        if (!state.equals(this.doorState)) {
             var old = this.doorState;
             this.doorState = state;
             this.elevatorUpdatedListener.firePropertyChange(ElevatorEvent.DOOR_STATE, old, this.doorState);
@@ -135,10 +135,10 @@ public class LocalElevator implements ILocalElevator {
 
     @Override
     public void setElevatorState(ElevatorState state) {
-        if (this.lastState != state) {
+        if (!state.equals(this.lastState)) {
             var old = this.lastState;
             this.lastState = state;
-            this.elevatorUpdatedListener.firePropertyChange(ElevatorEvent.CURRENT_STATE, old, mode);
+            this.elevatorUpdatedListener.firePropertyChange(ElevatorEvent.CURRENT_STATE, old, this.lastState);
         }
     }
 
@@ -180,7 +180,7 @@ public class LocalElevator implements ILocalElevator {
 
     @Override
     public void setCapacity(int capacity) {
-        if (this.capacity != capacity && capacity > 0) {
+        if (this.capacity != capacity && capacity >= 0) {
             this.elevatorUpdatedListener.firePropertyChange(ElevatorEvent.CAPACITY, this.capacity, capacity);
             this.capacity = capacity;
         }
