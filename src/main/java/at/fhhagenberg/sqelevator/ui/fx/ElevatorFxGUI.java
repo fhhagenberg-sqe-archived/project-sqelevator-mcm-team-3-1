@@ -50,6 +50,9 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
     private LinkedList<FXElevator> evtrs;
     private IUserInteractionMapper mapper;
     private IEnvironment environment;
+    private IElevator elevator;
+
+    private boolean testingMode = false;
 
     public static void main(String[] args) {
         launch();
@@ -57,7 +60,9 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        IElevator elevator = (IElevator) Naming.lookup("rmi://localhost:1099/ElevatorSim");
+        if (!testingMode) {
+            elevator = (IElevator) Naming.lookup("rmi://localhost:1099/ElevatorSim");
+        }
         ICoreMapper core = new CoreMapper(elevator,
                 new EnvironmentFactory(), new ElevatorFactory(), new FloorFactory());
         this.mapper = new UserInteractionMapper(core);
@@ -86,12 +91,15 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
     private VBox renderLayout() {
         VBox layout = new VBox();
         HBox elevatorColumns = new HBox();
+        elevatorArea.setId("ElevatorArea");
+        floorCallArea.setId("FloorCallArea");
         elevatorColumns.getChildren().add(elevatorArea);
         elevatorColumns.getChildren().add(floorCallArea);
         elevatorColumns.getChildren().add(selectedElevator);
         elevatorColumns.setPadding(new Insets(10, 20, 10, 10));
         elevatorColumns.setMinHeight(500);
 
+        generalElevatorInformation.setId("GeneralElevatorInformation");
         layout.getChildren().add(elevatorColumns);
         layout.getChildren().add(generalElevatorInformation);
         return layout;
@@ -126,6 +134,18 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         if (floor != null && elevatorCallView != null) {
             elevatorCallView.addFloor(floor);
         }
+    }
+
+    public void initElevatorInterface(IElevator elevator) {
+        this.elevator = elevator;
+    }
+
+    public boolean getTestingModeActive() {
+        return testingMode;
+    }
+
+    public void setTestingMode(boolean testingMode) {
+        this.testingMode = testingMode;
     }
 
     @Override
