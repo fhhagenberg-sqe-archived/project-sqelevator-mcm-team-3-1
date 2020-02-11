@@ -13,14 +13,9 @@ import at.fhhagenberg.sqelevator.interfaces.IElevatorMode;
  */
 public class ElevatorModeAuto implements IElevatorMode {
 
-
     @Override
     public ElevatorModeType getModeType() {
         return ElevatorModeType.AUTOMATIC;
     }
 
-    @Override
-    public void setModeType(ElevatorModeType type) {
-
-    }
 }

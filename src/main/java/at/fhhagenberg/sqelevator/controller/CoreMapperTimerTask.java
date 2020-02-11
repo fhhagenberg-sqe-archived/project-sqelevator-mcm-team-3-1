@@ -1,5 +1,6 @@
 package at.fhhagenberg.sqelevator.controller;
 
+import at.fhhagenberg.sqelevator.LogManager;
 import at.fhhagenberg.sqelevator.interfaces.ICoreMapper;
 
 import java.rmi.RemoteException;
@@ -20,7 +21,7 @@ public class CoreMapperTimerTask extends TimerTask {
             coreMapper.updateElevators();
             coreMapper.updateFloors();
         } catch (RemoteException rme) {
-            System.err.println("Remote exception: " + rme.getMessage());
+            LogManager.getLogger().severe("Connection to remote shut down.");
         }
     }
 }

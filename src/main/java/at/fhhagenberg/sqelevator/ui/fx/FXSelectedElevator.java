@@ -5,6 +5,7 @@
  */
 package at.fhhagenberg.sqelevator.ui.fx;
 
+import at.fhhagenberg.sqelevator.LogManager;
 import at.fhhagenberg.sqelevator.enums.DoorState;
 import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
 import at.fhhagenberg.sqelevator.enums.ElevatorState;
@@ -57,11 +58,9 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
     private final Label nextFloorLabel;
     private final TextField nextFloor;
     private final Button submitNextFloor;
-    private IUserInteractionMapper m;
     private ILocalElevator elevator;
 
     public FXSelectedElevator(IUserInteractionMapper m) {
-        this.m = m;
         header = new Label();
         speedLabel = new Label("Current Speed");
         accelerationLabel = new Label("Current Acceleration");
@@ -111,26 +110,24 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
         changeMode.setOnMouseClicked((MouseEvent t) -> {
             var mode = elevator.getMode() instanceof ElevatorModeAuto ?
                     new ElevatorModeManual() : new ElevatorModeAuto();
-            //Todo: handling remote exception
             try {
                 m.toggleMode(elevator.getElevatorNumber(), mode);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LogManager.getLogger().severe("Connection to remote shut down.");
             }
         });
 
         submitNextFloor.setOnMouseClicked((MouseEvent t) -> {
-            //Todo: handling remote exception
             try {
                 m.storeFloor();
             } catch (RemoteException e) {
-                e.printStackTrace();
+                LogManager.getLogger().severe("Connection to remote shut down.");
             }
         });
 
-        nextFloor.textProperty().addListener((observable, oldValue, newValue) -> {
-            m.processInput(newValue);
-        });
+        nextFloor.textProperty().addListener((observable, oldValue, newValue) ->
+            m.processInput(newValue)
+        );
     }
 
     /**
@@ -232,50 +229,50 @@ public class FXSelectedElevator extends GridPane implements PropertyChangeListen
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                switch (evt.getPropertyName()) {
-                    case UIEvent.SELECTED_ELEVATOR_CHANGED:
-                        setSelectedElevator((ILocalElevator) evt.getNewValue());
-                        break;
-                    case UIEvent.SAVE_FLOOR_ENABLED:
-                        submitNextFloor.setDisable(!(boolean) evt.getNewValue());
-                        break;
-                    case ElevatorEvent.CURRENT_ACCELERATION_FTSQR:
-                        currentAcceleration.setText(evt.getNewValue().toString());
-                        break;
-                    case ElevatorEvent.CURRENT_FLOOR:
-                        currentFloor.setText(evt.getNewValue().toString());
-                        break;
-                    case ElevatorEvent.CURRENT_POSITION:
-                        currentPosition.setText(evt.getNewValue().toString());
-                        break;
-                    case ElevatorEvent.CURRENT_SPEED_FTS:
-                        currentSpeed.setText(evt.getNewValue().toString());
-                        break;
-                    case ElevatorEvent.DIRECTION:
-                        currentDirection.setText(evt.getNewValue().toString());
-                        break;
-                    case ElevatorEvent.DOOR_STATE:
-                        currentDoorState.setText(((DoorState) evt.getNewValue()).name());
-                        break;
-                    case ElevatorEvent.LBS_WEIGHT:
-                        currentLoad.setText(evt.getNewValue().toString());
-                        break;
-                    case ElevatorEvent.CAPACITY:
-                        currentCapacity.setText(evt.getNewValue().toString());
-                    case ElevatorEvent.MODE:
-                        currentMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
-                        updateUI();
-                        break;
-                    case ElevatorEvent.TARGET_FLOOR:
-                        nextFloor.setText(evt.getNewValue().toString());
-                        break;
-                    case ElevatorEvent.CURRENT_STATE:
-                        currentState.setText(((ElevatorState) evt.getNewValue()).name());
-                        break;
-                }
+        Platform.runLater(() -> {
+            switch (evt.getPropertyName()) {
+                case UIEvent.SELECTED_ELEVATOR_CHANGED:
+                    setSelectedElevator((ILocalElevator) evt.getNewValue());
+                    break;
+                case UIEvent.SAVE_FLOOR_ENABLED:
+                    submitNextFloor.setDisable(!(boolean) evt.getNewValue());
+                    break;
+                case ElevatorEvent.CURRENT_ACCELERATION_FTSQR:
+                    currentAcceleration.setText(evt.getNewValue().toString());
+                    break;
+                case ElevatorEvent.CURRENT_FLOOR:
+                    currentFloor.setText(evt.getNewValue().toString());
+                    break;
+                case ElevatorEvent.CURRENT_POSITION:
+                    currentPosition.setText(evt.getNewValue().toString());
+                    break;
+                case ElevatorEvent.CURRENT_SPEED_FTS:
+                    currentSpeed.setText(evt.getNewValue().toString());
+                    break;
+                case ElevatorEvent.DIRECTION:
+                    currentDirection.setText(evt.getNewValue().toString());
+                    break;
+                case ElevatorEvent.DOOR_STATE:
+                    currentDoorState.setText(((DoorState) evt.getNewValue()).name());
+                    break;
+                case ElevatorEvent.LBS_WEIGHT:
+                    currentLoad.setText(evt.getNewValue().toString());
+                    break;
+                case ElevatorEvent.CAPACITY:
+                    currentCapacity.setText(evt.getNewValue().toString());
+                    break;
+                case ElevatorEvent.MODE:
+                    currentMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
+                    updateUI();
+                    break;
+                case ElevatorEvent.TARGET_FLOOR:
+                    nextFloor.setText(evt.getNewValue().toString());
+                    break;
+                case ElevatorEvent.CURRENT_STATE:
+                    currentState.setText(((ElevatorState) evt.getNewValue()).name());
+                    break;
+                default:
+                    break;
             }
         });
     }

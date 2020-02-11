@@ -14,13 +14,6 @@ import at.fhhagenberg.sqelevator.enums.ElevatorModeType;
 public interface IElevatorMode {
 
     /**
-     * Sets the mode of the elevator
-     *
-     * @param type ElevatorModeType
-     */
-    public void setModeType(ElevatorModeType type);
-
-    /**
      * Returns the current type of the current elevatorMode
      *
      * @return ElevatorModeType type

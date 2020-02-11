@@ -29,7 +29,7 @@ public class UserInteractionMapper implements IUserInteractionMapper {
 
     private final PropertyChangeSupport uiEventListener = new PropertyChangeSupport(this);
 
-    public UserInteractionMapper(ICoreMapper shader) throws RemoteException {
+    public UserInteractionMapper(ICoreMapper shader) {
         this.shader = shader;
         shader.addMappingLoadedListener(this);
     }
@@ -87,9 +87,9 @@ public class UserInteractionMapper implements IUserInteractionMapper {
             if (evt.getNewValue() != null) {
                 this.environment = (IEnvironment) evt.getNewValue();
                 this.uiEventListener.firePropertyChange(UIEvent.ENVIRONMENT_LOADED, null, environment);
-                this.elevators.forEach((localElevator) -> {
-                    this.uiEventListener.firePropertyChange(UIEvent.NEW_ELEVATOR_ADDED, null, localElevator);
-                });
+                this.elevators.forEach(localElevator ->
+                        this.uiEventListener.firePropertyChange(UIEvent.NEW_ELEVATOR_ADDED, null, localElevator)
+                );
             }
         } else if (evt.getPropertyName().equals(CoreMapperEvent.ELEVATOR_LOADED)) {
             ILocalElevator localElevator = (ILocalElevator) evt.getNewValue();
@@ -105,11 +105,6 @@ public class UserInteractionMapper implements IUserInteractionMapper {
                 this.uiEventListener.firePropertyChange(UIEvent.FLOOR_LOADED, null, floor);
             }
         }
-    }
-
-    @Override
-    public void toggleDoorState() {
-        System.out.println("TODO: Toggle door state");
     }
 
     public void setEnvironment(IEnvironment environment) {

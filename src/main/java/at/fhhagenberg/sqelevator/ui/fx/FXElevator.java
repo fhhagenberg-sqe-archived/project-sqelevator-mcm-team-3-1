@@ -28,16 +28,12 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     private static final double COLUMN_WIDTH = 80;
 
     private ILocalElevator elevator;
-    private int numberOfFloors;
     private Pane[] floors;
     private VBox header;
-    private Label elevatorName;
-    private Label elevatorDoorState;
     private Label elevatorDirection;
     private Label elevatorMode;
 
     public FXElevator(ILocalElevator elevator, int numberOfFloors, double availableHeight) {
-        this.numberOfFloors = numberOfFloors;
         this.elevator = elevator;
         floors = new Pane[numberOfFloors];
         this.populateHeader();
@@ -63,12 +59,12 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
      */
     private void populateHeader() {
         this.header = new VBox();
-        this.elevatorName = new Label("E " + elevator.getElevatorNumber());
-        this.elevatorDoorState = new Label(elevator.getDoorState().name());
+        Label elevatorName = new Label("E " + elevator.getElevatorNumber());
+        Label elevatorDoorState = new Label(elevator.getDoorState().name());
         this.elevatorDirection = new Label(elevator.getDirection().name());
         this.elevatorMode = new Label(elevator.getMode().getModeType().name());
-        this.elevatorName.setId("ElevatorNameLabel");
-        this.elevatorDoorState.setId("ElevatorDoorStateLabel");
+        elevatorName.setId("ElevatorNameLabel");
+        elevatorDoorState.setId("ElevatorDoorStateLabel");
         this.elevatorDirection.setId("ElevatorDirectionLabel");
         this.elevatorMode.setId("ElevatorModeLabel");
         this.header.setId("Header");
@@ -110,8 +106,6 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
     private void setTarget(int floor) {
         floors[floor].setBorder(new Border(new BorderStroke(Color.DARKGREEN,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
-        /*setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
-                CornerRadii.EMPTY, Insets.EMPTY)));*/
     }
 
     /**
@@ -135,36 +129,6 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(8))));
     }
 
-    /**
-     * Updates the Elevator state representation of the UI
-     *
-     * @param state ElevatorState state
-     */
-    private void setElevatorState(ElevatorState state) {
-        switch (state) {
-            case ERROR:
-                this.header.setBackground(new Background(new BackgroundFill(Color.RED,
-                        CornerRadii.EMPTY, Insets.EMPTY)));
-                break;
-            case ACTIVE:
-                this.header.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN,
-                        CornerRadii.EMPTY, Insets.EMPTY)));
-                break;
-            case INACTIVE:
-                this.header.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,
-                        CornerRadii.EMPTY, Insets.EMPTY)));
-                break;
-            case UNKNOWN:
-                this.header.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,
-                        CornerRadii.EMPTY, Insets.EMPTY)));
-                break;
-            default:
-                this.header.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,
-                        CornerRadii.EMPTY, Insets.EMPTY)));
-                break;
-        }
-    }
-
     public void setSelected(ILocalElevator e) {
         if (this.elevator.equals(e)) {
             setBorder(new Border(new BorderStroke(Color.BLACK,
@@ -181,25 +145,24 @@ public class FXElevator extends GridPane implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                switch (evt.getPropertyName()) {
-                    case UIEvent.SELECTED_ELEVATOR_CHANGED:
-                        setSelected((ILocalElevator) evt.getNewValue());
-                        break;
-                    case ElevatorEvent.SELECTED_FLOORS:
-                    case ElevatorEvent.TARGET_FLOOR:
-                    case ElevatorEvent.CURRENT_FLOOR:
-                        updateView();
-                        break;
-                    case ElevatorEvent.DIRECTION:
-                        elevatorDirection.setText(((ElevatorDirection) evt.getNewValue()).name());
-                        break;
-                    case ElevatorEvent.MODE:
-                        elevatorMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
-                        break;
-                }
+        Platform.runLater(() -> {
+            switch (evt.getPropertyName()) {
+                case UIEvent.SELECTED_ELEVATOR_CHANGED:
+                    setSelected((ILocalElevator) evt.getNewValue());
+                    break;
+                case ElevatorEvent.SELECTED_FLOORS:
+                case ElevatorEvent.TARGET_FLOOR:
+                case ElevatorEvent.CURRENT_FLOOR:
+                    updateView();
+                    break;
+                case ElevatorEvent.DIRECTION:
+                    elevatorDirection.setText(((ElevatorDirection) evt.getNewValue()).name());
+                    break;
+                case ElevatorEvent.MODE:
+                    elevatorMode.setText(((IElevatorMode) evt.getNewValue()).getModeType().name());
+                    break;
+                default:
+                    break;
             }
         });
     }

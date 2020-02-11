@@ -15,8 +15,6 @@ public class UIEvent {
     public static final String NEW_ELEVATOR_ADDED = "UIEvent.NewElevatorAdded";
     public static final String ENVIRONMENT_LOADED = "UIEvent.EnvironmentLoaded";
     public static final String FLOOR_LOADED = "UiEvent.FloorLoaded";
-    // public static final String  = "UIElevent.";
-
 
     private UIEvent() {
     }

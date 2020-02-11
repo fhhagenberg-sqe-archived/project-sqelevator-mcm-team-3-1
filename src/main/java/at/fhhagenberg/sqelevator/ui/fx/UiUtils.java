@@ -5,6 +5,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class UiUtils {
+
+    private UiUtils() {
+    }
+
     public static Pane generatePane(double availableWidth, double availableHeight) {
         var p = new Pane();
         p.setMaxWidth(availableWidth);

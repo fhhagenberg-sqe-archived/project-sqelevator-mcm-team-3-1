@@ -5,6 +5,7 @@
  */
 package at.fhhagenberg.sqelevator.ui.fx;
 
+import at.fhhagenberg.sqelevator.LogManager;
 import at.fhhagenberg.sqelevator.controller.CoreMapper;
 import at.fhhagenberg.sqelevator.controller.UserInteractionMapper;
 import at.fhhagenberg.sqelevator.interfaces.*;
@@ -16,7 +17,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -36,7 +36,10 @@ import java.util.LinkedList;
  * BE CREATED!!!!
  */
 public class ElevatorFxGUI extends Application implements PropertyChangeListener {
-
+    /**
+     * The interval in milliseconds on which the elevator data is going to be fetched from the remote
+     */
+    private static final int DEFAULT_UPDATE_INTERVAL_MS = 100;
     private static final double ELEVATOR_DISPLAY_HEIGHT = 500;
 
     private HBox generalElevatorInformation = new HBox();
@@ -47,7 +50,6 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
     private LinkedList<FXElevator> evtrs;
     private IUserInteractionMapper mapper;
     private IEnvironment environment;
-    private ICoreMapper core;
 
     public static void main(String[] args) {
         launch();
@@ -56,7 +58,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
     @Override
     public void start(Stage primaryStage) throws Exception {
         IElevator elevator = (IElevator) Naming.lookup("rmi://localhost:1099/ElevatorSim");
-        core = new CoreMapper(elevator,
+        ICoreMapper core = new CoreMapper(elevator,
                 new EnvironmentFactory(), new ElevatorFactory(), new FloorFactory());
         this.mapper = new UserInteractionMapper(core);
         selectedElevator = new FXSelectedElevator(mapper);
@@ -64,7 +66,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         Scene scene = new Scene(renderLayout(), 1080, 600);
         primaryStage.setTitle("DataManager FX");
         primaryStage.setMinWidth(1080);
-        primaryStage.setMinHeight(600 + 40);
+        primaryStage.setMinHeight(640);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(event -> {
@@ -78,7 +80,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
         core.loadElevators();
         core.loadFloors();
 
-        core.schedulePeriodicUpdates(ICoreMapper.DEFAULT_UPDATE_INTERVAL_MS);
+        core.schedulePeriodicUpdates(DEFAULT_UPDATE_INTERVAL_MS);
     }
 
     private VBox renderLayout() {
@@ -97,7 +99,7 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
 
     private void handleEnvironmentLoaded(IEnvironment environment) {
         if (environment != null) {
-            System.out.println("Floor view added!");
+            LogManager.getLogger().info("Floor view added!");
             this.environment = environment;
             elevatorCallView = new FXElevatorCallView(environment, ELEVATOR_DISPLAY_HEIGHT);
             this.floorCallArea.getChildren().clear();
@@ -108,17 +110,15 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
     }
 
     private void handleElevatorLoaded(ILocalElevator elevator) {
-        if (elevator != null) {
-            if (this.environment != null && this.evtrs.stream().noneMatch(fxElevator -> fxElevator.getElevator().equals(elevator))) {
-                System.out.println("Elevator added!");
-                var fxElevator = new FXElevator(elevator, environment.getNumberOfFloors(), ELEVATOR_DISPLAY_HEIGHT);
-                fxElevator.setOnMouseClicked((MouseEvent t) -> {
-                    this.mapper.selectElevator(elevator);
-                });
-                this.evtrs.add(fxElevator);
-                this.elevatorArea.getChildren().add(fxElevator);
-                this.mapper.addUiEventListener(fxElevator);
-            }
+        if (elevator != null && this.environment != null && this.evtrs.stream().noneMatch(fxElevator -> fxElevator.getElevator().equals(elevator))) {
+            LogManager.getLogger().info("Elevator added!");
+            var fxElevator = new FXElevator(elevator, environment.getNumberOfFloors(), ELEVATOR_DISPLAY_HEIGHT);
+            fxElevator.setOnMouseClicked(mouseEvent ->
+                    this.mapper.selectElevator(elevator)
+            );
+            this.evtrs.add(fxElevator);
+            this.elevatorArea.getChildren().add(fxElevator);
+            this.mapper.addUiEventListener(fxElevator);
         }
     }
 
@@ -130,23 +130,22 @@ public class ElevatorFxGUI extends Application implements PropertyChangeListener
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                switch (evt.getPropertyName()) {
-                    case UIEvent.ENVIRONMENT_LOADED:
-                        handleEnvironmentLoaded((IEnvironment) evt.getNewValue());
-                        break;
-                    case UIEvent.NEW_ELEVATOR_ADDED:
-                        handleElevatorLoaded((ILocalElevator) evt.getNewValue());
-                        break;
-                    case UIEvent.FLOOR_LOADED:
-                        handleFloorLoaded((IFloor) evt.getNewValue());
-                        break;
-                    case UIEvent.UPDATE_ERROR_MESSAGE:
-                        System.out.println("TODO: Add proper error output " + evt.getNewValue());
-                        break;
-                }
+        Platform.runLater(() -> {
+            switch (evt.getPropertyName()) {
+                case UIEvent.ENVIRONMENT_LOADED:
+                    handleEnvironmentLoaded((IEnvironment) evt.getNewValue());
+                    break;
+                case UIEvent.NEW_ELEVATOR_ADDED:
+                    handleElevatorLoaded((ILocalElevator) evt.getNewValue());
+                    break;
+                case UIEvent.FLOOR_LOADED:
+                    handleFloorLoaded((IFloor) evt.getNewValue());
+                    break;
+                case UIEvent.UPDATE_ERROR_MESSAGE:
+                    LogManager.getLogger().warning("Error output " + evt.getNewValue());
+                    break;
+                default:
+                    break;
             }
         });
     }
