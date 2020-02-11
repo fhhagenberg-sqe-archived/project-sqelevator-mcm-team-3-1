@@ -10,5 +10,18 @@ package at.fhhagenberg.sqelevator.enums;
  * current heading direction of the elevator
  */
 public enum ElevatorDirection {
-    UP, DOWN, UNSET
+    UP, DOWN, UNSET;
+
+    public static ElevatorDirection from(int id) {
+        switch (id) {
+            case 0:
+                return UP;
+            case 1:
+                return DOWN;
+            case 2:
+                return UNSET;
+        }
+
+        return null;
+    }
 }

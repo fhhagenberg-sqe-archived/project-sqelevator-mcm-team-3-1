@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqelevator.controller;
 
 import at.fhhagenberg.sqelevator.enums.DoorState;
+import at.fhhagenberg.sqelevator.enums.ElevatorDirection;
 import at.fhhagenberg.sqelevator.interfaces.*;
 import at.fhhagenberg.sqelevator.model.factory.ElevatorFactory;
 import at.fhhagenberg.sqelevator.model.factory.EnvironmentFactory;
@@ -11,9 +12,7 @@ import sqelevator.IElevator;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
+import java.util.*;
 
 public class CoreMapper implements ICoreMapper {
     private IElevator elevator;
@@ -137,6 +136,16 @@ public class CoreMapper implements ICoreMapper {
             localElevator.setWeight(elevator.getElevatorWeight(elevatorNumber));
             localElevator.setCapacity(elevator.getElevatorCapacity(elevatorNumber));
             localElevator.setSpeed(elevator.getElevatorSpeed(elevatorNumber));
+            localElevator.setDirection(ElevatorDirection.from(elevator.getCommittedDirection(elevatorNumber)));
+            List<Integer> floorList = new ArrayList<>();
+
+            for (var f : floors.entrySet()) {
+                if (elevator.getElevatorButton(elevatorNumber, f.getValue().getFloorNumber())) {
+                    floorList.add(f.getValue().getFloorNumber());
+                }
+            }
+
+            localElevator.setSelectedFloors(floorList.stream().mapToInt(Integer::intValue).toArray());
         }
     }
 
